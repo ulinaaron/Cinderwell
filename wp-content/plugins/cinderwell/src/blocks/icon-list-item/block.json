@@ -1,0 +1,48 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cinderwell/icon-list-item",
+  "title": "Icon List Item",
+  "category": "cinderwell",
+  "icon": "yes",
+  "description": "An item within a Cinderwell Icon List.",
+  "parent": ["cinderwell/icon-list"],
+  "supports": {
+    "align": false,
+    "align_text": false,
+    "align_content": false,
+    "color": false,
+    "typography": false,
+    "spacing": false,
+    "border": false,
+    "anchor": false,
+    "customClassName": false,
+    "html": false,
+    "multiple": true,
+    "reusable": false,
+    "inserter": false
+  },
+  "attributes": {
+    "text": { "type": "string", "default": "" },
+    "url": { "type": "string", "default": "" },
+    "opensInNewTab": { "type": "boolean", "default": false },
+    "urlDynamic": { "type": "object", "default": {} },
+    "useDefaultIcon": { "type": "boolean", "default": true },
+    "icon": { "type": "string", "default": "check" },
+    "iconSource": { "type": "string", "default": "library" },
+    "iconSvg": { "type": "string", "default": "" },
+    "iconViewBox": { "type": "string", "default": "0 0 24 24" },
+    "iconSvgId": { "type": "integer", "default": 0 },
+    "iconSvgUrl": { "type": "string", "default": "" }
+  },
+  "usesContext": [
+    "cinderwell/iconListDefaultIcon",
+    "cinderwell/iconListDefaultIconSource",
+    "cinderwell/iconListDefaultIconSvg",
+    "cinderwell/iconListDefaultIconViewBox",
+    "cinderwell/iconListDefaultIconSvgId",
+    "cinderwell/iconListDefaultIconSvgUrl"
+  ],
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./editor.css"
+}

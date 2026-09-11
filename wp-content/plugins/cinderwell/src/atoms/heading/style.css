@@ -1,0 +1,13 @@
+.cinderwell-atom-heading {
+    font-family: var(--cw-font-heading);
+    color: var(--cw-color-text);
+    line-height: var(--cw-line-height-tight);
+}
+h1.cinderwell-atom-heading { font-size: var(--cw-font-size-3xl); }
+h2.cinderwell-atom-heading { font-size: var(--cw-font-size-2xl); }
+h3.cinderwell-atom-heading { font-size: var(--cw-font-size-xl); }
+h4.cinderwell-atom-heading { font-size: var(--cw-font-size-lg); }
+
+.cinderwell-atom-heading.cinderwell-text-size-sm { font-size: var(--cw-font-size-xl); }
+.cinderwell-atom-heading.cinderwell-text-size-md { font-size: var(--cw-font-size-2xl); }
+.cinderwell-atom-heading.cinderwell-text-size-lg { font-size: var(--cw-font-size-3xl); }

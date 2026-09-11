@@ -1,0 +1,114 @@
+/* Shared block background image and controlled dark-overlay presets. */
+.cw-has-background-image {
+	position: relative;
+	isolation: isolate;
+}
+
+.cw-has-background-image::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	background: var(--cw-color-dark, #1a1a1a);
+	opacity: 0;
+	pointer-events: none;
+}
+
+.cw-has-background-image > * {
+	position: relative;
+	z-index: 1;
+}
+
+.cw-background-overlay-soft::before {
+	opacity: 0.2;
+}
+
+.cw-background-overlay-medium::before {
+	opacity: 0.45;
+}
+
+.cw-background-overlay-strong::before {
+	opacity: 0.68;
+}
+
+.cw-has-background-image:not(.cw-background-overlay-none) {
+	color: var(--cw-color-white, #fff);
+}
+
+.cw-image-fit-cover {
+	object-fit: cover !important;
+}
+
+.cw-image-fit-contain {
+	object-fit: contain !important;
+}
+
+.cw-image-position-top {
+	object-position: center top !important;
+}
+
+.cw-image-position-bottom {
+	object-position: center bottom !important;
+}
+
+.cw-image-position-left {
+	object-position: left center !important;
+}
+
+.cw-image-position-right {
+	object-position: right center !important;
+}
+
+.cw-image-position-top-left {
+	object-position: left top !important;
+}
+
+.cw-image-position-top-right {
+	object-position: right top !important;
+}
+
+.cw-image-position-bottom-left {
+	object-position: left bottom !important;
+}
+
+.cw-image-position-bottom-right {
+	object-position: right bottom !important;
+}
+
+.cw-image-aspect-square {
+	width: 100%;
+	aspect-ratio: 1;
+	object-fit: cover;
+}
+
+.cw-image-aspect-landscape {
+	width: 100%;
+	aspect-ratio: 4 / 3;
+	object-fit: cover;
+}
+
+.cw-image-aspect-wide {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+}
+
+.cw-image-aspect-portrait {
+	width: 100%;
+	aspect-ratio: 3 / 4;
+	object-fit: cover;
+}
+
+/* Global content-image shape token. Background images intentionally remain
+ * edge-to-edge and are not included here. */
+:is(
+.cinderwell-atom-image > img,
+.cinderwell-hero__image,
+.cinderwell-image-text__media img,
+.cinderwell-card-grid__card-image img,
+.cinderwell-gallery__item img,
+.cinderwell-image-carousel__slide img,
+.cinderwell-slot-layout__image
+) {
+	border-radius: var(--cw-image-radius, 0);
+}

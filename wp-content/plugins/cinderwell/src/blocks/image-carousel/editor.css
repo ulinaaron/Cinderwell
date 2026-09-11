@@ -1,0 +1,12 @@
+.cinderwell-image-carousel__viewport {
+	overflow-x: auto;
+}
+
+.cinderwell-image-carousel__slide .cw-image-control-overlay {
+	inset: 1rem 1rem auto auto;
+}
+
+.cinderwell-image-carousel__controls[aria-hidden="true"] {
+	display: flex;
+	pointer-events: none;
+}

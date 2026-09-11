@@ -1,0 +1,13 @@
+.cinderwell-atom-link {
+    color: var(--cw-color-link);
+    text-decoration: underline;
+    transition: color var(--cw-duration-normal) var(--cw-ease-standard), opacity var(--cw-duration-normal) var(--cw-ease-standard);
+}
+.cinderwell-atom-link:hover {
+    color: var(--cw-color-link-hover);
+    opacity: 0.8;
+}
+.cinderwell-atom-link:focus-visible {
+    outline: 3px solid var(--cw-color-focus);
+    outline-offset: 2px;
+}

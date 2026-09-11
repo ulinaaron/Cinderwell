@@ -1,0 +1,319 @@
+/* Contextual surface variants intentionally override shared button states. */
+/* stylelint-disable no-descending-specificity */
+
+.cinderwell-buttons {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: var(--cw-gap-sm);
+	margin-top: 1.5rem;
+}
+
+/* Shared button contract. Buttons are rendered by several compound blocks,
+ * so these styles must load globally rather than only with the Button atom. */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.75em 1.5em;
+	border: 1px solid transparent;
+	border-radius: var(--cw-radius-sm);
+	font-family: var(--cw-font-body);
+	font-size: var(--cw-font-size-md);
+	font-weight: 500;
+	line-height: 1.4;
+	text-decoration: none !important;
+	cursor: pointer;
+	transition: background-color var(--cw-duration-normal) var(--cw-ease-standard), border-color var(--cw-duration-normal) var(--cw-ease-standard), color var(--cw-duration-normal) var(--cw-ease-standard), transform var(--cw-duration-fast) var(--cw-ease-standard);
+	user-select: none;
+}
+
+.btn:focus-visible {
+	outline: 2px solid var(--cw-color-focus);
+	outline-offset: 2px;
+}
+
+.btn:active {
+	transform: translateY(1px);
+}
+
+.btn.btn--primary {
+	border-color: var(--cw-color-brand);
+	background-color: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
+
+.btn.btn--primary:hover {
+	border-color: var(--cw-color-dark);
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+.btn.btn--secondary {
+	border-color: var(--cw-color-brand);
+	background-color: transparent;
+	color: var(--cw-color-brand);
+}
+
+.btn.btn--secondary:hover {
+	background-color: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
+
+.btn.btn--ghost {
+	border-color: transparent;
+	background-color: color-mix(in srgb, currentcolor 7%, transparent);
+	color: var(--cw-color-text);
+}
+
+.btn.btn--ghost:hover {
+	background-color: color-mix(in srgb, currentcolor 13%, transparent);
+	color: var(--cw-color-text);
+}
+
+.btn.btn--link {
+	padding: 0;
+	border-color: transparent;
+	background-color: transparent;
+	color: var(--cw-color-brand);
+	text-decoration: underline !important;
+	text-underline-offset: 0.2em;
+}
+
+.btn.btn--link:hover {
+	color: var(--cw-color-dark);
+	text-decoration-thickness: 2px;
+}
+
+.btn--sm {
+	padding: 0.5em 1em;
+	font-size: var(--cw-font-size-sm);
+}
+
+.btn--md {
+	padding: 0.75em 1.5em;
+	font-size: var(--cw-font-size-md);
+}
+
+.btn--lg {
+	padding: 1em 2em;
+	font-size: var(--cw-font-size-lg);
+}
+
+.btn--link.btn--sm,
+.btn--link.btn--md,
+.btn--link.btn--lg {
+	padding-inline: 0;
+}
+
+:is(.cinderwell-hero--bg-dark, .cinderwell-cta--bg-dark) .btn--primary {
+	border-color: var(--cw-color-white);
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-dark);
+}
+
+:is(.cinderwell-hero--bg-dark, .cinderwell-cta--bg-dark) .btn--primary:hover {
+	border-color: var(--cw-color-light);
+	background-color: var(--cw-color-light);
+}
+
+:is(.cinderwell-hero--bg-dark, .cinderwell-cta--bg-dark) .btn--secondary {
+	border-color: var(--cw-color-white);
+	background-color: transparent;
+	color: var(--cw-color-white);
+}
+
+:is(.cinderwell-hero--bg-dark, .cinderwell-cta--bg-dark) .btn--secondary:hover {
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-dark);
+}
+
+:is(.cinderwell-hero--bg-dark, .cinderwell-cta--bg-dark) :is(.btn--ghost, .btn--link) {
+	color: var(--cw-color-white);
+}
+
+:is(.cinderwell-hero--bg-dark, .cinderwell-cta--bg-dark) .btn--ghost:hover {
+	background-color: rgb(255 255 255 / 10%);
+}
+
+:is(.cinderwell-hero--bg-dark, .cinderwell-cta--bg-dark) .btn--link:hover {
+	color: var(--cw-color-light);
+}
+
+:is(.cinderwell-hero--bg-brand, .cinderwell-cta--bg-brand) .btn--primary {
+	border-color: var(--cw-color-white);
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-brand);
+}
+
+:is(.cinderwell-hero--bg-brand, .cinderwell-cta--bg-brand) .btn--secondary {
+	border-color: var(--cw-color-white);
+	background-color: transparent;
+	color: var(--cw-color-white);
+}
+
+:is(.cinderwell-hero--bg-brand, .cinderwell-cta--bg-brand) :is(.btn--ghost, .btn--link) {
+	color: var(--cw-color-white);
+}
+
+:is(.cinderwell-hero--bg-brand, .cinderwell-cta--bg-brand) .btn--primary:hover {
+	border-color: var(--cw-color-dark);
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+:is(.cinderwell-hero--bg-brand, .cinderwell-cta--bg-brand) .btn--secondary:hover {
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-brand);
+}
+
+:is(.cinderwell-hero--bg-brand, .cinderwell-cta--bg-brand) .btn--ghost:hover {
+	background-color: rgb(255 255 255 / 14%);
+}
+
+:is(.cinderwell-hero--bg-brand, .cinderwell-cta--bg-brand) .btn--link:hover {
+	color: var(--cw-color-light);
+}
+
+[dir="rtl"] .cinderwell-buttons {
+	flex-direction: row-reverse;
+}
+
+/* Center buttons inside centered containers */
+.cinderwell-hero__inner > .cinderwell-buttons,
+.cinderwell-cta__inner > .cinderwell-buttons {
+	justify-content: center !important;
+}
+
+/* Left-align buttons when block alignment is left */
+.cinderwell-hero--align-left .cinderwell-buttons,
+.cinderwell-cta--align-left .cinderwell-buttons {
+	justify-content: flex-start;
+}
+
+/* Right-align buttons when block alignment is right */
+.cinderwell-hero--align-right .cinderwell-buttons,
+.cinderwell-cta--align-right .cinderwell-buttons {
+	justify-content: flex-end;
+}
+
+
+/* Inherited dark/brand container surfaces supply the visual context that a
+ * transparent child Hero or CTA can no longer express through its own class. */
+:is(
+.cinderwell-section--bg-dark,
+.cinderwell-section--bg-brand,
+.cinderwell-section.cw-has-background-image:not(.cw-background-overlay-none),
+.cinderwell-tabs--bg-dark,
+.cinderwell-tabs--bg-brand,
+.cinderwell-tabs.cw-has-background-image:not(.cw-background-overlay-none)
+):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--primary {
+	border-color: var(--cw-color-white);
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-dark);
+}
+
+:is(.cinderwell-section--bg-brand, .cinderwell-tabs--bg-brand):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--primary {
+	color: var(--cw-color-brand);
+}
+
+:is(
+.cinderwell-section--bg-dark,
+.cinderwell-section--bg-brand,
+.cinderwell-section.cw-has-background-image:not(.cw-background-overlay-none),
+.cinderwell-tabs--bg-dark,
+.cinderwell-tabs--bg-brand,
+.cinderwell-tabs.cw-has-background-image:not(.cw-background-overlay-none)
+):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) :is(.btn--secondary, .btn--link) {
+	border-color: var(--cw-color-white);
+	background-color: transparent;
+	color: var(--cw-color-white);
+}
+
+:is(
+.cinderwell-section--bg-dark,
+.cinderwell-section--bg-brand,
+.cinderwell-section.cw-has-background-image:not(.cw-background-overlay-none),
+.cinderwell-tabs--bg-dark,
+.cinderwell-tabs--bg-brand,
+.cinderwell-tabs.cw-has-background-image:not(.cw-background-overlay-none)
+):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--ghost {
+	border-color: transparent;
+	background-color: color-mix(in srgb, currentcolor 9%, transparent);
+	color: var(--cw-color-white);
+}
+
+:is(
+.cinderwell-section--bg-dark,
+.cinderwell-section--bg-brand,
+.cinderwell-section.cw-has-background-image:not(.cw-background-overlay-none),
+.cinderwell-tabs--bg-dark,
+.cinderwell-tabs--bg-brand,
+.cinderwell-tabs.cw-has-background-image:not(.cw-background-overlay-none)
+):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--primary:hover {
+	border-color: var(--cw-color-light);
+	background-color: var(--cw-color-light);
+	color: var(--cw-color-dark);
+}
+
+:is(.cinderwell-section--bg-brand, .cinderwell-tabs--bg-brand):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--primary:hover {
+	border-color: var(--cw-color-dark);
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+:is(
+.cinderwell-section--bg-dark,
+.cinderwell-section--bg-brand,
+.cinderwell-section.cw-has-background-image:not(.cw-background-overlay-none),
+.cinderwell-tabs--bg-dark,
+.cinderwell-tabs--bg-brand,
+.cinderwell-tabs.cw-has-background-image:not(.cw-background-overlay-none)
+):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--secondary:hover {
+	border-color: var(--cw-color-white);
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-dark);
+}
+
+:is(.cinderwell-section--bg-brand, .cinderwell-tabs--bg-brand):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--secondary:hover {
+	color: var(--cw-color-brand);
+}
+
+:is(
+.cinderwell-section--bg-dark,
+.cinderwell-section--bg-brand,
+.cinderwell-section.cw-has-background-image:not(.cw-background-overlay-none),
+.cinderwell-tabs--bg-dark,
+.cinderwell-tabs--bg-brand,
+.cinderwell-tabs.cw-has-background-image:not(.cw-background-overlay-none)
+):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--ghost:hover {
+	border-color: transparent;
+	background-color: rgb(255 255 255 / 14%);
+	color: var(--cw-color-white);
+}
+
+:is(
+.cinderwell-section--bg-dark,
+.cinderwell-section--bg-brand,
+.cinderwell-section.cw-has-background-image:not(.cw-background-overlay-none),
+.cinderwell-tabs--bg-dark,
+.cinderwell-tabs--bg-brand,
+.cinderwell-tabs.cw-has-background-image:not(.cw-background-overlay-none)
+):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--link:hover {
+	border-color: transparent;
+	background-color: transparent;
+	color: var(--cw-color-light);
+}
+
+:is(
+.cinderwell-section--bg-dark,
+.cinderwell-section--bg-brand,
+.cinderwell-section.cw-has-background-image:not(.cw-background-overlay-none),
+.cinderwell-tabs--bg-dark,
+.cinderwell-tabs--bg-brand,
+.cinderwell-tabs.cw-has-background-image:not(.cw-background-overlay-none)
+):not(.cinderwell-section--children-own-backgrounds):not(.cinderwell-tabs--children-own-backgrounds) :is(.cinderwell-hero, .cinderwell-cta) .btn--link {
+	border-color: transparent;
+}
+
+/* stylelint-enable no-descending-specificity */

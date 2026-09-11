@@ -1,0 +1,4 @@
+.cinderwell-slot-layout__inner { padding: 1rem; }
+.cw-slot-layout__add { display: flex; align-items: flex-end; gap: 8px; }
+.cw-slot-layout__add .components-base-control { flex: 1; }
+.cw-slot-layout__add .components-button { margin-bottom: 1px; }

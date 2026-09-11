@@ -1,0 +1,12 @@
+.cinderwell-form__inner { padding: 1rem; }
+.cinderwell-form__preview,
+.cinderwell-form__empty {
+    background: #f9f9f9;
+    padding: 2rem;
+    text-align: center;
+    border-radius: var(--cw-radius-sm);
+}
+.cinderwell-form__note {
+    font-size: 0.875rem;
+    color: #666;
+}

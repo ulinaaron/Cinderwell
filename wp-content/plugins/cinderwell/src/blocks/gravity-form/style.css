@@ -1,0 +1,36 @@
+.cinderwell-form {
+    padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+    background-color: var(--cw-color-bg);
+    color: var(--cw-color-text);
+}
+.cinderwell-form--bg-white { background-color: var(--cw-color-white); color: var(--cw-color-text); }
+.cinderwell-form--bg-light { background-color: var(--cw-color-light); color: var(--cw-color-text); }
+.cinderwell-form--bg-dark { background-color: var(--cw-color-dark); color: var(--cw-color-white); }
+.cinderwell-form--bg-brand { background-color: var(--cw-color-brand); color: var(--cw-color-brand-contrast); }
+.cinderwell-form__inner { margin: 0 auto; }
+.cinderwell-form .gfield input[type="text"],
+.cinderwell-form .gfield input[type="email"],
+.cinderwell-form .gfield input[type="tel"],
+.cinderwell-form .gfield input[type="url"],
+.cinderwell-form .gfield input[type="number"],
+.cinderwell-form .gfield textarea,
+.cinderwell-form .gfield select {
+    border: 1px solid var(--cw-color-border);
+    font-family: var(--cw-font-body);
+    padding: 0.75rem;
+    border-radius: var(--cw-radius-sm);
+    width: 100%;
+}
+.cinderwell-form .gform_button {
+    background: var(--cw-color-brand);
+    color: var(--cw-color-brand-contrast);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--cw-radius-sm);
+    cursor: pointer;
+    font-family: var(--cw-font-body);
+}
+.cinderwell-form .gform_button:hover {
+    opacity: 0.9;
+}
+[dir="rtl"] .cinderwell-form { text-align: right; }

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cinderwell/mega-menu-column",
+  "title": "Mega Menu Column",
+  "category": "cinderwell",
+  "icon": "columns",
+  "description": "A curated group of links or featured content inside a mega menu.",
+  "parent": ["cinderwell/mega-menu"],
+  "supports": {
+    "align": false,
+    "align_text": false,
+    "align_content": false,
+    "color": false,
+    "typography": false,
+    "spacing": false,
+    "border": false,
+    "anchor": false,
+    "customClassName": false,
+    "html": false,
+    "multiple": true,
+    "reusable": false
+  },
+  "attributes": {
+    "dynamicData": { "type": "object", "default": {} },
+    "conditions": { "type": "object", "default": {} },
+    "visibility": { "type": "string", "default": "always" },
+    "visibilityConfig": { "type": "object", "default": {} },
+    "heading": { "type": "string", "default": "Menu group" }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./editor.css"
+}

@@ -1,0 +1,11 @@
+.cinderwell-hero {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cinderwell-hero__inner {
+    width: 100%;
+    padding: 2rem;
+}

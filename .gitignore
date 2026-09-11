@@ -1,0 +1,33 @@
+# Track the Cinderwell ecosystem, not the surrounding local WordPress site.
+/*
+!/.gitignore
+!/README.md
+!/wp-content/
+
+/wp-content/*
+!/wp-content/plugins/
+!/wp-content/themes/
+
+/wp-content/plugins/*
+!/wp-content/plugins/cinderwell/
+!/wp-content/plugins/cinderwell-alerts/
+
+/wp-content/themes/*
+!/wp-content/themes/cinderwell-starter/
+
+# Dependencies, generated assets, local configuration, and runtime data.
+**/node_modules/
+**/build/
+**/.DS_Store
+**/*.log
+**/.env
+**/.env.*
+**/*.sql
+**/*.sqlite
+**/*.sqlite3
+**/*.db
+**/*.pem
+**/*.key
+**/*.zip
+**/*.mp4
+**/*.webm

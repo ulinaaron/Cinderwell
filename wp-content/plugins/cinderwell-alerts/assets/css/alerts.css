@@ -1,0 +1,184 @@
+.cw-alerts {
+	position: relative;
+	z-index: 1000;
+}
+
+.cw-alerts--bottom {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	z-index: 9998;
+	filter: drop-shadow(0 -0.75rem 1.5rem rgb(0 0 0 / 18%));
+}
+
+.cw-alert {
+	--cw-alert-background: var(--cw-color-dark);
+	--cw-alert-foreground: var(--cw-color-white);
+	--cw-alert-accent: var(--cw-color-brand);
+
+	border-top: 0.25rem solid var(--cw-alert-accent);
+	background:
+		linear-gradient(110deg, transparent 0 65%, rgb(255 255 255 / 4%) 65% 100%),
+		var(--cw-alert-background);
+	color: var(--cw-alert-foreground);
+}
+
+.cw-alerts--top .cw-alert {
+	border-top: 0;
+	border-bottom: 0.25rem solid var(--cw-alert-accent);
+}
+
+.cw-alert--brand {
+	--cw-alert-background: var(--cw-color-brand);
+	--cw-alert-foreground: var(--cw-color-brand-contrast);
+	--cw-alert-accent: var(--cw-color-white);
+}
+
+.cw-alert--success {
+	--cw-alert-background: #244b36;
+	--cw-alert-foreground: #fff;
+	--cw-alert-accent: #8ed1a9;
+}
+
+.cw-alert--warning {
+	--cw-alert-background: #674100;
+	--cw-alert-foreground: #fff;
+	--cw-alert-accent: #ffd166;
+}
+
+.cw-alert--critical {
+	--cw-alert-background: #761f1b;
+	--cw-alert-foreground: #fff;
+	--cw-alert-accent: #ff9b92;
+}
+
+.cw-alert__shell {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr) auto;
+	gap: 0.75rem 1rem;
+	align-items: center;
+	max-width: var(--cw-width-wide);
+	margin-inline: auto;
+	padding: 0.875rem var(--cw-layout-gutter);
+}
+
+.cw-alert__mark {
+	width: 0.75rem;
+	height: 0.75rem;
+	border: 0.2rem solid var(--cw-alert-accent);
+	border-radius: var(--cw-radius-pill);
+	box-shadow: 0 0 0 0.25rem rgb(255 255 255 / 8%);
+}
+
+.cw-alert__message,
+.cw-alert__content {
+	min-width: 0;
+}
+
+.cw-alert__title {
+	margin: 0 0 0.2rem;
+	font-family: var(--cw-font-heading);
+	font-size: var(--cw-font-size-md);
+	font-weight: 700;
+	line-height: var(--cw-line-height-tight);
+}
+
+.cw-alert__content {
+	font-size: var(--cw-font-size-sm);
+	line-height: var(--cw-line-height-body);
+}
+
+.cw-alert__content :where(p, ul, ol) {
+	margin-block: 0.25rem;
+}
+
+.cw-alert__content a {
+	color: inherit;
+	font-weight: 700;
+	text-underline-offset: 0.18em;
+}
+
+.cw-alert__content .btn {
+	min-height: 2.5rem;
+}
+
+.cw-alert__content > [class*="wp-block-cinderwell-"] {
+	width: 100% !important;
+	max-width: none !important;
+	padding: 0 !important;
+	background: transparent !important;
+	color: inherit !important;
+	font-size: inherit;
+	line-height: inherit;
+}
+
+.cw-alert__content > [class*="wp-block-cinderwell-"] > [class$="__inner"] {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.4rem 1rem;
+	width: 100%;
+	max-width: none !important;
+	margin: 0;
+	padding: 0 !important;
+}
+
+.cw-alert__content :where(.cinderwell-heading, .cinderwell-subheading, .cinderwell-body__content, .cinderwell-cta__body, .cinderwell-buttons) {
+	margin: 0;
+}
+
+.cw-alert__content .cinderwell-heading {
+	font-size: var(--cw-font-size-md);
+}
+
+.cw-alert__dismiss {
+	display: inline-grid;
+	place-items: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	padding: 0;
+	border: 1px solid rgb(255 255 255 / 45%);
+	border-radius: var(--cw-radius-pill);
+	background: transparent;
+	color: inherit;
+	font-size: 1.5rem;
+	line-height: 1;
+	cursor: pointer;
+}
+
+.cw-alert__dismiss:hover {
+	border-color: var(--cw-alert-accent);
+	background: rgb(255 255 255 / 12%);
+}
+
+.cw-alert.is-dismissing {
+	opacity: 0;
+	transform: translateY(-0.5rem);
+	transition: opacity var(--cw-duration-normal) var(--cw-ease-standard), transform var(--cw-duration-normal) var(--cw-ease-standard);
+}
+
+.cw-alerts--bottom .cw-alert.is-dismissing {
+	transform: translateY(0.5rem);
+}
+
+@media (max-width: 640px) {
+
+	.cw-alert__shell {
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		align-items: start;
+		padding-block: 0.75rem;
+	}
+
+	.cw-alert__content > [class*="wp-block-cinderwell-"] > [class$="__inner"] {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.cw-alert.is-dismissing {
+		transition: none;
+	}
+}

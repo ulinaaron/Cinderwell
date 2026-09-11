@@ -1,0 +1,37 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cinderwell/mega-menu",
+  "title": "Mega Menu",
+  "category": "cinderwell",
+  "icon": "menu-alt3",
+  "description": "A wide, block-based disclosure panel for the native Navigation block.",
+  "parent": ["core/navigation"],
+  "supports": {
+    "align": false,
+    "align_text": false,
+    "align_content": false,
+    "color": false,
+    "typography": false,
+    "spacing": false,
+    "border": false,
+    "anchor": false,
+    "customClassName": false,
+    "html": false,
+    "multiple": true,
+    "reusable": false
+  },
+  "attributes": {
+    "dynamicData": { "type": "object", "default": {} },
+    "conditions": { "type": "object", "default": {} },
+    "visibility": { "type": "string", "default": "always" },
+    "visibilityConfig": { "type": "object", "default": {} },
+    "label": { "type": "string", "default": "Explore" },
+    "columns": { "type": "number", "default": 3 },
+    "background": { "type": "string", "default": "white" }
+  },
+  "editorScript": "file:./index.js",
+  "viewScript": "file:./view.js",
+  "style": "file:./style.css",
+  "editorStyle": "file:./editor.css"
+}

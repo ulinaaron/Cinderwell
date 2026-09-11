@@ -1,0 +1,46 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "cinderwell/icon",
+    "title": "Icon",
+    "category": "cinderwell",
+    "icon": "star-filled",
+    "description": "Lucide icon or custom SVG with controlled styling.",
+    "supports": {
+        "align": ["wide", "full"], "align_text": false, "align_content": false,
+        "color": false, "typography": false, "spacing": false,
+        "border": false, "anchor": false, "customClassName": false,
+        "html": false, "multiple": true, "reusable": true
+    },
+    "attributes": {
+		"dynamicData": {
+			"type": "object",
+			"default": {}
+		},
+		"conditions": {
+			"type": "object",
+			"default": {}
+		},
+		"visibility": {
+			"type": "string",
+			"default": "always"
+		},
+		"visibilityConfig": {
+			"type": "object",
+			"default": {}
+		},
+        "icon": { "type": "string", "default": "star" },
+        "iconSource": { "type": "string", "default": "library" },
+        "iconSvg": { "type": "string", "default": "" },
+        "iconViewBox": { "type": "string", "default": "0 0 24 24" },
+        "iconSvgId": { "type": "integer", "default": 0 },
+        "iconSvgUrl": { "type": "string", "default": "" },
+        "iconSize": { "type": "string", "default": "md" },
+        "iconColor": { "type": "string", "default": "brand" },
+        "iconTreatment": { "type": "string", "default": "plain" },
+        "iconAlignment": { "type": "string", "default": "left" }
+    },
+    "editorScript": "file:./index.js",
+    "style": "file:./style.css",
+    "editorStyle": "file:./editor.css"
+}

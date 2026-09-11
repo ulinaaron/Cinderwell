@@ -1,0 +1,13 @@
+.cinderwell-loop__inner {
+	padding-inline: 1rem;
+}
+
+.cinderwell-loop__image {
+	pointer-events: none;
+}
+
+.cinderwell-loop__pagination-preview {
+	color: #757575;
+	font-size: 12px;
+	font-style: italic;
+}

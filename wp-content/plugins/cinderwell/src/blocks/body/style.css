@@ -1,0 +1,12 @@
+.cinderwell-body {
+    padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+    background-color: var(--cw-color-bg);
+    color: var(--cw-color-text);
+}
+.cinderwell-body--bg-white { background-color: var(--cw-color-white); color: var(--cw-color-text); }
+.cinderwell-body--bg-light { background-color: var(--cw-color-light); color: var(--cw-color-text); }
+.cinderwell-body--bg-dark { background-color: var(--cw-color-dark); color: var(--cw-color-white); }
+.cinderwell-body--bg-brand { background-color: var(--cw-color-brand); color: var(--cw-color-brand-contrast); }
+.cinderwell-body__inner { margin: 0 auto; }
+[dir="rtl"] .cinderwell-body { text-align: right; }
+[dir="rtl"] .cinderwell-body .cinderwell-buttons { flex-direction: row-reverse; }

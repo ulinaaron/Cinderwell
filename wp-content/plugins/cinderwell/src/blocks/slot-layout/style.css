@@ -1,0 +1,42 @@
+.cinderwell-slot-layout {
+    padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+    background: var(--cw-color-bg);
+    color: var(--cw-color-text);
+}
+.cinderwell-slot-layout--bg-white { background: var(--cw-color-white); color: var(--cw-color-text); }
+.cinderwell-slot-layout--bg-light { background: var(--cw-color-light); color: var(--cw-color-text); }
+.cinderwell-slot-layout--bg-dark { background: var(--cw-color-dark); color: var(--cw-color-white); }
+.cinderwell-slot-layout--bg-brand { background: var(--cw-color-brand); color: var(--cw-color-brand-contrast); }
+.cinderwell-slot-layout__inner { margin-inline: auto; }
+.cinderwell-slot-layout__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--cw-gap-sm); }
+.cinderwell-slot-layout--cols-1 .cinderwell-slot-layout__grid { grid-template-columns: minmax(0, 1fr); }
+.cinderwell-slot-layout--cols-3 .cinderwell-slot-layout__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+@media (max-width: 1024px) {
+    .cinderwell-slot-layout--tablet-cols-1 .cinderwell-slot-layout__grid { grid-template-columns: minmax(0, 1fr); }
+    .cinderwell-slot-layout--tablet-cols-2 .cinderwell-slot-layout__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cinderwell-slot-layout--tablet-cols-3 .cinderwell-slot-layout__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+.cinderwell-slot-layout--gap-none .cinderwell-slot-layout__grid { gap: var(--cw-spacing-none); }
+.cinderwell-slot-layout--gap-xs .cinderwell-slot-layout__grid { gap: var(--cw-spacing-xs); }
+.cinderwell-slot-layout--gap-sm .cinderwell-slot-layout__grid { gap: var(--cw-spacing-sm); }
+.cinderwell-slot-layout--gap-md .cinderwell-slot-layout__grid { gap: var(--cw-spacing-md); }
+.cinderwell-slot-layout--gap-lg .cinderwell-slot-layout__grid { gap: var(--cw-spacing-lg); }
+.cinderwell-slot-layout--gap-xl .cinderwell-slot-layout__grid { gap: var(--cw-spacing-xl); }
+.cinderwell-slot-layout__slot--span-2 { grid-column: span 2; }
+.cinderwell-slot-layout__slot--span-full { grid-column: 1 / -1; }
+.cinderwell-slot-layout--cols-1 .cinderwell-slot-layout__slot { grid-column: 1 / -1; }
+.cinderwell-slot-layout__slot > :first-child { margin-top: 0; }
+.cinderwell-slot-layout__slot > :last-child { margin-bottom: 0; }
+.cinderwell-slot-layout__image { display: block; width: 100%; height: auto; }
+.cinderwell-slot-layout__placeholder { display: grid; min-height: 10rem; padding: 1rem; place-items: center; border: 1px dashed currentColor; opacity: 0.65; }
+.cinderwell-slot-layout__divider { width: 100%; margin: 0; border: 0; border-top: 1px solid currentColor; opacity: 0.35; }
+@media (max-width: 700px) {
+    .cinderwell-slot-layout__grid { grid-template-columns: minmax(0, 1fr); }
+    .cinderwell-slot-layout__slot { grid-column: 1 / -1; }
+    .cinderwell-slot-layout--mobile-cols-1 .cinderwell-slot-layout__grid { grid-template-columns: minmax(0, 1fr); }
+    .cinderwell-slot-layout--mobile-cols-2 .cinderwell-slot-layout__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cinderwell-slot-layout--mobile-cols-3 .cinderwell-slot-layout__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .cinderwell-slot-layout--mobile-cols-2 .cinderwell-slot-layout__slot,
+    .cinderwell-slot-layout--mobile-cols-3 .cinderwell-slot-layout__slot { grid-column: auto; }
+}

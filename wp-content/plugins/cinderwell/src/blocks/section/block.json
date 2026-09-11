@@ -1,0 +1,69 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "cinderwell/section",
+    "title": "Section",
+    "category": "cinderwell",
+    "icon": "align-wide",
+    "description": "Generic section container that accepts any block via InnerBlocks.",
+    "supports": {
+        "align": [
+            "wide",
+            "full"
+        ],
+        "align_text": false,
+        "align_content": false,
+        "color": false,
+        "typography": false,
+        "spacing": false,
+        "border": false,
+        "anchor": false,
+        "customClassName": false,
+        "html": false,
+        "multiple": true,
+        "reusable": true
+    },
+    "attributes": {
+		"dynamicData": {
+			"type": "object",
+			"default": {}
+		},
+		"conditions": {
+			"type": "object",
+			"default": {}
+		},
+		"visibility": {
+			"type": "string",
+			"default": "always"
+		},
+		"visibilityConfig": {
+			"type": "object",
+			"default": {}
+		},
+        "spacingResponsive": {
+            "type": "object",
+            "default": {}
+        },
+        "width": {
+            "type": "string",
+            "default": "standard"
+        },
+        "background": {
+            "type": "string",
+            "default": "white"
+        },
+        "backgroundImage": { "type": "integer", "default": 0 },
+        "backgroundImageUrl": { "type": "string", "default": "" },
+        "backgroundImageFit": { "type": "string", "default": "cover" },
+        "backgroundImagePosition": { "type": "string", "default": "center" },
+        "backgroundOverlay": { "type": "string", "default": "none" },
+        "childBackgroundMode": { "type": "string", "default": "inherit" },
+        "align": {
+            "type": "string",
+            "default": "full"
+        }
+    },
+    "editorScript": "file:./index.js",
+    "style": "file:./style.css",
+    "editorStyle": "file:./editor.css"
+}

@@ -1,0 +1,45 @@
+.cw-alert-fields {
+	display: grid;
+	gap: 1rem;
+}
+
+.cw-alert-fields > label,
+.cw-alert-fields fieldset {
+	display: grid;
+	gap: 0.35rem;
+	margin: 0;
+}
+
+.cw-alert-fields label > span:first-child,
+.cw-alert-fields legend {
+	font-weight: 600;
+}
+
+.cw-alert-fields :where(input[type="number"], input[type="datetime-local"], select, textarea) {
+	width: 100%;
+}
+
+.cw-alert-fields .cw-alert-check {
+	display: flex;
+	grid-template-columns: none;
+	gap: 0.5rem;
+	align-items: flex-start;
+}
+
+.cw-alert-fields .cw-alert-check input {
+	margin-top: 0.2rem;
+}
+
+.cw-alert-fields .cw-alert-inline {
+	display: flex;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.cw-alert-fields .cw-alert-inline input {
+	width: 5rem;
+}
+
+.cw-alert-fields small {
+	color: #646970;
+}

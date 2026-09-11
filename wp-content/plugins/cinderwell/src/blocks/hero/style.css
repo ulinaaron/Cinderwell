@@ -1,0 +1,127 @@
+.cinderwell-hero {
+    padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+    background-color: var(--cw-color-bg);
+    color: var(--cw-color-text);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Background image support */
+.cinderwell-hero--has-bg {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--cw-color-white);
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+}
+
+.cinderwell-hero__bg-image {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+}
+
+.cinderwell-hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--cw-color-dark);
+    opacity: 0.45;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.cinderwell-hero__overlay--soft { opacity: 0.2; }
+.cinderwell-hero__overlay--medium { opacity: 0.45; }
+.cinderwell-hero__overlay--strong { opacity: 0.68; }
+
+.cinderwell-hero--has-bg .cinderwell-hero__inner {
+    position: relative;
+    z-index: 2;
+}
+
+.cinderwell-hero--has-bg .btn--primary {
+    background-color: var(--cw-color-white);
+    color: var(--cw-color-dark);
+    border-color: var(--cw-color-white);
+}
+
+.cinderwell-hero--has-bg .btn--primary:hover {
+    background-color: var(--cw-color-light);
+    border-color: var(--cw-color-light);
+}
+
+.cinderwell-hero--has-bg .btn--secondary {
+    background-color: transparent;
+    color: var(--cw-color-white);
+    border-color: var(--cw-color-white);
+}
+
+.cinderwell-hero--has-bg .btn--secondary:hover {
+    background-color: var(--cw-color-white);
+    color: var(--cw-color-dark);
+}
+
+.cinderwell-hero--has-bg .btn--ghost {
+    color: var(--cw-color-white);
+}
+
+.cinderwell-hero--has-bg .btn--link {
+    color: var(--cw-color-white);
+}
+
+.cinderwell-hero--bg-white {
+    background-color: var(--cw-color-white);
+    color: var(--cw-color-text);
+}
+
+.cinderwell-hero--bg-light {
+    background-color: var(--cw-color-light);
+    color: var(--cw-color-text);
+}
+
+.cinderwell-hero--bg-dark {
+    background-color: var(--cw-color-dark);
+    color: var(--cw-color-white);
+}
+
+.cinderwell-hero--bg-brand {
+    background-color: var(--cw-color-brand);
+    color: var(--cw-color-brand-contrast);
+}
+
+.cinderwell-hero__inner {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.cinderwell-hero__inner > .cinderwell-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.cinderwell-hero__figure {
+    margin: 1.5rem 0;
+}
+
+.cinderwell-hero__image {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+[dir="rtl"] .cinderwell-hero {
+    text-align: center;
+}
+
+[dir="rtl"] .cinderwell-hero .cinderwell-buttons {
+    flex-direction: row-reverse;
+}

@@ -1,0 +1,13 @@
+.cinderwell-atom-image { margin: 0; }
+.cinderwell-atom-image img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+.cinderwell-atom-image__caption {
+    font-size: var(--cw-font-size-sm);
+    font-style: italic;
+    margin-top: 0.5rem;
+    color: var(--cw-color-text);
+    opacity: 0.8;
+}

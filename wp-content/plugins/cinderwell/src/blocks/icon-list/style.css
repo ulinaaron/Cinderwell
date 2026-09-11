@@ -1,0 +1,103 @@
+.cinderwell-icon-list__items {
+	display: grid;
+	gap: var(--cw-icon-list-gap, 1rem);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cinderwell-icon-list--gap-compact {
+	--cw-icon-list-gap: 0.5rem;
+}
+
+.cinderwell-icon-list--gap-standard {
+	--cw-icon-list-gap: 1rem;
+}
+
+.cinderwell-icon-list--gap-relaxed {
+	--cw-icon-list-gap: 1.5rem;
+}
+
+.cinderwell-icon-list__item {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	align-items: start;
+	gap: 0.75rem;
+	margin: 0;
+	padding: 0;
+}
+
+.cinderwell-icon-list__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: var(--cw-icon-list-size, 1.25rem);
+	height: var(--cw-icon-list-size, 1.25rem);
+	margin-top: 0.15em;
+	border-radius: var(--cw-radius-pill);
+	color: var(--cw-color-brand);
+}
+
+.cinderwell-icon-list__icon svg {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.cinderwell-icon-list--size-sm {
+	--cw-icon-list-size: 1rem;
+}
+
+.cinderwell-icon-list--size-md {
+	--cw-icon-list-size: 1.25rem;
+}
+
+.cinderwell-icon-list--size-lg {
+	--cw-icon-list-size: 1.5rem;
+}
+
+.cinderwell-icon-list--color-text .cinderwell-icon-list__icon {
+	color: var(--cw-color-text);
+}
+
+.cinderwell-icon-list--color-dark .cinderwell-icon-list__icon {
+	color: var(--cw-color-dark);
+}
+
+.cinderwell-icon-list--color-light .cinderwell-icon-list__icon {
+	color: var(--cw-color-light);
+}
+
+.cinderwell-icon-list--color-white .cinderwell-icon-list__icon {
+	color: var(--cw-color-white);
+}
+
+.cinderwell-icon-list--treatment-soft .cinderwell-icon-list__icon,
+.cinderwell-icon-list--treatment-solid .cinderwell-icon-list__icon {
+	box-sizing: content-box;
+	padding: 0.4em;
+}
+
+.cinderwell-icon-list--treatment-soft .cinderwell-icon-list__icon {
+	background: color-mix(in srgb, currentcolor 12%, transparent);
+}
+
+.cinderwell-icon-list--treatment-solid .cinderwell-icon-list__icon {
+	background: currentcolor;
+}
+
+.cinderwell-icon-list--treatment-solid .cinderwell-icon-list__icon svg {
+	color: var(--cw-color-white);
+}
+
+.cinderwell-icon-list__content,
+.cinderwell-icon-list__link {
+	min-width: 0;
+	color: inherit;
+	line-height: var(--cw-line-height-normal);
+}
+
+.cinderwell-icon-list__link {
+	text-decoration-thickness: 0.08em;
+	text-underline-offset: 0.16em;
+}

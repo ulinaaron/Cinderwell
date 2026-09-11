@@ -1,0 +1,94 @@
+/* === Editor Styles — match frontend full-width layout === */
+
+/* Remove editor content width constraint */
+.editor-styles-wrapper {
+    max-width: none !important;
+    padding: 0 !important;
+}
+
+/* Let top-level template/content blocks use the full canvas without forcing
+   nested blocks (Navigation items, Columns, Buttons, and so on) to full width. */
+.editor-styles-wrapper .is-root-container > .wp-block {
+    max-width: none !important;
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+}
+
+/* Inner block wrapper should respect theme layout widths */
+.editor-styles-wrapper .wp-block .block-editor-block-list__layout {
+    max-width: none;
+}
+
+/* Cinderwell blocks — full-width containers */
+.editor-styles-wrapper [data-type="cinderwell/hero"],
+.editor-styles-wrapper [data-type="cinderwell/section"],
+.editor-styles-wrapper [data-type="cinderwell/cta"],
+.editor-styles-wrapper [data-type="cinderwell/card-grid"],
+.editor-styles-wrapper [data-type="cinderwell/gallery"],
+.editor-styles-wrapper [data-type="cinderwell/faq"],
+.editor-styles-wrapper [data-type="cinderwell/body"],
+.editor-styles-wrapper [data-type="cinderwell/image-text"],
+.editor-styles-wrapper [data-type="cinderwell/two-column"],
+.editor-styles-wrapper [data-type="cinderwell/quote"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Block inner content should have max-width */
+.editor-styles-wrapper .cinderwell-hero__inner,
+.editor-styles-wrapper .cinderwell-cta__inner,
+.editor-styles-wrapper .cinderwell-body__inner,
+.editor-styles-wrapper .cinderwell-image-text__inner,
+.editor-styles-wrapper .cinderwell-faq__inner,
+.editor-styles-wrapper .cinderwell-two-column__inner,
+.editor-styles-wrapper .cinderwell-quote__inner,
+.editor-styles-wrapper .cinderwell-card-grid__inner,
+.editor-styles-wrapper .cinderwell-gallery__inner,
+.editor-styles-wrapper .cinderwell-section__inner {
+    max-width: var(--cw-width-standard, 800px);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+}
+
+/* Wide blocks get wider inner content */
+.editor-styles-wrapper .cinderwell-hero--width-wide .cinderwell-hero__inner,
+.editor-styles-wrapper .cinderwell-section--width-wide .cinderwell-section__inner,
+.editor-styles-wrapper .cinderwell-card-grid--width-wide .cinderwell-card-grid__inner,
+.editor-styles-wrapper .cinderwell-gallery--width-wide .cinderwell-gallery__inner {
+    max-width: var(--cw-width-wide, 1100px);
+}
+
+/* Full-width inner content */
+.editor-styles-wrapper .cinderwell-hero--width-full .cinderwell-hero__inner,
+.editor-styles-wrapper .cinderwell-section--width-full .cinderwell-section__inner {
+    max-width: var(--cw-width-full, 100%);
+}
+
+/* Narrow blocks */
+.editor-styles-wrapper .cinderwell-quote--width-narrow .cinderwell-quote__inner,
+.editor-styles-wrapper .cinderwell-faq--width-narrow .cinderwell-faq__inner {
+    max-width: var(--cw-width-narrow, 600px);
+}
+
+/* Ensure block backgrounds go edge-to-edge */
+.editor-styles-wrapper .cinderwell-hero,
+.editor-styles-wrapper .cinderwell-cta,
+.editor-styles-wrapper .cinderwell-section,
+.editor-styles-wrapper .cinderwell-card-grid,
+.editor-styles-wrapper .cinderwell-faq,
+.editor-styles-wrapper .cinderwell-body,
+.editor-styles-wrapper .cinderwell-image-text,
+.editor-styles-wrapper .cinderwell-two-column,
+.editor-styles-wrapper .cinderwell-quote,
+.editor-styles-wrapper .cinderwell-gallery {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+/* Buttons in editor — no underlines */
+.editor-styles-wrapper .btn {
+    text-decoration: none !important;
+}

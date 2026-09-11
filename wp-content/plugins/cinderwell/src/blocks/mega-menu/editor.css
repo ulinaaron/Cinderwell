@@ -1,0 +1,56 @@
+.editor-styles-wrapper .cinderwell-mega-menu {
+	flex: 0 0 auto;
+	width: auto;
+}
+
+.editor-styles-wrapper .cinderwell-mega-menu__toggle {
+	margin: 0;
+}
+
+.editor-styles-wrapper .cinderwell-mega-menu__panel {
+	position: absolute;
+	top: calc(100% + 0.75rem);
+	inset-inline-start: 0;
+	inset-inline-end: auto;
+	width: min(56rem, calc(100vw - 4rem));
+	max-width: none;
+	opacity: 0;
+	visibility: hidden;
+	pointer-events: none;
+	transform: translateY(0.5rem);
+}
+
+.editor-styles-wrapper .cinderwell-mega-menu.is-editor-open > .cinderwell-mega-menu__panel {
+	opacity: 1;
+	visibility: visible;
+	pointer-events: auto;
+	transform: none;
+}
+
+.editor-styles-wrapper .cinderwell-mega-menu__panel-content > .block-list-appender {
+	align-self: stretch;
+	min-height: 5rem;
+}
+
+@media (max-width: 781px) {
+
+	.editor-styles-wrapper .cinderwell-mega-menu {
+		width: 100%;
+	}
+
+	.editor-styles-wrapper .cinderwell-mega-menu__panel {
+		position: static;
+		display: none;
+		width: 100%;
+		max-width: none;
+		margin-top: 0.5rem;
+		opacity: 1;
+		visibility: visible;
+		pointer-events: auto;
+		transform: none;
+	}
+
+	.editor-styles-wrapper .cinderwell-mega-menu.is-editor-open > .cinderwell-mega-menu__panel {
+		display: block;
+	}
+}

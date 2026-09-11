@@ -1,0 +1,44 @@
+.cinderwell-tabs__editor-panels > .block-editor-inner-blocks > .block-editor-block-list__layout > .cinderwell-tabs__panel:not(.is-active),
+.cinderwell-tabs__editor-panels > .cinderwell-tabs__panel:not(.is-active) {
+    display: none;
+}
+
+.cinderwell-tabs__editor-panels > .block-editor-inner-blocks > .block-editor-block-list__layout > .cinderwell-tabs__panel.is-active,
+.cinderwell-tabs__editor-panels > .cinderwell-tabs__panel.is-active {
+    display: block;
+}
+
+.cinderwell-tabs__tab-label {
+    display: block;
+    min-width: 2ch;
+    outline: 0;
+}
+
+.cinderwell-tabs__sidebar-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.cinderwell-tabs__sidebar-items button {
+    min-height: 28px;
+    padding: 4px 9px;
+    border: 1px solid var(--cw-ui-border);
+    border-radius: var(--cw-radius-pill);
+    background: var(--cw-ui-pill-inactive);
+    color: var(--cw-ui-muted);
+    font: inherit;
+    font-size: 11px;
+    cursor: pointer;
+}
+
+.cinderwell-tabs__sidebar-items button:hover,
+.cinderwell-tabs__sidebar-items button.is-active {
+    background: var(--cw-ui-surface);
+    color: var(--cw-ui-accent);
+}
+
+.cinderwell-tabs__sidebar-items button.is-active {
+    border-color: var(--cw-ui-accent);
+    font-weight: 600;
+}

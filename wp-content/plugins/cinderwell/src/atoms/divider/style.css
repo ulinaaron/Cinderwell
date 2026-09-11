@@ -1,0 +1,8 @@
+.cinderwell-atom-divider {
+    border: none;
+    border-top: 1px solid var(--cw-color-border);
+    margin: 1.5rem 0;
+}
+.cinderwell-atom-divider--light { border-top-width: 1px; }
+.cinderwell-atom-divider--medium { border-top-width: 2px; }
+.cinderwell-atom-divider--heavy { border-top-width: 4px; }

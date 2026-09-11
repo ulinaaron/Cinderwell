@@ -1,0 +1,381 @@
+:root {
+	--cw-color-white: #fff;
+	--cw-color-light: #f8f5ef;
+	--cw-color-dark: #1a1a1a;
+	--cw-color-brand: #b84c00;
+	--cw-color-text: #1a1a1a;
+	--cw-color-bg: #fff;
+	--cw-color-brand-contrast: #fff;
+	--cw-color-surface: #fff;
+	--cw-color-muted: #666;
+	--cw-color-border: #d9d6d0;
+	--cw-color-link: #b84c00;
+	--cw-color-link-hover: #1a1a1a;
+	--cw-color-focus: #b84c00;
+	--cw-font-heading: inherit;
+	--cw-font-body: inherit;
+	--cw-line-height-tight: 1.2;
+	--cw-line-height-body: 1.6;
+	--cw-line-height-relaxed: 1.7;
+	--cw-font-size-xs: clamp(0.75rem, 0.72rem + 0.12vw, 0.8125rem);
+	--cw-font-size-sm: clamp(0.875rem, 0.82rem + 0.22vw, 1rem);
+	--cw-font-size-md: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+	--cw-font-size-lg: clamp(1.125rem, 1rem + 0.55vw, 1.375rem);
+	--cw-font-size-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+	--cw-font-size-2xl: clamp(2rem, 1.45rem + 2.3vw, 3rem);
+	--cw-font-size-3xl: clamp(2.5rem, 1.7rem + 3.4vw, 4rem);
+	--cw-font-size-4xl: clamp(3rem, 1.9rem + 4.5vw, 5rem);
+	--cw-type-body: var(--cw-font-size-md);
+	--cw-type-lead: var(--cw-font-size-lg);
+	--cw-type-heading: var(--cw-font-size-2xl);
+	--cw-type-display: var(--cw-font-size-3xl);
+	--cw-spacing-none: 0;
+	--cw-spacing-xs: clamp(0.5rem, 0.4rem + 0.4vw, 0.75rem);
+	--cw-spacing-sm: clamp(1.5rem, 1.25rem + 1vw, 2rem);
+	--cw-spacing-md: clamp(3rem, 2.5rem + 2vw, 4rem);
+	--cw-spacing-lg: clamp(4rem, 3rem + 4vw, 6rem);
+	--cw-spacing-xl: clamp(6rem, 5rem + 4vw, 8rem);
+	--cw-gap-sm: 1rem;
+	--cw-gap-md: 1.5rem;
+	--cw-gap-lg: 2rem;
+	--cw-layout-gutter: 1.5rem;
+	--cw-width-narrow: 600px;
+	--cw-width-standard: 900px;
+	--cw-width-wide: 1200px;
+	--cw-width-full: 100%;
+	--cw-radius-sm: 4px;
+	--cw-radius-md: 8px;
+	--cw-radius-pill: 999px;
+	--cw-shadow-sm: 0 2px 8px rgb(0 0 0 / 8%);
+	--cw-shadow-md: 0 8px 24px rgb(0 0 0 / 12%);
+	--cw-duration-fast: 100ms;
+	--cw-duration-normal: 200ms;
+	--cw-duration-slow: 300ms;
+	--cw-ease-standard: ease;
+}
+
+/* Shared slot atom styles */
+.cinderwell-eyebrow {
+	display: block;
+	font-size: var(--cw-font-size-xs);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--cw-color-brand);
+	margin-bottom: 0.5rem;
+}
+
+.cinderwell-heading {
+	font-family: var(--cw-font-heading);
+	font-size: var(--cw-type-heading);
+	color: inherit;
+	line-height: var(--cw-line-height-tight);
+	margin-top: 0;
+}
+
+.cinderwell-subheading {
+	font-size: var(--cw-type-lead);
+	opacity: 0.85;
+	margin-top: 0.5rem;
+}
+
+.cinderwell-body {
+	font-family: var(--cw-font-body);
+	line-height: var(--cw-line-height-relaxed);
+}
+
+.cinderwell-caption {
+	font-size: var(--cw-font-size-sm);
+	font-style: italic;
+	margin-top: 0.5rem;
+	opacity: 0.8;
+}
+
+.cinderwell-byline {
+	font-size: var(--cw-font-size-sm);
+	opacity: 0.7;
+	margin-top: 0.25rem;
+}
+
+.cinderwell-pullquote {
+	border-left: 4px solid var(--cw-color-brand);
+	padding-left: 1.5rem;
+	margin: 1.5rem 0;
+	font-size: var(--cw-type-lead);
+	font-style: italic;
+}
+
+[dir="rtl"] .cinderwell-pullquote {
+	border-left: none;
+	border-right: 4px solid var(--cw-color-brand);
+	padding-left: 0;
+	padding-right: 1.5rem;
+}
+
+.cinderwell-footnote {
+	font-size: var(--cw-font-size-xs);
+	opacity: 0.7;
+	margin-top: 1.5rem;
+}
+
+.cinderwell-legal {
+	font-size: var(--cw-font-size-xs);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	opacity: 0.6;
+	margin-top: 1rem;
+}
+
+/* Token-only typography scales. Each choice preserves semantic hierarchy. */
+.cinderwell-text-size-sm {
+	--cw-type-body: var(--cw-font-size-sm);
+	--cw-type-lead: var(--cw-font-size-md);
+	--cw-type-heading: var(--cw-font-size-xl);
+	--cw-type-display: var(--cw-font-size-2xl);
+}
+
+.cinderwell-text-size-md {
+	--cw-type-body: var(--cw-font-size-md);
+	--cw-type-lead: var(--cw-font-size-lg);
+	--cw-type-heading: var(--cw-font-size-2xl);
+	--cw-type-display: var(--cw-font-size-3xl);
+}
+
+.cinderwell-text-size-lg {
+	--cw-type-body: var(--cw-font-size-lg);
+	--cw-type-lead: var(--cw-font-size-xl);
+	--cw-type-heading: var(--cw-font-size-3xl);
+	--cw-type-display: var(--cw-font-size-4xl);
+}
+
+.cinderwell-text-color-text {
+	color: var(--cw-color-text) !important;
+}
+
+.cinderwell-text-color-brand {
+	color: var(--cw-color-brand) !important;
+}
+
+.cinderwell-text-color-dark {
+	color: var(--cw-color-dark) !important;
+}
+
+.cinderwell-text-color-light {
+	color: var(--cw-color-light) !important;
+}
+
+.cinderwell-text-color-white {
+	color: var(--cw-color-white) !important;
+}
+
+.cinderwell-text-size-sm,
+.cinderwell-text-size-md,
+.cinderwell-text-size-lg {
+	font-size: var(--cw-type-body);
+}
+
+.cinderwell-hero .cinderwell-heading {
+	font-size: var(--cw-type-display);
+}
+
+:is(
+.wp-block-cinderwell-hero,
+.wp-block-cinderwell-body,
+.wp-block-cinderwell-cta,
+.wp-block-cinderwell-image-text,
+.wp-block-cinderwell-two-column,
+.wp-block-cinderwell-quote,
+.wp-block-cinderwell-gallery,
+.wp-block-cinderwell-image-carousel,
+.wp-block-cinderwell-faq,
+.wp-block-cinderwell-card-grid,
+.wp-block-cinderwell-loop,
+.wp-block-cinderwell-accordion,
+.wp-block-cinderwell-tabs,
+.wp-block-cinderwell-slot-layout
+) {
+	font-size: var(--cw-type-body);
+}
+
+:is(
+.wp-block-cinderwell-hero,
+.wp-block-cinderwell-body,
+.wp-block-cinderwell-cta,
+.wp-block-cinderwell-image-text,
+.wp-block-cinderwell-two-column,
+.wp-block-cinderwell-quote,
+.wp-block-cinderwell-gallery,
+.wp-block-cinderwell-image-carousel,
+.wp-block-cinderwell-faq,
+.wp-block-cinderwell-card-grid,
+.wp-block-cinderwell-loop,
+.wp-block-cinderwell-accordion,
+.wp-block-cinderwell-tabs,
+.wp-block-cinderwell-slot-layout
+) :where(
+.cinderwell-eyebrow,
+.cinderwell-heading,
+.cinderwell-subheading,
+.cinderwell-body__content,
+.cinderwell-cta__body,
+.cinderwell-image-text__body,
+.cinderwell-two-column__content,
+.cinderwell-quote__text,
+.cinderwell-quote__attribution,
+.cinderwell-quote__byline,
+.cinderwell-quote__context,
+.cinderwell-faq__question,
+.cinderwell-faq__answer,
+.cinderwell-accordion__title,
+.cinderwell-accordion__content,
+.cinderwell-tabs__label,
+.cinderwell-tabs__panel,
+.cinderwell-slot-layout__text,
+.cinderwell-card-grid__card-title,
+.cinderwell-card-grid__card-description,
+.cinderwell-loop__title,
+.cinderwell-loop__excerpt,
+.cinderwell-caption,
+.cinderwell-byline,
+.cinderwell-footnote
+) {
+	color: inherit;
+}
+
+:where(
+.cinderwell-text-color-text,
+.cinderwell-text-color-brand,
+.cinderwell-text-color-dark,
+.cinderwell-text-color-light,
+.cinderwell-text-color-white
+) :where(
+.cinderwell-heading,
+.cinderwell-subheading,
+.cinderwell-body__content,
+.cinderwell-cta__body,
+.cinderwell-image-text__body,
+.cinderwell-two-column__content,
+.cinderwell-quote__text,
+.cinderwell-quote__attribution,
+.cinderwell-quote__byline,
+.cinderwell-quote__context,
+.cinderwell-faq__question,
+.cinderwell-faq__answer,
+.cinderwell-accordion__title,
+.cinderwell-accordion__content,
+.cinderwell-tabs__label,
+.cinderwell-tabs__panel,
+.cinderwell-slot-layout__text,
+.cinderwell-card-grid__card-title,
+.cinderwell-card-grid__card-description,
+.cinderwell-loop__title,
+.cinderwell-loop__excerpt,
+.cinderwell-caption,
+.cinderwell-byline,
+.cinderwell-footnote
+) {
+	color: inherit;
+}
+
+/* Full-width block layout — blocks control their own width */
+.wp-block-cinderwell-hero,
+.wp-block-cinderwell-section,
+.wp-block-cinderwell-cta,
+.wp-block-cinderwell-card-grid,
+.wp-block-cinderwell-loop,
+.wp-block-cinderwell-gallery,
+.wp-block-cinderwell-image-carousel,
+.wp-block-cinderwell-faq,
+.wp-block-cinderwell-body,
+.wp-block-cinderwell-image-text,
+.wp-block-cinderwell-two-column,
+.wp-block-cinderwell-quote {
+	max-width: 100% !important;
+	width: 100% !important;
+}
+
+/* Inner content respects design token widths */
+.cinderwell-hero__inner,
+.cinderwell-cta__inner,
+.cinderwell-body__inner,
+.cinderwell-image-text__inner,
+.cinderwell-faq__inner,
+.cinderwell-two-column__inner,
+.cinderwell-quote__inner,
+.cinderwell-card-grid__inner,
+.cinderwell-loop__inner,
+.cinderwell-gallery__inner,
+.cinderwell-image-carousel__inner,
+.cinderwell-section__inner {
+	max-width: var(--cw-width-standard);
+	margin-inline: auto;
+	padding-inline: var(--cw-layout-gutter);
+}
+
+/* Wide-width modifier */
+.cinderwell-hero--width-wide .cinderwell-hero__inner,
+.cinderwell-section--width-wide .cinderwell-section__inner,
+.cinderwell-card-grid--width-wide .cinderwell-card-grid__inner,
+.cinderwell-loop--width-wide .cinderwell-loop__inner,
+.cinderwell-gallery--width-wide .cinderwell-gallery__inner,
+.cinderwell-image-carousel--width-wide .cinderwell-image-carousel__inner {
+	max-width: var(--cw-width-wide);
+}
+
+/* Full-width modifier */
+.cinderwell-hero--width-full .cinderwell-hero__inner,
+.cinderwell-section--width-full .cinderwell-section__inner {
+	max-width: var(--cw-width-full);
+}
+
+/* Narrow-width modifier */
+.cinderwell-quote--width-narrow .cinderwell-quote__inner,
+.cinderwell-faq--width-narrow .cinderwell-faq__inner,
+.cinderwell-body--width-narrow .cinderwell-body__inner {
+	max-width: var(--cw-width-narrow);
+}
+
+/* Focus styles */
+*:focus-visible {
+	outline: 3px solid var(--cw-color-focus);
+	outline-offset: 2px;
+}
+
+/* Skip link */
+.cinderwell-skip-link {
+	position: absolute;
+	top: -100%;
+	left: 0;
+	background: var(--cw-color-brand);
+	color: var(--cw-color-white);
+	padding: 0.75rem 1.5rem;
+	z-index: 9999;
+	text-decoration: none;
+	font-weight: 600;
+}
+
+.cinderwell-skip-link:focus {
+	top: 0;
+}
+
+/* Responsive visibility is screen-only so print output retains content. */
+@media screen and (min-width: 1025px) {
+
+	.cw-hide-desktop {
+		display: none !important;
+	}
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+
+	.cw-hide-tablet {
+		display: none !important;
+	}
+}
+
+@media screen and (max-width: 768px) {
+
+	.cw-hide-mobile {
+		display: none !important;
+	}
+}

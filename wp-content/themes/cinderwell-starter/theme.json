@@ -1,0 +1,109 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/theme.json",
+    "version": 3,
+    "settings": {
+        "appearanceTools": true,
+        "useRootPaddingAwareAlignments": true,
+        "layout": {
+            "contentSize": "720px",
+            "wideSize": "1280px"
+        },
+        "color": {
+            "custom": false,
+            "customGradient": false,
+            "defaultPalette": false,
+            "palette": [
+                { "slug": "white", "color": "#ffffff", "name": "White" },
+                { "slug": "light", "color": "#f8f5ef", "name": "Light" },
+                { "slug": "dark", "color": "#1a1a1a", "name": "Dark" },
+                { "slug": "brand", "color": "#c64f00", "name": "Brand" }
+            ]
+        },
+        "typography": {
+            "fontSize": false,
+            "dropCap": false,
+            "customFontSize": false,
+            "fontStyle": false,
+            "lineHeight": false,
+            "letterSpacing": false,
+            "textTransform": false,
+            "textDecoration": false
+        },
+        "spacing": {
+            "padding": false,
+            "margin": false,
+            "blockGap": true,
+            "units": ["rem", "em", "px", "vh", "vw", "%"]
+        }
+    },
+    "styles": {
+        "color": {
+            "background": "var(--cw-color-bg)",
+            "text": "var(--cw-color-text)"
+        },
+        "typography": {
+            "fontFamily": "var(--cw-font-body)",
+            "fontSize": "1rem",
+            "lineHeight": "1.6"
+        },
+        "elements": {
+            "h1": {
+                "fontFamily": "var(--cw-font-heading)",
+                "fontWeight": "700",
+                "fontSize": "clamp(2.5rem, 5vw, 4rem)",
+                "lineHeight": "1.1",
+                "letterSpacing": "-0.02em"
+            },
+            "h2": {
+                "fontFamily": "var(--cw-font-heading)",
+                "fontWeight": "600",
+                "fontSize": "clamp(2rem, 4vw, 3rem)",
+                "lineHeight": "1.2",
+                "letterSpacing": "-0.01em"
+            },
+            "h3": {
+                "fontFamily": "var(--cw-font-heading)",
+                "fontWeight": "600",
+                "fontSize": "clamp(1.5rem, 3vw, 2.25rem)",
+                "lineHeight": "1.3"
+            },
+            "link": {
+                "color": "var(--cw-color-brand)",
+                "textDecoration": "underline",
+                "textDecorationThickness": "1px",
+                "textUnderlineOffset": "0.15em"
+            }
+        },
+        "blocks": {
+            "core/navigation": {
+                "typography": {
+                    "fontFamily": "var(--cw-font-body)",
+                    "fontSize": "1rem",
+                    "fontWeight": "500"
+                },
+                "spacing": {
+                    "blockGap": "1.5rem"
+                }
+            }
+        }
+    },
+    "customTemplates": [
+        {
+            "name": "showcase",
+            "title": "Cinderwell Showcase",
+            "postTypes": ["page"]
+        }
+    ],
+    "templateParts": [
+        {
+            "area": "header",
+            "name": "header",
+            "title": "Header"
+        },
+        {
+            "area": "footer",
+            "name": "footer",
+            "title": "Footer"
+        }
+    ]
+}
