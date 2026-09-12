@@ -2,6 +2,7 @@
 /**
  * Plugin Name: Cinderwell Alerts
  * Plugin URI: https://github.com/ulinaaron/Cinderwell/tree/main/wp-content/plugins/cinderwell-alerts
+ * Update URI: https://cinderwell-updates.surge.sh/cinderwell-alerts/
  * Description: Scheduled, condition-aware alert bars composed with Cinderwell blocks.
  * Version: 0.1.3
  * Requires at least: 6.5

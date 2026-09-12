@@ -1,0 +1,662 @@
+/**
+ * Cinderwell's WooCommerce adapter.
+ *
+ * WooCommerce remains responsible for commerce behavior and structural layout.
+ * This layer maps its public block and template surfaces to Cinderwell tokens.
+ */
+
+:where(
+.woocommerce,
+.woocommerce-page,
+.wc-block-components-root,
+[class*="wp-block-woocommerce-"]
+) {
+	color: var(--cw-color-text);
+	font-family: var(--cw-font-body);
+	font-size: var(--cw-type-body);
+	line-height: var(--cw-line-height-body);
+}
+
+/* WooCommerce owns its block templates; Cinderwell owns the reusable shell
+ * that maps those templates to the design-token contract. Keeping this here
+ * lets parent-theme updates and unrelated client themes receive the same fix. */
+body.woocommerce-page .wp-site-blocks > main,
+body.woocommerce-page .wp-site-blocks > .woocommerce.product > main {
+	padding-block: var(--cw-page-padding-block);
+	padding-inline: var(--cw-page-padding-inline);
+}
+
+body.single-product .wp-site-blocks > .woocommerce.product {
+	padding-inline: var(--cw-page-padding-inline);
+}
+
+body.woocommerce-page .wp-site-blocks > main > :where(
+	.wp-block-post-title,
+	.wp-block-post-content,
+	.wp-block-woocommerce-store-notices
+) {
+	min-width: 0;
+}
+
+/* Product collections and classic catalog loops. */
+:where(.wc-block-product-template, .wc-block-grid__products, .woocommerce ul.products) {
+	gap: var(--cw-gap-lg);
+}
+
+/* Woo's legacy Product Grid combines percentage widths with negative margins.
+ * That breaks as soon as a tokenized gap is introduced. Grid owns both column
+ * sizing and spacing, so empty-cart recommendations remain balanced. */
+.wc-block-grid .wc-block-grid__products {
+	display: grid;
+	margin: 0;
+	padding: 0;
+	grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+	gap: var(--cw-gap-lg);
+}
+
+.wc-block-grid[class*="has-"] .wc-block-grid__products > .wc-block-grid__product {
+	display: flex;
+	width: 100%;
+	max-width: none;
+	margin: 0;
+	padding: 0 0 var(--cw-gap-md);
+	flex: none;
+	flex-direction: column;
+	border: 1px solid var(--cw-color-border);
+	border-radius: var(--cw-radius-md);
+	background: var(--cw-color-surface);
+	overflow: hidden;
+	font-size: var(--cw-font-size-sm);
+	text-align: left;
+}
+
+.wc-block-grid .wc-block-grid__product-link {
+	display: block;
+	width: 100%;
+}
+
+.wc-block-grid .wc-block-grid__product-image {
+	margin: 0 0 var(--cw-gap-md);
+}
+
+.wc-block-grid .wc-block-grid__product-image img {
+	width: 100%;
+	border-radius: 0;
+}
+
+.wc-block-grid :where(
+	.wc-block-grid__product-title,
+	.wc-block-grid__product-price,
+	.wc-block-grid__product-rating,
+	.wc-block-grid__product-add-to-cart
+) {
+	margin-inline: var(--cw-gap-md);
+}
+
+.wc-block-grid .wc-block-grid__product-add-to-cart {
+	margin-top: auto;
+}
+
+.wp-block-woocommerce-empty-cart-block > .wc-block-cart__empty-cart__title {
+	margin-bottom: var(--cw-gap-md);
+}
+
+.wp-block-woocommerce-empty-cart-block > .wp-block-separator {
+	margin-block: var(--cw-gap-md);
+}
+
+:where(.wc-block-product-template, .wc-block-grid__products, .woocommerce ul.products) > li {
+	box-sizing: border-box;
+	margin: 0;
+}
+
+:where(
+.wc-block-components-product-image,
+.wc-block-grid__product-image,
+.woocommerce ul.products li.product a img,
+.woocommerce-product-gallery__image
+) img {
+	display: block;
+	border-radius: var(--cw-image-radius, var(--cw-radius-md));
+}
+
+:where(
+.wc-block-components-product-name,
+.wc-block-grid__product-title,
+.wp-block-post-title,
+.woocommerce-loop-product__title,
+.product_title
+) {
+	color: var(--cw-color-text);
+	font-family: var(--cw-font-heading);
+	line-height: var(--cw-line-height-tight);
+}
+
+:where(a.wc-block-components-product-name, .wc-block-grid__product-link, .woocommerce-loop-product__link) {
+	color: var(--cw-color-text);
+	text-decoration: none;
+}
+
+:where(a.wc-block-components-product-name, .wc-block-grid__product-link, .woocommerce-loop-product__link):hover {
+	color: var(--cw-color-link-hover);
+}
+
+:where(
+.wc-block-components-product-price,
+.wc-block-grid__product-price,
+.woocommerce div.product p.price,
+.woocommerce div.product span.price,
+.woocommerce ul.products li.product .price
+) {
+	color: var(--cw-color-text);
+	font-size: var(--cw-font-size-md);
+}
+
+:where(.wc-block-components-product-price, .price) del {
+	color: var(--cw-color-muted);
+	opacity: 0.75;
+}
+
+:where(.wc-block-components-product-price, .price) ins {
+	color: var(--cw-color-brand);
+	font-weight: 600;
+	text-decoration: none;
+}
+
+:where(
+.wc-block-components-product-sale-badge,
+.wc-block-components-product-badge,
+.woocommerce span.onsale
+) {
+	min-width: 0;
+	min-height: 0;
+	padding: 0.45em 0.7em;
+	border: 0;
+	border-radius: var(--cw-radius-pill);
+	background: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+	font-size: var(--cw-font-size-xs);
+	line-height: 1;
+}
+
+/* Buttons share the same contract as Cinderwell actions. */
+:where(
+.wc-block-components-button:not(.is-link),
+.wc-block-components-product-button .wp-block-button__link,
+.wp-block-woocommerce-product-button .wp-block-button__link,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button
+) {
+	min-height: 0;
+	padding: 0.75em 1.5em;
+	border: 1px solid var(--cw-color-brand) !important;
+	border-radius: var(--cw-radius-sm);
+	background: var(--cw-color-brand) !important;
+	box-shadow: none;
+	color: var(--cw-color-brand-contrast) !important;
+	font-family: var(--cw-font-body);
+	font-size: var(--cw-font-size-md);
+	font-weight: 500;
+	line-height: 1.4;
+	text-decoration: none;
+	transition: background-color var(--cw-duration-normal) var(--cw-ease-standard), border-color var(--cw-duration-normal) var(--cw-ease-standard), color var(--cw-duration-normal) var(--cw-ease-standard), transform var(--cw-duration-fast) var(--cw-ease-standard);
+}
+
+:where(
+.wc-block-components-button:not(.is-link),
+.wc-block-components-product-button .wp-block-button__link,
+.wp-block-woocommerce-product-button .wp-block-button__link,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button
+):hover {
+	border-color: var(--cw-color-dark) !important;
+	background: var(--cw-color-dark) !important;
+	color: var(--cw-color-white) !important;
+}
+
+:where(
+.wc-block-components-button:not(.is-link),
+.wc-block-components-product-button .wp-block-button__link,
+.wp-block-woocommerce-product-button .wp-block-button__link,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button
+):active {
+	transform: translateY(1px);
+}
+
+:where(
+.wc-block-components-button:not(.is-link),
+.wc-block-components-product-button .wp-block-button__link,
+.wp-block-woocommerce-product-button .wp-block-button__link,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button
+):focus-visible {
+	outline: 2px solid var(--cw-color-focus);
+	outline-offset: 2px;
+	box-shadow: none;
+}
+
+:where(.wc-block-components-button, .woocommerce .button):disabled,
+:where(.wc-block-components-button, .woocommerce .button).disabled {
+	cursor: not-allowed;
+	opacity: 0.55;
+}
+
+/* The notice dismiss control uses Woo's generic button class but is an icon
+ * control, not a call to action. */
+.wc-block-components-notice-banner > .wc-block-components-button {
+	width: 16px !important;
+	min-width: 0 !important;
+	height: 16px !important;
+	min-height: 0 !important;
+	margin: 6px 0 0 auto !important;
+	padding: 0 !important;
+	border: 0 !important;
+	background: transparent !important;
+	color: inherit !important;
+}
+
+:where(
+.wc-block-components-button.is-link,
+.wc-block-cart-item__remove-link,
+.wc-block-components-totals-coupon-link,
+.wc-block-components-checkout-return-to-cart-button,
+.woocommerce .woocommerce-LostPassword a
+) {
+	color: var(--cw-color-link);
+	text-underline-offset: 0.2em;
+}
+
+:where(
+.wc-block-components-button.is-link,
+.wc-block-cart-item__remove-link,
+.wc-block-components-totals-coupon-link,
+.wc-block-components-checkout-return-to-cart-button,
+.woocommerce .woocommerce-LostPassword a
+):hover {
+	color: var(--cw-color-link-hover);
+}
+
+/* Form controls. */
+:where(
+.wc-block-components-text-input input,
+.wc-block-components-textarea,
+.wc-block-components-combobox-control input,
+.wc-block-components-select select,
+.wc-block-product-search__field,
+.woocommerce input[type="text"],
+.woocommerce input[type="email"],
+.woocommerce input[type="tel"],
+.woocommerce input[type="password"],
+.woocommerce input[type="number"],
+.woocommerce textarea,
+.woocommerce select
+) {
+	box-sizing: border-box;
+	border: 1px solid var(--cw-color-border);
+	border-radius: var(--cw-radius-sm);
+	background: var(--cw-color-surface);
+	color: var(--cw-color-text);
+	font: inherit;
+}
+
+:where(
+.wc-block-components-text-input input,
+.wc-block-components-textarea,
+.wc-block-components-combobox-control input,
+.wc-block-components-select select,
+.wc-block-product-search__field,
+.woocommerce input,
+.woocommerce textarea,
+.woocommerce select
+):focus-visible {
+	border-color: var(--cw-color-focus);
+	outline: 2px solid var(--cw-color-focus);
+	outline-offset: 1px;
+	box-shadow: none;
+}
+
+:where(.wc-block-components-text-input label, .wc-block-components-checkbox__label, .woocommerce form label) {
+	color: var(--cw-color-text);
+	font-size: var(--cw-font-size-sm);
+}
+
+.wc-block-components-quantity-selector {
+	border-color: var(--cw-color-border);
+	border-radius: var(--cw-radius-sm);
+	background: var(--cw-color-surface);
+}
+
+.wc-block-components-quantity-selector::after {
+	border-color: var(--cw-color-border);
+	border-radius: var(--cw-radius-sm);
+}
+
+/* Cart, checkout, and mini-cart surfaces. */
+:where(.wc-block-cart, .wc-block-checkout) {
+	container-type: inline-size;
+}
+
+:where(
+.wc-block-cart__sidebar,
+.wc-block-checkout__sidebar,
+.wc-block-components-sidebar,
+.wc-block-components-checkout-order-summary__content,
+.wc-block-mini-cart__drawer .wc-block-components-drawer__content
+) {
+	border-radius: var(--cw-radius-md);
+	background: var(--cw-color-surface);
+}
+
+:where(.wc-block-cart__sidebar, .wc-block-checkout__sidebar) {
+	border: 1px solid var(--cw-color-border);
+	box-shadow: var(--cw-shadow-sm);
+}
+
+/* The layout gap already separates the main content from the sidebar. */
+body.woocommerce-page .wc-block-components-sidebar-layout .wc-block-components-sidebar {
+	padding-left: 0;
+}
+
+:where(
+.wc-block-cart-items td,
+.wc-block-cart-items th,
+.wc-block-components-totals-wrapper,
+.wc-block-components-totals-item,
+.wc-block-checkout__shipping-method-option,
+.wc-block-components-checkout-step
+) {
+	border-color: var(--cw-color-border);
+}
+
+:where(
+.wc-block-cart__totals-title,
+.wc-block-components-title,
+.wc-block-components-checkout-step__heading,
+.wc-block-components-checkout-order-summary__title,
+.woocommerce-order-details__title,
+.woocommerce-column__title
+) {
+	color: var(--cw-color-text);
+	font-family: var(--cw-font-heading);
+	line-height: var(--cw-line-height-tight);
+}
+
+:where(.wc-block-cart-item__product, .wc-block-components-order-summary-item__description) {
+	line-height: var(--cw-line-height-body);
+}
+
+:where(.wc-block-components-product-metadata, .wc-block-components-product-details, .wc-block-cart-item__prices) {
+	color: var(--cw-color-muted);
+	font-size: var(--cw-font-size-sm);
+}
+
+.wc-block-checkout__shipping-method-option--selected {
+	border-color: var(--cw-color-brand);
+	background: color-mix(in srgb, var(--cw-color-brand) 7%, var(--cw-color-surface));
+}
+
+.wc-block-components-radio-control__input:checked {
+	border-color: var(--cw-color-brand);
+	background: var(--cw-color-brand);
+}
+
+.wc-block-components-checkbox .wc-block-components-checkbox__input:checked {
+	border-color: var(--cw-color-brand);
+	background: var(--cw-color-brand);
+}
+
+/* Notices retain WooCommerce's semantic status colors while adopting the
+ * Cinderwell surface, border, typography, and focus system. */
+:where(
+.wc-block-components-notice-banner,
+.woocommerce-message,
+.woocommerce-info,
+.woocommerce-error
+) {
+	border-radius: var(--cw-radius-sm);
+	box-shadow: none;
+	font-family: var(--cw-font-body);
+	font-size: var(--cw-font-size-sm);
+	line-height: var(--cw-line-height-body);
+}
+
+.wc-block-components-notice-banner:focus-visible {
+	outline: 2px solid var(--cw-color-focus);
+	outline-offset: 2px;
+}
+
+/* Product filters and account navigation. */
+:where(
+.wc-block-components-filter-reset-button,
+.wc-block-components-chip,
+.wc-block-product-filter-removable-chips__clear-all,
+.woocommerce-MyAccount-navigation a
+) {
+	color: var(--cw-color-link);
+}
+
+:where(.wc-block-components-chip, .wc-block-product-filter-removable-chips__clear-all) {
+	border-color: var(--cw-color-border);
+	border-radius: var(--cw-radius-pill);
+	background: var(--cw-color-surface);
+}
+
+.woocommerce-MyAccount-navigation ul {
+	display: flex;
+	margin: 0 0 var(--cw-gap-lg);
+	padding: 0;
+	flex-wrap: wrap;
+	gap: var(--cw-gap-sm);
+	list-style: none;
+}
+
+.woocommerce-MyAccount-navigation .is-active a {
+	color: var(--cw-color-text);
+	text-decoration-thickness: 2px;
+	text-underline-offset: 0.25em;
+}
+
+/* Account pages use WooCommerce's durable markup, but not its legacy floats.
+ * The logged-out screen stays focused; the dashboard becomes a clear
+ * navigation/content composition. */
+body.woocommerce-account main.site-main {
+	background: var(--cw-color-light);
+}
+
+body.woocommerce-account main.site-main > .wp-block-post-title {
+	width: min(
+		calc(100% - var(--cw-page-padding-inline) - var(--cw-page-padding-inline)),
+		var(--cw-width-standard)
+	);
+	margin-inline: auto !important;
+	text-align: center;
+}
+
+body.woocommerce-account:not(.logged-in) .wp-block-post-content > .woocommerce {
+	width: min(
+		calc(100% - var(--cw-page-padding-inline) - var(--cw-page-padding-inline)),
+		var(--cw-width-narrow)
+	);
+	margin-inline: auto !important;
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce > h2 {
+	margin: 0 0 var(--cw-gap-md);
+	font-size: var(--cw-font-size-xl);
+	text-align: center;
+}
+
+body.woocommerce-account .woocommerce form.woocommerce-form-login,
+body.woocommerce-account .woocommerce form.woocommerce-ResetPassword,
+body.woocommerce-account .woocommerce form.woocommerce-form-register {
+	margin: 0;
+	padding: clamp(var(--cw-gap-md), 4vw, var(--cw-spacing-md));
+	border: 1px solid var(--cw-color-border);
+	border-radius: var(--cw-radius-md);
+	background: var(--cw-color-surface);
+	box-shadow: var(--cw-shadow-sm);
+}
+
+body.woocommerce-account .woocommerce form :where(.form-row, p) {
+	margin-block: 0 var(--cw-gap-sm);
+}
+
+body.woocommerce-account .woocommerce form label {
+	display: inline-block;
+	margin-bottom: 0.35rem;
+	font-weight: 600;
+}
+
+body.woocommerce-account .woocommerce form :where(
+	input[type="text"],
+	input[type="email"],
+	input[type="password"]
+) {
+	min-height: 3rem;
+	padding: 0.75rem 0.875rem;
+	font-size: var(--cw-font-size-md);
+}
+
+body.woocommerce-account .woocommerce form .show-password-input {
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+body.woocommerce-account .woocommerce form .form-row:has(.woocommerce-form-login__submit) {
+	display: flex;
+	align-items: center;
+	gap: var(--cw-gap-sm);
+}
+
+body.woocommerce-account .woocommerce form .woocommerce-form-login__rememberme {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	margin: 0;
+	font-weight: 400;
+}
+
+body.woocommerce-account .woocommerce form .woocommerce-form-login__rememberme input {
+	width: 1rem;
+	height: 1rem;
+	margin: 0;
+}
+
+body.woocommerce-account .woocommerce .woocommerce-LostPassword {
+	margin: var(--cw-gap-sm) 0 0;
+}
+
+body.woocommerce-account.logged-in .wp-block-post-content > .woocommerce {
+	display: grid;
+	width: min(
+		calc(100% - var(--cw-page-padding-inline) - var(--cw-page-padding-inline)),
+		var(--cw-width-wide)
+	);
+	margin-inline: auto !important;
+	grid-template-columns: minmax(13rem, 0.3fr) minmax(0, 1fr);
+	gap: var(--cw-gap-lg);
+}
+
+body.woocommerce-account.logged-in .wp-block-post-content > .woocommerce::before,
+body.woocommerce-account.logged-in .wp-block-post-content > .woocommerce::after {
+	display: none;
+}
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation,
+body.woocommerce-account.logged-in .woocommerce-MyAccount-content {
+	float: none;
+	width: auto;
+}
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation ul {
+	display: grid;
+	margin: 0;
+	padding: var(--cw-gap-sm);
+	gap: 0.25rem;
+	border: 1px solid var(--cw-color-border);
+	border-radius: var(--cw-radius-md);
+	background: var(--cw-color-surface);
+	box-shadow: var(--cw-shadow-sm);
+}
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation li {
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation a {
+	display: block;
+	padding: 0.7rem 0.85rem;
+	border-radius: var(--cw-radius-sm);
+	color: var(--cw-color-text);
+	text-decoration: none;
+}
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation a:hover,
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation a:focus-visible,
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation .is-active a {
+	background: color-mix(in srgb, var(--cw-color-brand) 10%, var(--cw-color-surface));
+	color: var(--cw-color-text);
+}
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation .is-active a {
+	box-shadow: inset 0.2rem 0 0 var(--cw-color-brand);
+}
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-content {
+	min-width: 0;
+	padding: clamp(var(--cw-gap-md), 4vw, var(--cw-spacing-md));
+	border: 1px solid var(--cw-color-border);
+	border-radius: var(--cw-radius-md);
+	background: var(--cw-color-surface);
+	box-shadow: var(--cw-shadow-sm);
+}
+
+/* Classic tables remain available for account and order screens. */
+:where(.woocommerce table.shop_table, .woocommerce table.woocommerce-table) {
+	border-color: var(--cw-color-border);
+	border-radius: var(--cw-radius-md);
+	border-collapse: separate;
+	background: var(--cw-color-surface);
+}
+
+:where(.woocommerce table.shop_table, .woocommerce table.woocommerce-table) :where(th, td) {
+	padding: var(--cw-gap-sm);
+	border-color: var(--cw-color-border);
+}
+
+@media (max-width: 700px) {
+
+	:where(.wc-block-cart__sidebar, .wc-block-checkout__sidebar) {
+		margin-top: var(--cw-gap-lg);
+	}
+
+	body.woocommerce-account main.site-main > .wp-block-post-title {
+		text-align: left;
+	}
+
+	body.woocommerce-account:not(.logged-in) .woocommerce > h2 {
+		text-align: left;
+	}
+
+	body.woocommerce-account .woocommerce form.woocommerce-form-login,
+	body.woocommerce-account .woocommerce form.woocommerce-ResetPassword,
+	body.woocommerce-account .woocommerce form.woocommerce-form-register {
+		padding: var(--cw-gap-md);
+	}
+
+	body.woocommerce-account .woocommerce form .form-row:has(.woocommerce-form-login__submit) {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+
+	body.woocommerce-account.logged-in .wp-block-post-content > .woocommerce {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}

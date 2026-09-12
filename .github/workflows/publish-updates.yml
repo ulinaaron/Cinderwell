@@ -1,0 +1,53 @@
+name: Publish Cinderwell updates
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "release-*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cinderwell-updates-production
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: updates-production
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: wp-content/plugins/cinderwell/package-lock.json
+
+      - name: Install build dependencies
+        working-directory: wp-content/plugins/cinderwell
+        run: npm ci
+
+      - name: Build Cinderwell
+        working-directory: wp-content/plugins/cinderwell
+        run: npm run build
+
+      - name: Package release
+        run: node scripts/build-update-release.mjs
+
+      - name: Retain release packages with the workflow run
+        uses: actions/upload-artifact@v4
+        with:
+          name: cinderwell-update-packages
+          path: dist/
+          if-no-files-found: error
+
+      - name: Publish to Surge
+        run: npx --yes surge ./dist https://cinderwell-updates.surge.sh
+        env:
+          SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}

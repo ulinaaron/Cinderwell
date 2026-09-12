@@ -1600,6 +1600,18 @@
 	padding: 0;
 }
 
+.cw-link-context-popover .components-popover__content {
+	width: 280px;
+}
+
+.cw-link-context-popover .cw-popover__inner {
+	gap: 10px;
+}
+
+.cw-link-context-popover .cw-link-setting > .cw-field__label {
+	display: none;
+}
+
 .cw-native-link-popover__head {
 	display: flex;
 	min-height: 40px;

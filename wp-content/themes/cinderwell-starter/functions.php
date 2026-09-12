@@ -1,7 +1,7 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'CINDERWELL_STARTER_VERSION', '0.2.6' );
+define( 'CINDERWELL_STARTER_VERSION', '0.3.0' );
 
 // Theme setup.
 add_action( 'after_setup_theme', function () {

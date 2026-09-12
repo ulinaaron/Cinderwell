@@ -1,5 +1,30 @@
 # Extending Cinderwell
 
+## Client theme architecture
+
+Install `cinderwell-starter` unchanged as the updateable **Cinderwell Base**
+parent theme. Each client site should activate a child theme rather than a copy
+of the parent:
+
+```css
+/*
+Theme Name: Client Name
+Template: cinderwell-starter
+Requires Plugins: cinderwell
+Text Domain: client-name
+*/
+```
+
+The client child theme owns its `theme.json`, brand token overrides, patterns,
+header/footer variations, and only the templates that genuinely differ. The
+Cinderwell plugin owns blocks and third-party integrations such as WooCommerce,
+so those fixes reach every client independently of template customization.
+
+Site Editor template changes are database records and outrank parent and child
+theme files. Use **Settings → Cinderwell → Template Updates** to identify these
+records. Export intentional changes into the child theme before resetting the
+database customization.
+
 ## Admin bar integrations
 
 Cinderwell provides a shared admin-bar root for add-ons. Add nodes during
@@ -23,7 +48,7 @@ filter `cinderwell_admin_bar_capability` to change that policy.
 
 ## Public Style Capabilities
 
-Cinderwell registers four stable style handles. Client themes and custom blocks
+Cinderwell registers five stable style handles. Client themes and custom blocks
 can depend on the capabilities they use instead of loading the entire design
 system stylesheet.
 
@@ -33,6 +58,7 @@ system stylesheet.
 | `cinderwell-actions` | `.btn`, button variants and sizes, and shared button groups |
 | `cinderwell-responsive` | Responsive spacing utility classes |
 | `cinderwell-media` | Background overlays, image fit/position/aspect utilities, and image radius |
+| `cinderwell-commerce` | WooCommerce product, cart, checkout, account, form, and notice token mappings; registered only when WooCommerce is active |
 
 Attach client styling to an existing Cinderwell block with
 `wp_enqueue_block_style()` so it remains conditional:
@@ -64,6 +90,23 @@ Custom block metadata may also reference registered capability handles:
 Treat these handles, the documented `--cw-*` properties, and documented utility
 classes as public API. Complex selectors inside Cinderwell block styles remain
 implementation details.
+
+### Page shell spacing
+
+Themes can apply Cinderwell's page-shell tokens to their own custom templates
+without hardcoding layout values. Cinderwell's built-in third-party adapters,
+including WooCommerce, apply these tokens themselves:
+
+```css
+.client-page-shell {
+    padding-block: var(--cw-page-padding-block);
+    padding-inline: var(--cw-page-padding-inline);
+}
+```
+
+`--cw-page-padding-block` defaults to `--cw-spacing-md`, while
+`--cw-page-padding-inline` defaults to `--cw-layout-gutter`. Client themes can
+override either alias independently without changing component spacing.
 
 ## Filter Hooks
 

@@ -2,7 +2,19 @@
 /*
 !/.gitignore
 !/README.md
+!/.github/
+!/scripts/
+!/updates/
 !/wp-content/
+
+/.github/*
+!/.github/workflows/
+
+/scripts/*
+!/scripts/build-update-release.mjs
+
+/updates/*
+!/updates/info.example.json
 
 /wp-content/*
 !/wp-content/plugins/

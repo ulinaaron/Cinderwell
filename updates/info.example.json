@@ -1,0 +1,42 @@
+{
+  "plugin": {
+    "name": "Cinderwell",
+    "slug": "cinderwell",
+    "version": "0.1.16",
+    "homepage": "https://github.com/ulinaaron/Cinderwell",
+    "plugin_file": "cinderwell/cinderwell.php",
+    "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-0.1.16.zip",
+    "requires": "6.3",
+    "tested": "7.1",
+    "sections": {
+      "description": "Cinderwell block system and extension layer."
+    },
+    "sha256": "example"
+  },
+  "addons": {
+    "cinderwell-alerts": {
+      "name": "Cinderwell Alerts",
+      "slug": "cinderwell-alerts",
+      "version": "0.1.3",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-alerts/cinderwell-alerts.php",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-alerts-0.1.3.zip",
+      "requires": "6.5",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Scheduled, condition-aware alert bars composed with Cinderwell blocks."
+      },
+      "sha256": "example"
+    }
+  },
+  "theme": {
+    "name": "Cinderwell Base",
+    "slug": "cinderwell-starter",
+    "version": "0.3.0",
+    "homepage": "https://github.com/ulinaaron/Cinderwell",
+    "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-starter-0.3.0.zip",
+    "requires": "6.6",
+    "requires_php": "7.4",
+    "sha256": "example"
+  }
+}

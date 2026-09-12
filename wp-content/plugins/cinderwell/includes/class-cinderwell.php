@@ -204,6 +204,7 @@ class Cinderwell {
         new Renderer();
         new Responsive_Images();
         new Accessible_Links();
+        new Commerce();
         new Schema_Aggregator();
         new Admin_Bar();
         new Admin_Page();

@@ -8,7 +8,7 @@ import { ImageOverlayControls, ImageSettingsControl } from '../../shared/image-c
 import { getImageClassName, getMediaUrl } from '../../shared/media';
 import { IconGlyph } from '../../shared/icon-library';
 import { IconSettingsControl, getIconStyleClassName } from '../../shared/icon-controls';
-import { LinkSettingsControl, getDynamicLinkValue } from '../../shared/link-control';
+import { EditableLink, LinkSettingsControl } from '../../shared/link-control';
 import metadata from './block.json';
 
 let cardCounter = 0;
@@ -154,7 +154,19 @@ registerBlockType( metadata.name, {
                                         { card.showLabel && <RichText tagName="span" className={ `cinderwell-card-grid__card-label${ getTextStyleClassName( attributes, 'cardLabel' ) }` } value={ card.label } onChange={ ( value ) => updateCard( i, 'label', value ) } placeholder={ __( 'Eyebrow…', 'cinderwell' ) } allowedFormats={ [] } /> }
                                         <RichText tagName={ getHeadingTagName( attributes.itemHeadingLevel, 3 ) } className={ `cinderwell-card-grid__card-title${ getTextStyleClassName( attributes, 'cardTitle' ) }` } value={ card.title } onChange={ ( value ) => updateCard( i, 'title', value ) } placeholder={ __( 'Card title…', 'cinderwell' ) } allowedFormats={ [] } />
                                         <RichText tagName="p" className={ `cinderwell-card-grid__card-description${ getTextStyleClassName( attributes, 'cardDescription' ) }` } value={ card.description } onChange={ ( value ) => updateCard( i, 'description', value ) } placeholder={ __( 'Card description…', 'cinderwell' ) } allowedFormats={ [] } />
-                                        <RichText tagName="a" href={ getDynamicLinkValue( card.buttonUrl, card.buttonUrlDynamic ) || '#' } target={ card.buttonNewTab ? '_blank' : undefined } rel={ card.buttonNewTab ? 'noopener noreferrer' : undefined } className={ `btn btn--${ card.buttonVariant || 'primary' } btn--${ card.buttonSize || 'sm' }` } value={ card.buttonText } onChange={ ( value ) => updateCard( i, 'buttonText', value ) } placeholder={ __( 'Button text…', 'cinderwell' ) } allowedFormats={ [] } onClick={ ( event ) => event.preventDefault() } />
+                                        <EditableLink
+                                            tagName="a"
+                                            className={ `btn btn--${ card.buttonVariant || 'primary' } btn--${ card.buttonSize || 'sm' }` }
+                                            value={ card.buttonText }
+                                            url={ card.buttonUrl }
+                                            opensInNewTab={ Boolean( card.buttonNewTab ) }
+                                            dynamicData={ card.buttonUrlDynamic || {} }
+                                            onTextChange={ ( value ) => updateCard( i, 'buttonText', value ) }
+                                            onLinkChange={ ( changes ) => updateCardLink( i, changes ) }
+                                            contextLabel={ __( 'Button destination', 'cinderwell' ) }
+                                            placeholder={ __( 'Button text…', 'cinderwell' ) }
+                                            allowedFormats={ [] }
+                                        />
                                     </div>
                                 </div>
                             ) ) }

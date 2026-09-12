@@ -238,6 +238,18 @@ class Design_Tokens {
                 'default'     => '1.5rem',
                 'description' => __( 'Horizontal breathing room at content edges', 'cinderwell' ),
             ],
+            'cw_page_padding_inline' => [
+                'label'       => __( 'Page Inline Padding', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-layout-gutter)',
+                'description' => __( 'Horizontal padding for standard page and application shells', 'cinderwell' ),
+            ],
+            'cw_page_padding_block' => [
+                'label'       => __( 'Page Block Padding', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-spacing-md)',
+                'description' => __( 'Vertical padding between standard page content and the site chrome', 'cinderwell' ),
+            ],
             'cw_width_narrow'   => [
                 'label'       => __( 'Narrow Width', 'cinderwell' ),
                 'type'        => 'text',
@@ -401,7 +413,7 @@ class Design_Tokens {
             return 'widths';
         }
 
-        if ( 0 === strpos( $key, 'cw_gap_' ) || 0 === strpos( $key, 'cw_layout_' ) ) {
+        if ( 0 === strpos( $key, 'cw_gap_' ) || 0 === strpos( $key, 'cw_layout_' ) || 0 === strpos( $key, 'cw_page_' ) ) {
             return 'layout';
         }
 

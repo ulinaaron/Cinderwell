@@ -26,7 +26,10 @@ class Admin_Page {
     }
 
     public function render_page() {
-        $active_tab = isset( $_GET['tab'] ) ? sanitize_text_field( $_GET['tab'] ) : 'general';
+        $requested_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general';
+        $active_tab    = in_array( $requested_tab, [ 'general', 'permissions', 'tokens', 'templates' ], true )
+            ? $requested_tab
+            : 'general';
         ?>
         <div class="wrap">
             <h1><?php esc_html_e( 'Cinderwell Settings', 'cinderwell' ); ?></h1>
@@ -41,6 +44,9 @@ class Admin_Page {
                 <a href="?page=cinderwell&tab=tokens" class="nav-tab <?php echo 'tokens' === $active_tab ? 'nav-tab-active' : ''; ?>">
                     <?php esc_html_e( 'Design Tokens', 'cinderwell' ); ?>
                 </a>
+                <a href="?page=cinderwell&tab=templates" class="nav-tab <?php echo 'templates' === $active_tab ? 'nav-tab-active' : ''; ?>">
+                    <?php esc_html_e( 'Template Updates', 'cinderwell' ); ?>
+                </a>
             </nav>
 
             <div class="tab-content" style="margin-top: 20px;">
@@ -51,6 +57,9 @@ class Admin_Page {
                         break;
                     case 'tokens':
                         $this->render_tokens_tab();
+                        break;
+                    case 'templates':
+                        $this->render_templates_tab();
                         break;
                     default:
                         $this->render_general_tab();
@@ -67,6 +76,7 @@ class Admin_Page {
         $patterns  = $this->get_registered_patterns();
         $theme     = wp_get_theme();
         $override  = file_exists( get_template_directory() . '/cinderwell/' );
+        $templates = $this->get_template_overrides();
         ?>
         <div class="card" style="max-width: 600px; margin-top: 20px;">
             <h2><?php esc_html_e( 'General Information', 'cinderwell' ); ?></h2>
@@ -86,6 +96,44 @@ class Admin_Page {
                 <tr>
                     <th><?php esc_html_e( 'Active Theme', 'cinderwell' ); ?></th>
                     <td><?php echo esc_html( $theme->get( 'Name' ) ); ?></td>
+                </tr>
+                <tr>
+                    <th><?php esc_html_e( 'Theme Role', 'cinderwell' ); ?></th>
+                    <td>
+                        <?php if ( is_child_theme() ) : ?>
+                            <?php
+                            printf(
+                                /* translators: %s: parent theme name. */
+                                esc_html__( 'Client child theme inheriting from %s', 'cinderwell' ),
+                                esc_html( wp_get_theme( get_template() )->get( 'Name' ) )
+                            );
+                            ?>
+                        <?php else : ?>
+                            <?php esc_html_e( 'Parent/base theme', 'cinderwell' ); ?>
+                        <?php endif; ?>
+                    </td>
+                </tr>
+                <tr>
+                    <th><?php esc_html_e( 'Database Template Overrides', 'cinderwell' ); ?></th>
+                    <td>
+                        <?php if ( $templates ) : ?>
+                            <strong style="color: #b32d2e;">
+                                <?php
+                                printf(
+                                    /* translators: %d: number of template overrides. */
+                                    esc_html( _n( '%d override', '%d overrides', count( $templates ), 'cinderwell' ) ),
+                                    esc_html( number_format_i18n( count( $templates ) ) )
+                                );
+                                ?>
+                            </strong>
+                            &mdash;
+                            <a href="<?php echo esc_url( admin_url( 'options-general.php?page=cinderwell&tab=templates' ) ); ?>">
+                                <?php esc_html_e( 'Review update blockers', 'cinderwell' ); ?>
+                            </a>
+                        <?php else : ?>
+                            <span style="color: #008a20;">&#10003; <?php esc_html_e( 'None', 'cinderwell' ); ?></span>
+                        <?php endif; ?>
+                    </td>
                 </tr>
                 <tr>
                     <th><?php esc_html_e( 'Override Directory', 'cinderwell' ); ?></th>
@@ -115,6 +163,75 @@ class Admin_Page {
                     <li><code><?php echo esc_html( $block ); ?></code></li>
                 <?php endforeach; ?>
             </ul>
+        </div>
+        <?php
+    }
+
+    private function render_templates_tab() {
+        $overrides = $this->get_template_overrides();
+        $theme     = wp_get_theme();
+        ?>
+        <div class="card" style="max-width: 900px; margin-top: 20px;">
+            <h2><?php esc_html_e( 'Template Update Status', 'cinderwell' ); ?></h2>
+            <p>
+                <?php
+                printf(
+                    /* translators: %s: active theme name. */
+                    esc_html__( 'Cinderwell checked Site Editor customizations associated with %s.', 'cinderwell' ),
+                    '<strong>' . esc_html( $theme->get( 'Name' ) ) . '</strong>'
+                );
+                ?>
+            </p>
+            <p>
+                <?php esc_html_e( 'A database customization takes precedence over the corresponding parent- or child-theme file. Upstream file updates will not appear for that template until the customization is exported to the client theme and the database version is reset.', 'cinderwell' ); ?>
+            </p>
+
+            <?php if ( ! $overrides ) : ?>
+                <div class="notice notice-success inline">
+                    <p><?php esc_html_e( 'No database template overrides are blocking theme file updates.', 'cinderwell' ); ?></p>
+                </div>
+            <?php else : ?>
+                <div class="notice notice-warning inline">
+                    <p>
+                        <?php
+                        printf(
+                            /* translators: %d: number of template overrides. */
+                            esc_html( _n( '%d database override is taking precedence over theme files.', '%d database overrides are taking precedence over theme files.', count( $overrides ), 'cinderwell' ) ),
+                            esc_html( number_format_i18n( count( $overrides ) ) )
+                        );
+                        ?>
+                    </p>
+                </div>
+
+                <table class="widefat striped" style="margin-top: 16px;">
+                    <thead>
+                        <tr>
+                            <th><?php esc_html_e( 'Name', 'cinderwell' ); ?></th>
+                            <th><?php esc_html_e( 'Type', 'cinderwell' ); ?></th>
+                            <th><?php esc_html_e( 'Theme', 'cinderwell' ); ?></th>
+                            <th><?php esc_html_e( 'Action', 'cinderwell' ); ?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ( $overrides as $override ) : ?>
+                            <tr>
+                                <td><strong><?php echo esc_html( $override['title'] ); ?></strong><br><code><?php echo esc_html( $override['slug'] ); ?></code></td>
+                                <td><?php echo esc_html( $override['type_label'] ); ?></td>
+                                <td><code><?php echo esc_html( $override['theme'] ); ?></code></td>
+                                <td><a href="<?php echo esc_url( $override['editor_url'] ); ?>"><?php esc_html_e( 'Open in Site Editor', 'cinderwell' ); ?></a></td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+
+            <h3><?php esc_html_e( 'Safe downstream workflow', 'cinderwell' ); ?></h3>
+            <ol>
+                <li><?php esc_html_e( 'Build each client site as a child theme of the Cinderwell parent theme.', 'cinderwell' ); ?></li>
+                <li><?php esc_html_e( 'Export intentional Site Editor template changes into that child theme.', 'cinderwell' ); ?></li>
+                <li><?php esc_html_e( 'Confirm the exported file is deployed, then reset the database customization in the Site Editor.', 'cinderwell' ); ?></li>
+                <li><?php esc_html_e( 'Leave the Cinderwell plugin and parent theme unmodified so their updates remain replaceable.', 'cinderwell' ); ?></li>
+            </ol>
         </div>
         <?php
     }
@@ -223,5 +340,57 @@ class Admin_Page {
         }
         sort( $patterns );
         return $patterns;
+    }
+
+    /**
+     * Return Site Editor templates that shadow files from the active theme
+     * inheritance chain.
+     */
+    private function get_template_overrides() {
+        $theme_slugs = array_values( array_unique( [ get_stylesheet(), get_template() ] ) );
+        $posts       = get_posts( [
+            'post_type'              => [ 'wp_template', 'wp_template_part' ],
+            'post_status'            => 'any',
+            'posts_per_page'         => -1,
+            'orderby'                => 'post_type title',
+            'order'                  => 'ASC',
+            'no_found_rows'          => true,
+            'update_post_meta_cache' => false,
+        ] );
+        $overrides   = [];
+
+        foreach ( $posts as $post ) {
+            $post_themes = wp_get_object_terms( $post->ID, 'wp_theme', [ 'fields' => 'names' ] );
+            if ( is_wp_error( $post_themes ) ) {
+                continue;
+            }
+
+            $matching_themes = array_values( array_intersect( $theme_slugs, $post_themes ) );
+            if ( ! $matching_themes ) {
+                continue;
+            }
+
+            $theme_slug = $matching_themes[0];
+            $editor_url = add_query_arg(
+                [
+                    'postType' => $post->post_type,
+                    'postId'   => $theme_slug . '//' . $post->post_name,
+                    'canvas'   => 'edit',
+                ],
+                admin_url( 'site-editor.php' )
+            );
+
+            $overrides[] = [
+                'title'      => $post->post_title ?: $post->post_name,
+                'slug'       => $post->post_name,
+                'theme'      => $theme_slug,
+                'type_label' => 'wp_template_part' === $post->post_type
+                    ? __( 'Template part', 'cinderwell' )
+                    : __( 'Template', 'cinderwell' ),
+                'editor_url' => $editor_url,
+            ];
+        }
+
+        return $overrides;
     }
 }

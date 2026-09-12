@@ -39,6 +39,8 @@
 	--cw-gap-md: 1.5rem;
 	--cw-gap-lg: 2rem;
 	--cw-layout-gutter: 1.5rem;
+	--cw-page-padding-inline: var(--cw-layout-gutter);
+	--cw-page-padding-block: var(--cw-spacing-md);
 	--cw-width-narrow: 600px;
 	--cw-width-standard: 900px;
 	--cw-width-wide: 1200px;
@@ -292,6 +294,48 @@
 .wp-block-cinderwell-quote {
 	max-width: 100% !important;
 	width: 100% !important;
+}
+
+/* Full-canvas Cinderwell components form a continuous page composition.
+ * Gutenberg's normal block gap still applies to ordinary content such as a
+ * Heading followed by a Button. */
+:where(
+	.wp-block-post-content,
+	.editor-styles-wrapper .is-root-container
+) > :is(
+	.wp-block-cinderwell-hero,
+	.wp-block-cinderwell-section,
+	.wp-block-cinderwell-cta,
+	.wp-block-cinderwell-card-grid,
+	.wp-block-cinderwell-loop,
+	.wp-block-cinderwell-gallery,
+	.wp-block-cinderwell-image-carousel,
+	.wp-block-cinderwell-faq,
+	.wp-block-cinderwell-body,
+	.wp-block-cinderwell-image-text,
+	.wp-block-cinderwell-two-column,
+	.wp-block-cinderwell-quote,
+	.wp-block-cinderwell-accordion,
+	.wp-block-cinderwell-tabs,
+	.wp-block-cinderwell-slot-layout
+) + :is(
+	.wp-block-cinderwell-hero,
+	.wp-block-cinderwell-section,
+	.wp-block-cinderwell-cta,
+	.wp-block-cinderwell-card-grid,
+	.wp-block-cinderwell-loop,
+	.wp-block-cinderwell-gallery,
+	.wp-block-cinderwell-image-carousel,
+	.wp-block-cinderwell-faq,
+	.wp-block-cinderwell-body,
+	.wp-block-cinderwell-image-text,
+	.wp-block-cinderwell-two-column,
+	.wp-block-cinderwell-quote,
+	.wp-block-cinderwell-accordion,
+	.wp-block-cinderwell-tabs,
+	.wp-block-cinderwell-slot-layout
+) {
+	margin-block-start: var(--cw-spacing-none);
 }
 
 /* Inner content respects design token widths */

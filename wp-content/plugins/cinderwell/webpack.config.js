@@ -8,7 +8,7 @@ const getEntryPoints = () => {
     const entryPoints = {};
 
     // Public capability styles. Blocks opt into the layers they can render.
-    [ 'base', 'actions', 'responsive', 'media' ].forEach( ( capability ) => {
+    [ 'base', 'actions', 'responsive', 'media', 'commerce' ].forEach( ( capability ) => {
         entryPoints[ `shared/${ capability }` ] = path.resolve( __dirname, `src/shared/${ capability }.css` );
     } );
 

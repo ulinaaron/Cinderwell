@@ -1,6 +1,6 @@
 # Cinderwell
 
-A WordPress block system, Full Site Editing starter theme, and add-on foundation for client websites. Cinderwell combines direct canvas editing with shared design tokens, responsive controls, and reusable content blocks.
+A WordPress block system, updateable Full Site Editing parent theme, and add-on foundation for client websites. Cinderwell combines direct canvas editing with shared design tokens, responsive controls, and reusable content blocks.
 
 This project is in active development.
 
@@ -10,7 +10,7 @@ This project is in active development.
 | --- | --- | --- |
 | Cinderwell | [`wp-content/plugins/cinderwell`](wp-content/plugins/cinderwell) | Blocks, atoms, design tokens, editor controls, dynamic data, and extension hooks |
 | Cinderwell Alerts | [`wp-content/plugins/cinderwell-alerts`](wp-content/plugins/cinderwell-alerts) | Block-built alert bars with scheduling, targeting, priority, and dismissal |
-| Cinderwell Starter | [`wp-content/themes/cinderwell-starter`](wp-content/themes/cinderwell-starter) | Companion block theme with FSE templates, header, footer, and theme integration |
+| Cinderwell Base | [`wp-content/themes/cinderwell-starter`](wp-content/themes/cinderwell-starter) | Updateable FSE parent theme with the template hierarchy and default site frame |
 
 The block kit includes Hero, Body, CTA, Card Grid, Image + Text, Icon List, Gallery, Image Carousel, FAQ, Accordion, Tabs, Loop, Two Column, Section, Slot Layout, Mega Menu, and Gravity Forms integration, plus standalone atoms and nested content blocks.
 
@@ -29,7 +29,13 @@ npm run build
 
 Copy the built `cinderwell` directory into your site's `wp-content/plugins/`, including its generated `build/` directory. Activate **Cinderwell** in WordPress. The source and `node_modules/` directories aren't needed on a deployment.
 
-To use the companion theme, copy `cinderwell-starter` into `wp-content/themes/` and activate **Cinderwell Starter**. To use alerts, copy `cinderwell-alerts` into `wp-content/plugins/` and activate it after Cinderwell.
+Install `cinderwell-starter` unchanged as the parent theme. For a client site,
+create and activate a child theme with `Template: cinderwell-starter`; do not copy
+or fork the parent into the client theme. This keeps parent fixes updateable
+while the child owns brand tokens, patterns, parts, and intentional template
+overrides. See the [parent-theme guide](wp-content/themes/cinderwell-starter/README.md).
+
+To use alerts, copy `cinderwell-alerts` into `wp-content/plugins/` and activate it after Cinderwell.
 
 This is a multi-component source repository. GitHub's source ZIP is not a single installable WordPress plugin ZIP; build and install the component directories described above.
 
@@ -46,7 +52,40 @@ npm run lint:css
 
 Block and atom entry points are discovered by the webpack configuration. Generated assets and dependencies are excluded from Git, so rebuild after cloning or updating source. Alerts and the starter theme use their PHP, CSS, and JavaScript files directly.
 
-For client-specific work, use a child theme and the documented extension hooks. See the [extension guide](wp-content/plugins/cinderwell/EXTENDING.md), [block plugin documentation](wp-content/plugins/cinderwell/README.md), and [Alerts documentation](wp-content/plugins/cinderwell-alerts/README.md).
+For client-specific work, use a child theme and the documented extension hooks.
+Cinderwell's update manifest supports the core plugin, add-ons, and parent
+theme; its schema is documented in
+[`updates/info.example.json`](updates/info.example.json).
+See the [extension guide](wp-content/plugins/cinderwell/EXTENDING.md), [block plugin documentation](wp-content/plugins/cinderwell/README.md), and [Alerts documentation](wp-content/plugins/cinderwell-alerts/README.md).
+
+## Publishing updates
+
+Production packages and `info.json` are published as a static site at
+`https://cinderwell-updates.surge.sh`. The private source repository remains the
+source of truth; client sites receive only independently installable WordPress
+ZIP packages.
+
+To configure publishing:
+
+1. Install the Surge CLI locally and log in.
+2. Create a domain-scoped token with
+   `surge tokens add --domain cinderwell-updates.surge.sh -m "github actions"`.
+3. Add the returned value as the `SURGE_TOKEN` Actions secret in GitHub.
+4. Optionally protect the `updates-production` GitHub environment with required
+   reviewers.
+
+Update the component header versions, commit the tested changes, and either run
+the **Publish Cinderwell updates** workflow manually or push a `release-*` tag.
+The workflow builds the core assets, creates separate plugin/theme ZIPs,
+generates checksums and the manifest, retains the output as a workflow artifact,
+then atomically publishes the directory to Surge.
+
+For a local packaging check after running the core build:
+
+```bash
+node scripts/build-update-release.mjs
+unzip -Z1 dist/packages/cinderwell-*.zip | head
+```
 
 ## Repository scope
 

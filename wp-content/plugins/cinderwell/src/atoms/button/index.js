@@ -5,13 +5,18 @@ import { __ } from '@wordpress/i18n';
 import { buttonVariantOptions, buttonSizeOptions } from '../../shared/design-system';
 import { ConditionsPanel } from '../../shared/conditions-panel';
 import { BlockIdentity, SegmentedControl } from '../../shared/inspector-controls';
-import { LinkSettingsControl, getDynamicLinkValue } from '../../shared/link-control';
+import { EditableLink, LinkSettingsControl } from '../../shared/link-control';
 import metadata from './block.json';
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => {
         const blockProps = useBlockProps( {
             className: `btn btn--${ attributes.variant } btn--${ attributes.size }`,
+        } );
+        const updateLink = ( changes ) => setAttributes( {
+            ...( Object.prototype.hasOwnProperty.call( changes, 'url' ) ? { url: changes.url } : {} ),
+            ...( Object.prototype.hasOwnProperty.call( changes, 'opensInNewTab' ) ? { opensInNewTab: changes.opensInNewTab } : {} ),
+            ...( Object.prototype.hasOwnProperty.call( changes, 'dynamicData' ) ? { urlDynamic: changes.dynamicData } : {} ),
         } );
         return (
             <>
@@ -26,11 +31,7 @@ registerBlockType( metadata.name, {
                             url={ attributes.url }
                             opensInNewTab={ Boolean( attributes.opensInNewTab ) }
                             dynamicData={ attributes.urlDynamic || {} }
-                            onChange={ ( changes ) => setAttributes( {
-                                ...( Object.prototype.hasOwnProperty.call( changes, 'url' ) ? { url: changes.url } : {} ),
-                                ...( Object.prototype.hasOwnProperty.call( changes, 'opensInNewTab' ) ? { opensInNewTab: changes.opensInNewTab } : {} ),
-                                ...( Object.prototype.hasOwnProperty.call( changes, 'dynamicData' ) ? { urlDynamic: changes.dynamicData } : {} ),
-                            } ) }
+                            onChange={ updateLink }
                         />
                     </PanelBody>
                     <PanelBody title={ __( 'Style', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
@@ -49,18 +50,19 @@ registerBlockType( metadata.name, {
                     </PanelBody>
                     <ConditionsPanel attributes={ attributes } setAttributes={ setAttributes } />
                 </InspectorControls>
-                <RichText
+                <EditableLink
                     { ...blockProps }
                     tagName="a"
                     identifier="text"
-                    href={ getDynamicLinkValue( attributes.url, attributes.urlDynamic ) || '#' }
-                    target={ attributes.opensInNewTab ? '_blank' : undefined }
-                    rel={ attributes.opensInNewTab ? 'noopener noreferrer' : undefined }
                     value={ attributes.text }
-                    onChange={ ( v ) => setAttributes( { text: v } ) }
+                    url={ attributes.url }
+                    opensInNewTab={ Boolean( attributes.opensInNewTab ) }
+                    dynamicData={ attributes.urlDynamic || {} }
+                    onTextChange={ ( v ) => setAttributes( { text: v } ) }
+                    onLinkChange={ updateLink }
+                    contextLabel={ __( 'Button destination', 'cinderwell' ) }
                     placeholder={ __( 'Button text…', 'cinderwell' ) }
                     allowedFormats={ [] }
-                    onClick={ ( event ) => event.preventDefault() }
                 />
             </>
         );

@@ -2,9 +2,9 @@
 Contributors: stevensinc
 Tags: gutenberg, blocks, design-system, accessibility
 Requires at least: 6.3
-Tested up to: 6.5
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.0
+Stable tag: 0.1.16
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,7 +16,7 @@ Cinderwell is a curated Gutenberg block library that enforces design system cons
 
 = Features =
 
-* 10 purpose-built blocks (Hero, Body, CTA, Image+Text, Quote, Gallery, FAQ, Two-Column, Section, Gravity Form)
+* Purpose-built page, content, media, navigation, and commerce blocks
 * Design system tokens via CSS custom properties
 * WCAG 2.1 AA accessible by default
 * JSON-LD structured data for FAQ and Quote blocks
@@ -31,6 +31,19 @@ Cinderwell is a curated Gutenberg block library that enforces design system cons
 3. Run `npm install && npm run build` in the plugin directory
 
 == Changelog ==
+
+= 0.1.16 =
+* Move WooCommerce page-shell ownership into the plugin and normalize responsive legacy product grids.
+* Add FSE template-override diagnostics and parent-theme update support.
+
+= 0.1.15 =
+* Add tokenized login and account-dashboard layouts for WooCommerce.
+
+= 0.1.12 =
+* Add a conditional WooCommerce token adapter for native store blocks and templates.
+
+= 0.1.11 =
+* Show the shared link editor beside buttons and links while their text is being edited.
 
 = 0.1.0 =
 * Initial release

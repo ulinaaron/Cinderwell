@@ -12,7 +12,7 @@ import { useDispatch, useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { ConditionsPanel } from './conditions-panel';
-import { LinkSettingsControl, getDynamicLinkValue } from './link-control';
+import { EditableLink, LinkSettingsControl } from './link-control';
 
 /**
  * Block identity strip — compact, pinned at top.
@@ -780,22 +780,29 @@ export const ButtonRepeater = ( { buttons = [], onChange } ) => {
 export const ButtonSave = ( { buttons = [], onChange } ) => {
     if ( ! buttons.length ) return null;
     const updateText = ( index, text ) => onChange( buttons.map( ( button, buttonIndex ) => buttonIndex === index ? { ...button, text } : button ) );
+    const updateLink = ( index, changes ) => onChange( buttons.map( ( button, buttonIndex ) => buttonIndex === index ? {
+        ...button,
+        ...( Object.prototype.hasOwnProperty.call( changes, 'url' ) ? { url: changes.url } : {} ),
+        ...( Object.prototype.hasOwnProperty.call( changes, 'opensInNewTab' ) ? { opensInNewTab: changes.opensInNewTab } : {} ),
+        ...( Object.prototype.hasOwnProperty.call( changes, 'dynamicData' ) ? { urlDynamic: changes.dynamicData } : {} ),
+    } : button ) );
 
     return (
         <div className="cinderwell-buttons">
             { buttons.map( ( btn, i ) => onChange ? (
-                <RichText
+                <EditableLink
                     key={ i }
                     tagName="a"
-                    href={ getDynamicLinkValue( btn.url, btn.urlDynamic ) || '#' }
-                    target={ btn.opensInNewTab ? '_blank' : undefined }
-                    rel={ btn.opensInNewTab ? 'noopener noreferrer' : undefined }
                     className={ `btn btn--${ btn.variant || 'primary' } btn--${ btn.size || 'md' }` }
                     value={ btn.text }
-                    onChange={ ( text ) => updateText( i, text ) }
+                    url={ btn.url }
+                    opensInNewTab={ Boolean( btn.opensInNewTab ) }
+                    dynamicData={ btn.urlDynamic || {} }
+                    onTextChange={ ( text ) => updateText( i, text ) }
+                    onLinkChange={ ( changes ) => updateLink( i, changes ) }
+                    contextLabel={ __( 'Button destination', 'cinderwell' ) }
                     placeholder={ __( 'Button text…', 'cinderwell' ) }
                     allowedFormats={ [] }
-                    onClick={ ( event ) => event.preventDefault() }
                 />
             ) : (
                 <RichText.Content

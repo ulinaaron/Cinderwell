@@ -1,4 +1,4 @@
-import { LinkControl } from '@wordpress/block-editor';
+import { LinkControl, RichText } from '@wordpress/block-editor';
 import { Button, Popover } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
@@ -65,4 +65,70 @@ export const LinkSettingsControl = ( { url = '', opensInNewTab = false, dynamicD
             onClose={ () => setShowDynamicData( false ) }
         /> }
     </div>;
+};
+
+/**
+ * Editable link text with an on-canvas view into the shared link settings.
+ *
+ * The popover deliberately renders LinkSettingsControl rather than introducing
+ * another URL field, so inline editing and the inspector use the same control.
+ */
+export const EditableLink = ( {
+    tagName = 'a',
+    value = '',
+    url = '',
+    opensInNewTab = false,
+    dynamicData = {},
+    onTextChange,
+    onLinkChange,
+    contextLabel = __( 'Link destination', 'cinderwell' ),
+    ...richTextProps
+} ) => {
+    const [ contextAnchor, setContextAnchor ] = useState( null );
+    const closeContext = () => setContextAnchor( null );
+    const openContext = ( event ) => setContextAnchor( event.currentTarget );
+    const suppliedOnClick = richTextProps.onClick;
+    const suppliedOnFocus = richTextProps.onFocus;
+
+    return <>
+        <RichText
+            { ...richTextProps }
+            tagName={ tagName }
+            href={ getDynamicLinkValue( url, dynamicData ) || '#' }
+            target={ opensInNewTab ? '_blank' : undefined }
+            rel={ opensInNewTab ? 'noopener noreferrer' : undefined }
+            value={ value }
+            onChange={ onTextChange }
+            onFocus={ ( event ) => {
+                openContext( event );
+                suppliedOnFocus?.( event );
+            } }
+            onClick={ ( event ) => {
+                event.preventDefault();
+                openContext( event );
+                suppliedOnClick?.( event );
+            } }
+        />
+        { contextAnchor && <Popover
+            anchor={ contextAnchor }
+            onClose={ closeContext }
+            placement="bottom-start"
+            offset={ 8 }
+            focusOnMount={ false }
+            className="cw-popover cw-link-context-popover"
+        >
+            <div className="cw-popover__inner">
+                <div className="cw-popover__head">
+                    <span className="cw-popover__title">{ contextLabel }</span>
+                    <button type="button" className="cw-popover__close" onClick={ closeContext } aria-label={ __( 'Close', 'cinderwell' ) }>&times;</button>
+                </div>
+                <LinkSettingsControl
+                    url={ url }
+                    opensInNewTab={ opensInNewTab }
+                    dynamicData={ dynamicData }
+                    onChange={ onLinkChange }
+                />
+            </div>
+        </Popover> }
+    </>;
 };
