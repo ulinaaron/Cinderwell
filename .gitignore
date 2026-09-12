@@ -19,6 +19,10 @@
 /wp-content/*
 !/wp-content/plugins/
 !/wp-content/themes/
+!/wp-content/mu-plugins/
+
+/wp-content/mu-plugins/*
+!/wp-content/mu-plugins/cinderwell-local-update-guard.php
 
 /wp-content/plugins/*
 !/wp-content/plugins/cinderwell/

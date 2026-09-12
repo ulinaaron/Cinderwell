@@ -18,6 +18,14 @@ class Update_Mechanism {
     private $update_info_loaded = false;
 
     public function __construct() {
+        if ( defined( 'CINDERWELL_DISABLE_UPDATES' ) && CINDERWELL_DISABLE_UPDATES ) {
+            return;
+        }
+
+        if ( ! apply_filters( 'cinderwell_updates_enabled', true ) ) {
+            return;
+        }
+
         add_filter( 'pre_set_site_transient_update_plugins', [ $this, 'check_for_updates' ] );
         add_filter( 'pre_set_site_transient_update_themes', [ $this, 'check_for_theme_updates' ] );
         add_filter( 'plugins_api', [ $this, 'plugin_info' ], 10, 3 );

@@ -87,6 +87,19 @@ node scripts/build-update-release.mjs
 unzip -Z1 dist/packages/cinderwell-*.zip | head
 ```
 
+### Local source protection
+
+The tracked `cinderwell-local-update-guard.php` must-use plugin activates only
+when WordPress reports a `local` or `development` environment. It disables the
+Cinderwell release client, removes cached update offers for Cinderwell, Alerts,
+and Cinderwell Base, and blocks a stale/manual update before it can replace the
+source directories. WordPress core and unrelated plugin/theme updates remain
+available.
+
+The release ZIP intentionally excludes development-only files such as `src/`
+and `node_modules/`, so never update a Cinderwell source checkout with a packaged
+release. Production sites are unaffected by the local guard.
+
 ## Repository scope
 
 Only Cinderwell's source, documentation, and bundled theme assets are tracked. WordPress core, other plugins and themes, uploads, databases, credentials, browser sessions, local showcase content, generated builds, and demo videos remain outside the repository.
