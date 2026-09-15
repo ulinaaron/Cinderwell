@@ -2,6 +2,9 @@
 
 A curated Gutenberg block library with design system constraints. Content editors get clean, accessible blocks with only content fields and design-system dropdowns — no raw design controls.
 
+Optional bundled modules add reusable content systems and token-based entrance
+animations without increasing the default frontend footprint.
+
 ## Requirements
 
 - WordPress 6.3+
@@ -44,9 +47,11 @@ npm run lint:css # Lint CSS
 | Slot Layout | Controlled grid assembled from approved slot types |
 | Two Column | Two-column layout with independent content |
 | Section | Generic container with InnerBlocks |
-| Loop | Dynamic post and custom-post-type listing with filtering and pagination |
+| Loop | Dynamic listing with filtering, pagination, and four switchable presentation layouts |
+| Page Header | Dynamic Page title with optional description, breadcrumbs, and per-Page overrides |
 | Mega Menu | Wide, responsive content panels nested in the native Navigation block |
 | Gravity Form | Gravity Forms integration with design token styling |
+| Utility Bar | Compact FSE header utility links sourced from Company Details |
 
 ## Atoms
 
@@ -63,10 +68,115 @@ npm run lint:css # Lint CSS
 CSS custom properties prefixed `--cw-*` cover semantic colors, typography and
 line height, spacing, layout gaps and gutters, widths, radii, shadows, images,
 and motion. Override them from the Design Tokens sidebar in the block editor.
+The color system includes semantic Info, Success, and Danger states, derived
+Brand Light and Brand Dark shades, and three optional client accent colors.
+These tokens are available in block Background controls; the Text control
+measures the site’s current resolved colors and narrows its palette to WCAG AA
+foreground pairings for the chosen surface. Changes in the token editor are
+recalculated in the live block preview before they are saved.
 
 ## Extension API
 
 See `EXTENDING.md` for filter and action hooks.
+
+## Editor Access
+
+**Cinderwell → Editor Access** provides role-based editor guardrails. Each role
+can use a Full Design, Content Editing, Text Only, or Custom preset and can
+have individual Cinderwell blocks removed from its inserter. Restricted
+controls are hidden and their attribute updates are filtered in Gutenberg;
+existing blocks remain registered and continue to render. Administrators
+always retain full access.
+
+## Block settings clipboard
+
+Use **Copy settings** and **Paste settings** in a Cinderwell block's Options
+menu to reuse compatible layout, appearance, spacing, visibility, animation,
+and image-presentation choices. Text, links, media selections, captions, and
+dynamic data remain unchanged. Compatible settings can move between related
+block types, while unsupported attributes are ignored. The feature respects
+Editor Access and can be disabled under **Cinderwell → Settings → Advanced**.
+Loop layout slugs and compatible presentation settings are included, while its
+content type, filters, ordering, item count, links, and semantic Loop type are
+left alone.
+
+## Patterns and variations
+
+Patterns are composition recipes for inserting several configured blocks.
+Switchable variations are a presentation layer on an existing block instance:
+they do not replace authored content or data choices. Loop includes Cards,
+Media List, Minimal List, and Featured Lead. Card Grid includes Raised,
+Bordered, Split Rows, Mosaic, Posters, and Directory. Hero includes Split,
+Statement, Editorial, Immersive, and Framed. Client themes can add, replace, or hide
+these live definitions through `cinderwell_block_variations`; see
+`EXTENDING.md`.
+
+## Add-Ons
+
+Cinderwell → Add-Ons combines independently packaged extensions
+from the Cinderwell release manifest with modules bundled in core. Bundled
+modules are inert until enabled and remain discoverable if the remote catalog
+is temporarily unavailable.
+
+### Teams
+
+The bundled Teams module can use **People / Person** or **Team Members / Team
+Member** terminology. It provides:
+
+- an optional `cw_person` content type with profile photo and biography;
+- hierarchical People Categories;
+- first name, last name, position, and opt-in contact/social fields;
+- public profile pages that can be enabled or disabled independently; and
+- a focused People variation of the Loop block with category filtering and
+  page or non-linked card behavior.
+
+Modal profile behavior is intentionally deferred until Cinderwell has a shared
+accessible modal/off-canvas primitive.
+
+### Portfolio
+
+The bundled Portfolio module provides a `cw_project` content type, hierarchical
+Portfolio Categories, configurable project fields, a focused Portfolio Loop
+variation, and editable block-template defaults for single items, the archive,
+and category archives. Public item URLs can be disabled while content remains
+available to loops.
+
+Child themes can override the module templates with standard FSE files:
+
+- `templates/single-cw_project.html`
+- `templates/archive-cw_project.html`
+- `templates/taxonomy-cw_portfolio_category.html`
+
+The shared `Cinderwell\Admin_Fields` schema renderer/sanitizer powers Teams,
+Portfolio, and Company Details settings and item metadata. Future bundled
+modules should use it instead of creating another one-off table renderer and
+sanitization branch.
+
+### Company Details
+
+The bundled Company Details module stores reusable organization identity,
+logos, contact, address, hours, and named or custom social-profile information.
+It can optionally output Organization JSON-LD when another SEO plugin does not
+own that schema. Once enabled, stored and derived values—including formatted
+address, telephone/email links, logo URLs, and a copyright line—appear in the
+block editor's Dynamic Data picker under **Company**. Field definitions can be
+changed with the `cinderwell_company_details_fields` filter.
+
+### Locations
+
+The bundled Locations module depends on Company Details and supplies a
+`cw_location` content type for branches, offices, campuses, and service areas.
+Location pages and archives are optional; entries remain available through the
+focused Locations Loop variation when public URLs are disabled. Child themes
+can override `templates/single-cw_location.html` and
+`templates/archive-cw_location.html`.
+
+## Settings portability
+
+Cinderwell → Import / Export moves add-on activation, design tokens,
+and module settings between sites in a versioned JSON file. Content, media, and
+FSE templates are intentionally excluded. Each bundled add-on also exposes a
+reset-to-defaults action from the Add-Ons screen.
 
 ## License
 

@@ -18,7 +18,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="↗" title={ __( 'Link', 'cinderwell' ) } description={ __( 'Inline text link', 'cinderwell' ) } />
-                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-links">
                         <LinkSettingsControl
                             url={ attributes.url }
                             opensInNewTab={ Boolean( attributes.opensInNewTab ) }

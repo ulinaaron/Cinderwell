@@ -19,7 +19,7 @@ registerBlockType( metadata.name, {
                 <InspectorControls>
                     <BlockIdentity icon="▧" title={ __( 'Image', 'cinderwell' ) } description={ __( 'Standalone media', 'cinderwell' ) } />
                     { attributes.imageId > 0 && (
-                    <PanelBody title={ __( 'Media', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Media', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-media">
                             <ImageSettingsControl
                                 alt={ attributes.imageAlt }
                                 fit={ attributes.imageFit }

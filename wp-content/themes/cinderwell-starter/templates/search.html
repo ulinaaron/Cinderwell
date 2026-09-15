@@ -1,28 +1,13 @@
 <!-- wp:template-part {"slug":"header","theme":"cinderwell-starter"} /-->
 
-<!-- wp:group {"tagName":"main","className":"site-main","style":{"spacing":{"padding":{"top":"3rem","bottom":"3rem"}}},"layout":{"type":"constrained"}} -->
-<main class="wp-block-group site-main" style="padding-top:3rem;padding-bottom:3rem"><!-- wp:query-title {"type":"search","showPrefix":true} /-->
+<!-- wp:group {"tagName":"main","align":"full","className":"site-main cinderwell-search-page","layout":{"type":"default"}} -->
+<main class="wp-block-group alignfull site-main cinderwell-search-page"><!-- wp:cinderwell/page-header {"align":"full"} /-->
 
-<!-- wp:search {"label":"Search","showLabel":false,"buttonText":"Search"} /-->
+<!-- wp:group {"align":"wide","className":"cinderwell-search-page__form","layout":{"type":"constrained","contentSize":"var(--cw-width-wide)"}} -->
+<div class="wp-block-group alignwide cinderwell-search-page__form"><!-- wp:search {"label":"Search the site","showLabel":false,"placeholder":"Search the site","buttonText":"Search","buttonUseIcon":false} /--></div>
+<!-- /wp:group -->
 
-<!-- wp:query {"query":{"perPage":10,"pages":0,"offset":0,"postType":"any","order":"desc","orderBy":"date","author":"","search":"","exclude":[],"sticky":"","inherit":true},"layout":{"type":"default"}} -->
-<div class="wp-block-query"><!-- wp:post-template -->
-<!-- wp:post-title {"isLink":true} /-->
-<!-- wp:post-excerpt /-->
-<!-- /wp:post-template -->
-
-<!-- wp:query-pagination {"layout":{"type":"flex","justifyContent":"space-between"}} -->
-<!-- wp:query-pagination-previous /-->
-<!-- wp:query-pagination-numbers /-->
-<!-- wp:query-pagination-next /-->
-<!-- /wp:query-pagination -->
-
-<!-- wp:query-no-results -->
-<!-- wp:paragraph -->
-<p>No results found.</p>
-<!-- /wp:paragraph -->
-<!-- /wp:query-no-results --></div>
-<!-- /wp:query --></main>
+<!-- wp:cinderwell/loop {"queryMode":"inherit","layout":"media-list","showHeading":false,"itemHeadingLevel":2,"showFeaturedImage":true,"showContentType":true,"showDate":false,"showTerms":false,"showExcerpt":true,"showReadMore":true,"readMoreLabel":"View result","showPagination":true,"emptyMessage":"No results found. Try another search term.","columns":"1","columnsTablet":"1","columnsMobile":"1","width":"wide","background":"white","align":"full"} /--></main>
 <!-- /wp:group -->
 
 <!-- wp:template-part {"slug":"footer","theme":"cinderwell-starter"} /-->

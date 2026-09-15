@@ -17,6 +17,12 @@ const sizeOptions = [
   { value: "lg", label: __("Large", "cinderwell") },
 ];
 
+const editorTokenKeys = new Set(
+  (window.cinderwellEditorSettings?.tokens || []).map((token) => token.key),
+);
+const hasEditorToken = (key) =>
+  editorTokenKeys.size === 0 || editorTokenKeys.has(key);
+
 const colorOptions = [
   {
     value: "brand",
@@ -28,6 +34,56 @@ const colorOptions = [
     label: __("Text", "cinderwell"),
     color: "var(--cw-color-text, #1a1a1a)",
   },
+  {
+    value: "muted",
+    label: __("Muted", "cinderwell"),
+    color: "var(--cw-color-muted, #666666)",
+  },
+  {
+    value: "brand-light",
+    label: __("Brand Light", "cinderwell"),
+    color: "var(--cw-color-brand-light, #f1dbcc)",
+  },
+  {
+    value: "brand-dark",
+    label: __("Brand Dark", "cinderwell"),
+    color: "var(--cw-color-brand-dark, #8a3900)",
+  },
+  {
+    value: "info",
+    label: __("Info", "cinderwell"),
+    color: "var(--cw-color-info, #005ea8)",
+  },
+  {
+    value: "success",
+    label: __("Success", "cinderwell"),
+    color: "var(--cw-color-success, #287d3c)",
+  },
+  {
+    value: "danger",
+    label: __("Danger", "cinderwell"),
+    color: "var(--cw-color-danger, #b42318)",
+  },
+  ...[
+    {
+      value: "accent-1",
+      key: "cw_color_accent_1",
+      label: __("Accent 1", "cinderwell"),
+      color: "var(--cw-color-accent-1, #6f42c1)",
+    },
+    {
+      value: "accent-2",
+      key: "cw_color_accent_2",
+      label: __("Accent 2", "cinderwell"),
+      color: "var(--cw-color-accent-2, #007c83)",
+    },
+    {
+      value: "accent-3",
+      key: "cw_color_accent_3",
+      label: __("Accent 3", "cinderwell"),
+      color: "var(--cw-color-accent-3, #9a6700)",
+    },
+  ].filter((option) => hasEditorToken(option.key)),
   {
     value: "dark",
     label: __("Dark", "cinderwell"),

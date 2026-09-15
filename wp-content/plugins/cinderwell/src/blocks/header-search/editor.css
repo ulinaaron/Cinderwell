@@ -1,0 +1,12 @@
+.editor-styles-wrapper .cinderwell-header-search {
+	display: inline-flex;
+	align-items: center;
+}
+
+.editor-styles-wrapper .cinderwell-header-search__toggle {
+	cursor: default;
+}
+
+.editor-styles-wrapper .cinderwell-header-search__panel {
+	display: none;
+}

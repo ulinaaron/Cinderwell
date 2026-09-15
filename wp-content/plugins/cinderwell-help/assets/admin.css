@@ -1,0 +1,273 @@
+.cw-help {
+	--cw-help-accent: #c64e00;
+	max-width: 1180px;
+}
+
+.cw-help__header {
+	display: flex;
+	align-items: end;
+	justify-content: space-between;
+	gap: 32px;
+	margin: 24px 0;
+	padding: 28px 32px;
+	background: #1c1c1c;
+	color: #fff;
+	border-top: 4px solid var(--cw-help-accent);
+}
+
+.cw-help__header h1 {
+	margin: 2px 0 8px;
+	color: inherit;
+	font-size: 32px;
+}
+
+.cw-help__header p {
+	margin: 0;
+	color: #d7d7d7;
+	font-size: 15px;
+}
+
+.cw-help__eyebrow {
+	color: #f3a36f;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.cw-help__search {
+	display: grid;
+	flex: 0 1 340px;
+	gap: 6px;
+	font-weight: 600;
+}
+
+.cw-help__search input[type="search"] {
+	width: 100%;
+	min-height: 42px;
+	margin: 0;
+}
+
+.cw-help__layout {
+	display: grid;
+	grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
+	gap: 32px;
+}
+
+.cw-help__nav {
+	display: flex;
+	flex-direction: column;
+	align-self: start;
+	padding: 8px;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	position: sticky;
+	top: 46px;
+}
+
+.cw-help__nav button {
+	padding: 11px 12px;
+	background: transparent;
+	border: 0;
+	border-left: 3px solid transparent;
+	color: #2c3338;
+	cursor: pointer;
+	font-size: 14px;
+	text-align: left;
+}
+
+.cw-help__nav button:hover,
+.cw-help__nav button:focus-visible {
+	background: #f6f7f7;
+	color: #135e96;
+}
+
+.cw-help__nav button.is-active {
+	background: #f6f7f7;
+	border-left-color: var(--cw-help-accent);
+	font-weight: 600;
+}
+
+.cw-help__count {
+	margin: 0 0 10px;
+	color: #646970;
+}
+
+.cw-help__topics {
+	display: grid;
+	gap: 12px;
+}
+
+.cw-help-topic {
+	background: #fff;
+	border: 1px solid #dcdcde;
+	box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+}
+
+.cw-help-topic[hidden] {
+	display: none;
+}
+
+.cw-help-topic summary {
+	display: grid;
+	grid-template-columns: 28px minmax(0, 1fr);
+	gap: 12px;
+	align-items: start;
+	padding: 18px 20px;
+	cursor: pointer;
+	list-style: none;
+}
+
+.cw-help-topic summary::-webkit-details-marker {
+	display: none;
+}
+
+.cw-help-topic summary::after {
+	content: "+";
+	grid-column: 3;
+	grid-row: 1;
+	font-size: 22px;
+	line-height: 1;
+}
+
+.cw-help-topic details[open] summary::after {
+	content: "−";
+}
+
+.cw-help__empty .dashicons {
+	width: 32px;
+	height: 32px;
+	font-size: 32px;
+	color: #8c8f94;
+}
+
+.cw-help-topic summary .dashicons {
+	color: var(--cw-help-accent);
+}
+
+.cw-help-topic summary strong,
+.cw-help-topic summary small {
+	display: block;
+}
+
+.cw-help-topic summary strong {
+	margin-bottom: 5px;
+	font-size: 16px;
+}
+
+.cw-help-topic summary small {
+	color: #646970;
+	font-size: 13px;
+	font-weight: 400;
+}
+
+.cw-help-topic__body {
+	max-width: 760px;
+	padding: 0 60px 22px;
+	font-size: 14px;
+	line-height: 1.65;
+}
+
+.cw-help-topic__body > :first-child {
+	margin-top: 0;
+}
+
+.cw-help-topic__body > :last-child {
+	margin-bottom: 0;
+}
+
+.cw-help__empty {
+	padding: 60px 24px;
+	background: #fff;
+	border: 1px dashed #c3c4c7;
+	text-align: center;
+}
+
+[id="cinderwell_help_dashboard"] .inside {
+	margin: 0;
+	padding: 0;
+}
+
+.cw-help-dashboard {
+	position: relative;
+	padding: 20px;
+	border-top: 3px solid var(--cw-help-accent, #c64e00);
+}
+
+.cw-help-dashboard__icon {
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	width: 34px;
+	height: 34px;
+	color: #c64e00;
+	font-size: 34px;
+}
+
+.cw-help-dashboard > p:first-of-type {
+	max-width: 82%;
+	margin-top: 0;
+	font-size: 14px;
+	line-height: 1.55;
+}
+
+.cw-help-dashboard__links {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 8px;
+	margin: 16px 0;
+}
+
+.cw-help-dashboard__links li {
+	margin: 0;
+}
+
+.cw-help-dashboard__links a {
+	display: block;
+	height: 100%;
+	padding: 10px;
+	background: #f6f7f7;
+	border-left: 2px solid #c64e00;
+	box-sizing: border-box;
+	text-decoration: none;
+}
+
+.cw-help-dashboard__links a:hover,
+.cw-help-dashboard__links a:focus-visible {
+	background: #fff7f2;
+}
+
+.cw-help-dashboard__action {
+	margin: 18px 0 0;
+}
+
+@media (max-width: 782px) {
+
+	.cw-help__header {
+		align-items: stretch;
+		flex-direction: column;
+		padding: 24px;
+	}
+
+	.cw-help__search {
+		flex-basis: auto;
+	}
+
+	.cw-help__layout {
+		grid-template-columns: 1fr;
+		gap: 18px;
+	}
+
+	.cw-help__nav {
+		position: static;
+	}
+
+	.cw-help-topic__body {
+		padding-right: 20px;
+		padding-left: 20px;
+	}
+
+	.cw-help-dashboard__links {
+		grid-template-columns: 1fr;
+	}
+}

@@ -62,7 +62,7 @@ export const ConditionsPanel = ( { attributes, setAttributes } ) => {
     };
 
     return <>
-        <PanelBody title={ __( 'Conditions', 'cinderwell' ) } initialOpen={ active.length > 0 } className="cw-conditions-panel">
+        <PanelBody title={ __( 'Conditions', 'cinderwell' ) } initialOpen={ active.length > 0 } className="cw-conditions-panel cw-access-advanced">
             <span className="cw-conditions-panel__label">{ __( 'Only show this block or its sections if', 'cinderwell' ) }</span>
             { active.length ? <div className="cw-conditions-panel__summary">{ active.map( ( label, index ) => <span key={ `${ label }-${ index }` }>{ label }</span> ) }</div> : <p className="cw-conditions-panel__empty">{ __( 'No conditions set. This block always shows.', 'cinderwell' ) }</p> }
             <Button variant="secondary" onClick={ open }>{ __( 'Edit conditions', 'cinderwell' ) }</Button>

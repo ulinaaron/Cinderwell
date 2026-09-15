@@ -1,0 +1,9 @@
+{
+    "name": "cinderwell-performance",
+    "version": "0.1.0",
+    "description": "Performance and Hydration modules for Cinderwell",
+    "private": true,
+    "scripts": {
+        "build": "echo 'No build step — plain JS/CSS assets.'"
+    }
+}

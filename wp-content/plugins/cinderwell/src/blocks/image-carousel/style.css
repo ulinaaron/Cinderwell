@@ -136,12 +136,39 @@
 	background-color: var(--cw-color-brand);
 }
 
-:is(.cinderwell-image-carousel--bg-dark, .cinderwell-image-carousel--bg-brand) .cinderwell-image-carousel__arrow:hover:not(:disabled),
-:is(.cinderwell-image-carousel--bg-dark, .cinderwell-image-carousel--bg-brand) .cinderwell-image-carousel__indicator.is-active,
-:is(.cinderwell-image-carousel--bg-dark, .cinderwell-image-carousel--bg-brand) .cinderwell-image-carousel__indicator:hover {
+:is(
+	.cinderwell-image-carousel--bg-dark,
+	.cinderwell-image-carousel--bg-brand,
+	.cinderwell-image-carousel[class*="--bg-brand-dark"],
+	.cinderwell-image-carousel[class*="--bg-muted"],
+	.cinderwell-image-carousel[class*="--bg-info"],
+	.cinderwell-image-carousel[class*="--bg-success"],
+	.cinderwell-image-carousel[class*="--bg-danger"],
+	.cinderwell-image-carousel[class*="--bg-accent-"]
+) .cinderwell-image-carousel__arrow:hover:not(:disabled),
+:is(
+	.cinderwell-image-carousel--bg-dark,
+	.cinderwell-image-carousel--bg-brand,
+	.cinderwell-image-carousel[class*="--bg-brand-dark"],
+	.cinderwell-image-carousel[class*="--bg-muted"],
+	.cinderwell-image-carousel[class*="--bg-info"],
+	.cinderwell-image-carousel[class*="--bg-success"],
+	.cinderwell-image-carousel[class*="--bg-danger"],
+	.cinderwell-image-carousel[class*="--bg-accent-"]
+) .cinderwell-image-carousel__indicator.is-active,
+:is(
+	.cinderwell-image-carousel--bg-dark,
+	.cinderwell-image-carousel--bg-brand,
+	.cinderwell-image-carousel[class*="--bg-brand-dark"],
+	.cinderwell-image-carousel[class*="--bg-muted"],
+	.cinderwell-image-carousel[class*="--bg-info"],
+	.cinderwell-image-carousel[class*="--bg-success"],
+	.cinderwell-image-carousel[class*="--bg-danger"],
+	.cinderwell-image-carousel[class*="--bg-accent-"]
+) .cinderwell-image-carousel__indicator:hover {
 	border-color: var(--cw-color-white);
 	background-color: var(--cw-color-white);
-	color: var(--cw-color-dark);
+	color: var(--cw-surface-background, var(--cw-color-dark));
 }
 
 [dir="rtl"] .cinderwell-image-carousel__arrow > [aria-hidden="true"] {

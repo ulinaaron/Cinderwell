@@ -1,0 +1,23 @@
+.cinderwell-person-profile__position {
+	margin: 0 0 var(--cw-gap-md);
+	color: var(--cw-color-muted);
+	font-size: var(--cw-font-size-lg);
+	line-height: var(--cw-line-height-body);
+}
+
+.cinderwell-person-profile__contact {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35em 0.65em;
+	margin-bottom: var(--cw-gap-md);
+	font-size: var(--cw-font-size-sm);
+}
+
+.cinderwell-person-profile__contact a {
+	color: var(--cw-color-link);
+	text-underline-offset: 0.2em;
+}
+
+.cinderwell-person-profile__contact a:hover {
+	color: var(--cw-color-link-hover);
+}

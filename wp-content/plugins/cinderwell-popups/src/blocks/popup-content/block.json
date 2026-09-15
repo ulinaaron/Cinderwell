@@ -1,0 +1,21 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cinderwell-popups/popup-content",
+  "title": "Popup Content",
+  "category": "cinderwell-popups",
+  "icon": "welcome-widgets-menus",
+  "description": "Container for the Cinderwell blocks displayed inside a popup.",
+  "supports": {
+    "align": false,
+    "color": false,
+    "typography": false,
+    "spacing": false,
+    "html": false,
+    "multiple": false,
+    "reusable": false
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./editor.css",
+  "style": "file:./style.css"
+}

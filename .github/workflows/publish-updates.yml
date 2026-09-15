@@ -27,7 +27,9 @@ jobs:
         with:
           node-version: 20
           cache: npm
-          cache-dependency-path: wp-content/plugins/cinderwell/package-lock.json
+          cache-dependency-path: |
+            wp-content/plugins/cinderwell/package-lock.json
+            wp-content/plugins/cinderwell-popups/package-lock.json
 
       - name: Install build dependencies
         working-directory: wp-content/plugins/cinderwell
@@ -35,6 +37,14 @@ jobs:
 
       - name: Build Cinderwell
         working-directory: wp-content/plugins/cinderwell
+        run: npm run build
+
+      - name: Install Popups build dependencies
+        working-directory: wp-content/plugins/cinderwell-popups
+        run: npm ci
+
+      - name: Build Cinderwell Popups
+        working-directory: wp-content/plugins/cinderwell-popups
         run: npm run build
 
       - name: Package release

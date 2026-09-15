@@ -9,6 +9,8 @@ import { getImageClassName, getMediaUrl } from '../../shared/media';
 import { IconGlyph } from '../../shared/icon-library';
 import { IconSettingsControl, getIconStyleClassName } from '../../shared/icon-controls';
 import { EditableLink, LinkSettingsControl } from '../../shared/link-control';
+import { canEditControl, filterEditorAccessChanges } from '../../shared/editor-access';
+import { VariationPicker, resolveBlockVariation } from '../../shared/variation-picker';
 import metadata from './block.json';
 
 let cardCounter = 0;
@@ -33,7 +35,9 @@ const columnOptions = [
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes, clientId } ) => {
-        const blockProps = useBlockProps( getBackgroundImageProps( { className: `cinderwell-card-grid cinderwell-card-grid--bg-${ attributes.background } cinderwell-card-grid--cols-${ attributes.columns }${ getResponsiveColumnsClassName( attributes ) }${ getCardColorClassName( attributes.cardColor ) }${ getTypographyClassName( attributes ) }` }, attributes ) );
+        const resolvedLayout = resolveBlockVariation( metadata.name, attributes.layout, 'raised' );
+        const activeLayout = resolvedLayout?.slug || 'raised';
+        const blockProps = useBlockProps( getBackgroundImageProps( { className: `cinderwell-card-grid cinderwell-card-grid--bg-${ attributes.background } cinderwell-card-grid--cols-${ attributes.columns }${ getResponsiveColumnsClassName( attributes ) }${ getCardColorClassName( attributes.cardColor ) } cinderwell-card-grid--layout-${ activeLayout }${ getTypographyClassName( attributes ) }` }, attributes ) );
         const cards = attributes.cards || [];
         const resolvedImageUrls = useSelect( ( select ) => cards.map( ( card ) => card.imageUrl || getMediaUrl( card.image > 0 ? select( 'core' ).getMedia( card.image ) : null ) ), [ cards.map( ( card ) => `${ card.image || 0 }:${ card.imageUrl || '' }` ).join( '|' ) ] );
         const secs = { eyebrow: attributes.showEyebrow, heading: attributes.showHeading, footnote: attributes.showFootnote };
@@ -53,7 +57,16 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="&#9638;" title={ __( 'Card Grid', 'cinderwell' ) } description={ __( 'Responsive card grid', 'cinderwell' ) } />
-                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    { canEditControl( 'layout' ) && (
+                        <VariationPicker
+                            blockName={ metadata.name }
+                            value={ attributes.layout }
+                            fallback="raised"
+                            title={ __( 'Variation', 'cinderwell' ) }
+                            onChange={ ( variation ) => setAttributes( filterEditorAccessChanges( variation.attributes || {}, attributes ) ) }
+                        />
+                    ) }
+                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-layout">
                         <SectionToggles sections={ [
                             { key: 'eyebrow', label: __( 'Eyebrow', 'cinderwell' ) },
                             { key: 'heading', label: __( 'Heading', 'cinderwell' ) },
@@ -67,7 +80,7 @@ registerBlockType( metadata.name, {
                             onChange={ ( breakpoint, value ) => setAttributes( breakpoint === 'desktop' ? { columns: value } : { [ breakpoint === 'tablet' ? 'columnsTablet' : 'columnsMobile' ]: value === 'auto' ? '' : value } ) }
                         />
                     </PanelBody>
-                    <PanelBody title={ __( 'Cards', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Cards', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-content">
                         { cards.map( ( card, i ) => (
                             <SortableItemCard
                                 key={ card.id || i }

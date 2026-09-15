@@ -45,8 +45,17 @@ Cinderwell is a curated Gutenberg block library for WordPress that enforces desi
 **Title:** Hero
 **Description:** Page-level hero with eyebrow, heading, image, and buttons
 **Slots:** eyebrow (string), heading (string), subheading (string), image (int), imageAlt (string, required), caption (string), buttons (array, max 3), footnote (string)
-**Design:** spacing (compact/comfy/airy), width (narrow/standard/wide/full), background (white/light/dark/brand), text size (auto/sm/md/lg), text color (auto/text/brand/dark/light/white)
-**Defaults:** spacing=comfy, width=standard, background=white
+**Design:** Split, Statement, Editorial, Background Image (`immersive` slug), and Framed layouts; spacing, width, image side and gap, alignment, background, and typography
+**Defaults:** layout=split, spacing=comfy, width=standard, background=white
+**Variation contract:** `layout` changes presentation only. Never replace or clear authored text, buttons, or media when applying a variation.
+
+### cinderwell/page-header
+**Title:** Page Header
+**Description:** Dynamic Page title with optional description and breadcrumbs
+**Content:** Current Page title, optional static or dynamically bound description, Home/ancestor/current breadcrumb trail
+**Design:** inherited or explicit background, spacing, width, alignment, and breadcrumb visibility
+**Overrides:** Page and post metadata may hide the header or override title, description, background, and breadcrumbs without changing the template
+**Defaults:** inherit the Page Headers settings; shipped defaults are light, wide, left-aligned, medium spacing, and breadcrumbs enabled
 
 ### cinderwell/body
 **Title:** Body
@@ -54,6 +63,13 @@ Cinderwell is a curated Gutenberg block library for WordPress that enforces desi
 **Slots:** eyebrow (string), heading (string), bodyContent (rich text), byline (string), pullquote (string), buttons (array, max 3), footnote (string)
 **Design:** spacing, width, background, text size, text color
 **Defaults:** spacing=comfy, width=standard, background=white
+
+### cinderwell/card-grid
+**Title:** Card Grid
+**Description:** Authored cards for services, features, products, or related content
+**Content:** Per-card image or icon, eyebrow, title, description, and button
+**Design:** Raised, Bordered, Split Rows, Mosaic, Posters, and Directory layouts; responsive columns, card surface, spacing, width, background, and typography
+**Variation contract:** `layout` changes presentation only. Never replace, reorder, or edit the `cards` array when applying a variation.
 
 ### cinderwell/cta
 **Title:** CTA
@@ -107,9 +123,23 @@ Cinderwell is a curated Gutenberg block library for WordPress that enforces desi
 **Description:** Dynamic listing for posts and public custom post types
 **Query:** post type, taxonomy term, item count, order, order-by, optional pagination
 **Content:** eyebrow, heading, featured image, terms, date, title, excerpt, read-more link
-**Design:** responsive 1–4 columns, image aspect, spacing, width, background, text size, text color
+**Design:** Cards, Media List, Minimal List, and Featured Lead layouts; responsive 1–4 columns, image aspect, spacing, width, background, text size, text color
 **Render:** PHP with `WP_Query`; extensible through `cinderwell_loop_query_args` and `cinderwell_loop_item_html`
 **Defaults:** 6 posts, newest first, 3/2/1 columns, width=wide, background=white
+
+Loop `variation` is reserved for semantic data modes such as People,
+Portfolio, and Locations. Loop `layout` is the switchable presentation slug.
+Never make a layout recipe change query, content, link, visibility, media, or
+dynamic-data attributes. Register client layouts through
+`cinderwell_block_variations`; keep CSS-only variants on the shared item markup
+and use `render_item_callback` only when the structure genuinely differs.
+
+Card Grid variations use the same registry and add their frontend modifier at
+render time so old static markup remains valid. Use `render_callback` only for
+trusted client layouts that cannot be expressed against the stable card markup.
+
+Hero variations use the same runtime modifier and may change only layout,
+alignment, width, image side, and split gap.
 
 ### cinderwell/accordion
 **Title:** Accordion
@@ -161,6 +191,14 @@ Cinderwell is a curated Gutenberg block library for WordPress that enforces desi
 **Design:** spacing, width, background
 **Render:** PHP callback using `[gravityform]` shortcode
 **Defaults:** spacing=comfy, width=standard, background=white, title=true, description=true, ajax=true
+
+### cinderwell/utility-bar
+**Title:** Utility Bar
+**Description:** Compact FSE header bar powered by the optional Company Details module
+**Fields:** phone, email, contact-link, social-profile visibility and mobile social visibility
+**Design:** dark, brand, light, or white token surface
+**Render:** PHP callback so Company Details changes update every header immediately; empty data produces no wrapper
+**Defaults:** phone and social profiles enabled, dark background
 
 ## Atom Reference
 
@@ -219,15 +257,35 @@ rules safe by default; user-aware rules must be intentionally exposed.
 | `--cw-color-light` | `#f8f5ef` | Light background |
 | `--cw-color-dark` | `#1a1a1a` | Dark background |
 | `--cw-color-brand` | `#b84c00` | Brand color |
+| `--cw-color-brand-light` | Derived | Subtle brand tint |
+| `--cw-color-brand-dark` | Derived | Strong brand shade |
 | `--cw-color-text` | `#1a1a1a` | Text color |
 | `--cw-color-bg` | `#ffffff` | Background color |
 | `--cw-color-brand-contrast` | `#ffffff` | Content on brand surfaces |
 | `--cw-color-surface` | `#ffffff` | Cards and raised surfaces |
 | `--cw-color-muted` | `#666666` | Secondary text |
+| `--cw-color-info` | `#005ea8` | Informational states |
+| `--cw-color-success` | `#287d3c` | Successful states |
+| `--cw-color-danger` | `#b42318` | Error and destructive states |
+| `--cw-color-accent-1` | `#6f42c1` | Optional accent |
+| `--cw-color-accent-2` | `#007c83` | Optional accent |
+| `--cw-color-accent-3` | `#9a6700` | Optional accent |
 | `--cw-color-border` | `#d9d6d0` | Borders and dividers |
 | `--cw-color-link` | `#b84c00` | Inline links |
 | `--cw-color-link-hover` | `#1a1a1a` | Link hover state |
 | `--cw-color-focus` | `#b84c00` | Keyboard focus rings |
+| `--cw-button-primary-background` | Brand | Primary button background and border |
+| `--cw-button-primary-foreground` | Brand contrast | Primary button text and icons |
+| `--cw-button-primary-hover-background` | Dark | Primary button hover background and border |
+| `--cw-button-primary-hover-foreground` | White | Primary button hover text and icons |
+| `--cw-button-secondary-foreground` | Brand | Secondary button text, icons, and border |
+| `--cw-button-secondary-hover-background` | Brand | Secondary button hover background and border |
+| `--cw-button-secondary-hover-foreground` | Brand contrast | Secondary button hover text and icons |
+| `--cw-button-ghost-foreground` | Text | Ghost button text and icons |
+| `--cw-button-ghost-background` | 7% ghost foreground | Ghost button background |
+| `--cw-button-ghost-hover-background` | 13% ghost foreground | Ghost button hover background |
+| `--cw-button-link-foreground` | Link | Link-style button text and icons |
+| `--cw-button-link-hover-foreground` | Link hover | Link-style button hover text and icons |
 | `--cw-font-heading` | `inherit` | Heading font family |
 | `--cw-font-body` | `inherit` | Body font family |
 | `--cw-line-height-tight` | `1.2` | Heading line height |
@@ -268,13 +326,24 @@ rules safe by default; user-aware rules must be intentionally exposed.
 - `cinderwell_render_{block_name}` — Override block markup. Params: `$html`, `$attributes`
 - `cinderwell_design_tokens` — Customize tokens. Params: `$tokens`, `$locale`
 - `cinderwell_gravity_form_args` — GF shortcode args. Params: `$args`, `$form_id`, `$attributes`
+- `cinderwell_loop_post_type_allowed` — Allow an intentional non-public Loop source. Params: `$allowed`, `$post_type_object`, `$attributes`
+- `cinderwell_loop_link_behavior` — Filter `page`/`none` item linking. Params: `$behavior`, `$post_type`, `$attributes`
 - `cinderwell_token_manifest` — Add tokens to manifest. Params: `$manifest`
+- `cinderwell_enable_accent_colors` — Show optional Accent 1–3 tokens and FSE presets. Return `false` from a client theme to remove them.
+- `cinderwell_enable_block_settings_clipboard` — Enable or disable the editor settings clipboard after the saved Advanced preference is resolved.
 - `cinderwell_admin_bar_capability` — Change the capability required for the shared admin-bar root
 
 ### Actions
 - `cinderwell_register_blocks` — Register custom blocks
 - `cinderwell_register_patterns` — Register custom patterns
 - `cinderwell_admin_bar_menu` — Add add-on nodes beneath the shared Cinderwell admin-bar root
+- `cinderwell_loop_item_after_title` — Render structured Loop metadata after an item title
+
+### Optional core modules
+- **Teams** (`teams`) — Disabled by default and enabled under Cinderwell → Add-Ons. Registers `cw_person`, `cw_people_category`, profile fields/settings, and the People variation of `cinderwell/loop`. Public profiles are independently optional; modal behavior must wait for the shared modal/off-canvas primitive.
+- **Portfolio** (`portfolio`) — Disabled by default and enabled under Cinderwell → Add-Ons. Registers `cw_project`, `cw_portfolio_category`, configurable project fields, a focused Loop variation, and plugin-fallback FSE templates. Keep its standard template slugs so child themes override them from `templates/`.
+- Add bundled modules through `cinderwell_bundled_addons`; add settings tabs through `cinderwell_settings_tabs`.
+- Use `Admin_Fields` for bundled-module settings and post-meta forms. Field definitions should be schema-driven and filtered so future modules such as Company Details do not duplicate rendering and sanitization.
 
 ## Common Tasks
 
@@ -308,8 +377,12 @@ rules safe by default; user-aware rules must be intentionally exposed.
 2. Add custom patterns via `cinderwell_register_patterns` hook
 3. Override tokens via `cinderwell_design_tokens` filter
 4. Override templates via `theme/cinderwell/{block}/index.html`
-5. Configure permissions via Cinderwell Settings > Permissions tab
+5. Configure block availability and editing guardrails via Cinderwell > Editor Access
 6. Depend on the public `cinderwell-base`, `cinderwell-actions`, `cinderwell-responsive`, and `cinderwell-media` style handles as needed
+
+New blocks automatically participate in the settings clipboard when their
+attributes follow the shared Editor Access grouping conventions. Clipboard
+pastes must preserve content, links, media selections, and dynamic data.
 
 ## Testing
 
@@ -321,7 +394,7 @@ rules safe by default; user-aware rules must be intentionally exposed.
 
 ## Gotchas
 
-- Block storage is JS `save()`, not PHP render — don't add `render_callback` (except Gravity Form)
+- Prefer JS `save()` for static content. Use metadata `render` for data-driven blocks such as Loop, Gravity Form, Tabs, and Utility Bar.
 - Every block must include all `supports: false` to strip design controls
 - Button array is capped at 3 — enforce in editor UI
 - Image alt text is required — block saves disabled without it

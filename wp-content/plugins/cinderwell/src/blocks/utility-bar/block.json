@@ -1,0 +1,34 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "cinderwell/utility-bar",
+    "title": "Utility Bar",
+    "category": "cinderwell",
+    "icon": "phone",
+    "description": "A compact header bar powered by Company Details.",
+    "supports": {
+        "align": ["full"],
+        "color": false,
+        "typography": false,
+        "spacing": false,
+        "border": false,
+        "anchor": false,
+        "customClassName": false,
+        "html": false,
+        "multiple": false,
+        "reusable": true
+    },
+    "attributes": {
+        "showPhone": { "type": "boolean", "default": true },
+        "showEmail": { "type": "boolean", "default": false },
+        "showSocials": { "type": "boolean", "default": true },
+        "showContact": { "type": "boolean", "default": false },
+        "showSocialsMobile": { "type": "boolean", "default": false },
+        "contactLabel": { "type": "string", "default": "Contact" },
+        "background": { "type": "string", "default": "dark" }
+    },
+    "editorScript": "file:./index.js",
+    "style": "file:./style.css",
+    "editorStyle": "file:./editor.css",
+    "render": "file:./render.php"
+}

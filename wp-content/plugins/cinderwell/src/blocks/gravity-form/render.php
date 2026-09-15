@@ -10,7 +10,8 @@ $show_title  = $attributes['title'] ?? true;
 $show_desc   = $attributes['description'] ?? true;
 $ajax        = $attributes['ajax'] ?? true;
 $width       = $attributes['width'] ?? 'standard';
-$background  = $attributes['background'] ?? 'white';
+$allowed_backgrounds = \Cinderwell\Design_Tokens::get_color_slugs( 'background' );
+$background          = in_array( $attributes['background'] ?? '', $allowed_backgrounds, true ) ? $attributes['background'] : 'white';
 
 $wrapper_classes = sprintf( 'cinderwell-form cinderwell-form--bg-%s', esc_attr( $background ) );
 

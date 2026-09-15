@@ -1,0 +1,35 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "cinderwell/page-header",
+    "title": "Page Header",
+    "category": "cinderwell",
+    "icon": "heading",
+    "description": "Dynamic page title, optional description, and breadcrumbs.",
+    "usesContext": [ "postId", "postType" ],
+    "supports": {
+        "align": [ "full" ],
+        "anchor": false,
+        "color": false,
+        "customClassName": false,
+        "html": false,
+        "multiple": false,
+        "spacing": false,
+        "typography": false
+    },
+    "attributes": {
+        "titleOverride": { "type": "string", "default": "" },
+        "description": { "type": "string", "default": "" },
+        "dynamicData": { "type": "object", "default": {} },
+        "background": { "type": "string", "default": "inherit" },
+        "breadcrumbs": { "type": "string", "default": "inherit" },
+        "alignment": { "type": "string", "default": "inherit" },
+        "width": { "type": "string", "default": "inherit" },
+        "spacing": { "type": "string", "default": "inherit" },
+        "align": { "type": "string", "default": "full" }
+    },
+    "editorScript": "file:./index.js",
+    "style": "file:./style.css",
+    "editorStyle": "file:./editor.css",
+    "render": "file:./render.php"
+}

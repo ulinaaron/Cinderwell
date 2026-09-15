@@ -119,6 +119,10 @@
 	cursor: pointer;
 }
 
+.cw-token-view__swatch--derived {
+	cursor: default;
+}
+
 .cw-token-view__badge {
 	padding: 2px 5px;
 	border-radius: 2px;
@@ -204,4 +208,27 @@
 	color: #757575;
 	font-size: 9px;
 	line-height: 1.35;
+}
+
+/* Role-based Editor Access hides controls in addition to filtering updates. */
+body.cw-editor-access-no-content .cw-access-content,
+body.cw-editor-access-no-links .cw-access-links,
+body.cw-editor-access-no-links .cinderwell-buttons-panel,
+body.cw-editor-access-no-media .cw-access-media,
+body.cw-editor-access-no-media .cw-fields-panel,
+body.cw-editor-access-no-appearance .cw-access-appearance,
+body.cw-editor-access-no-spacing .cw-access-spacing,
+body.cw-editor-access-no-layout .cw-access-layout,
+body.cw-editor-access-no-layout .cw-sections-panel,
+body.cw-editor-access-no-layout .cinderwell-content-panel,
+body.cw-editor-access-no-advanced .cw-access-advanced {
+	display: none !important;
+}
+
+body[data-cw-editor-access-preset="text"] .cw-access-content {
+	display: none !important;
+}
+
+.cw-editor-access-notice {
+	margin: 12px;
 }

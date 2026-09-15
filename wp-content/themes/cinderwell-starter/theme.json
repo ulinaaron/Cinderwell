@@ -16,7 +16,16 @@
                 { "slug": "white", "color": "#ffffff", "name": "White" },
                 { "slug": "light", "color": "#f8f5ef", "name": "Light" },
                 { "slug": "dark", "color": "#1a1a1a", "name": "Dark" },
-                { "slug": "brand", "color": "#c64f00", "name": "Brand" }
+                { "slug": "brand", "color": "#c64f00", "name": "Brand" },
+                { "slug": "brand-light", "color": "var(--cw-color-brand-light)", "name": "Brand Light" },
+                { "slug": "brand-dark", "color": "var(--cw-color-brand-dark)", "name": "Brand Dark" },
+                { "slug": "muted", "color": "var(--cw-color-muted)", "name": "Muted" },
+                { "slug": "info", "color": "var(--cw-color-info)", "name": "Info" },
+                { "slug": "success", "color": "var(--cw-color-success)", "name": "Success" },
+                { "slug": "danger", "color": "var(--cw-color-danger)", "name": "Danger" },
+                { "slug": "accent-1", "color": "var(--cw-color-accent-1)", "name": "Accent 1" },
+                { "slug": "accent-2", "color": "var(--cw-color-accent-2)", "name": "Accent 2" },
+                { "slug": "accent-3", "color": "var(--cw-color-accent-3)", "name": "Accent 3" }
             ]
         },
         "typography": {

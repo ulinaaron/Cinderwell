@@ -113,6 +113,14 @@
             "type": "string",
             "default": "center"
         },
+        "imageSide": {
+            "type": "string",
+            "default": "right"
+        },
+        "splitGap": {
+            "type": "string",
+            "default": "md"
+        },
         "imageAspect": {
             "type": "string",
             "default": "auto"
@@ -145,6 +153,10 @@
             "type": "boolean",
             "default": false
         },
+        "layout": {
+            "type": "string",
+            "default": "split"
+        },
         "spacingResponsive": {
             "type": "object",
             "default": {}
@@ -168,6 +180,10 @@
         "textStyles": {
             "type": "object",
             "default": {}
+        },
+        "alignment": {
+            "type": "string",
+            "default": "center"
         },
         "align": {
             "type": "string",

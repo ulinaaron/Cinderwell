@@ -1,0 +1,12 @@
+.editor-styles-wrapper .cinderwell-page-header {
+	min-height: 12rem;
+}
+
+.editor-styles-wrapper .cinderwell-page-header__dynamic-label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin-block-start: var(--cw-gap-sm);
+	font-size: var(--cw-font-size-sm);
+	opacity: 0.75;
+}

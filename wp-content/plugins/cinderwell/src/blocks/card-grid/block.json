@@ -58,6 +58,7 @@
         },
         "headingLevel": { "type": "integer", "default": 2 },
         "itemHeadingLevel": { "type": "integer", "default": 3 },
+        "layout": { "type": "string", "default": "raised" },
         "cards": {
             "type": "array",
             "default": []

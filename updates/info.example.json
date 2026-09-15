@@ -2,10 +2,10 @@
   "plugin": {
     "name": "Cinderwell",
     "slug": "cinderwell",
-    "version": "0.1.16",
+    "version": "0.1.34",
     "homepage": "https://github.com/ulinaaron/Cinderwell",
     "plugin_file": "cinderwell/cinderwell.php",
-    "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-0.1.16.zip",
+    "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-0.1.34.zip",
     "requires": "6.3",
     "tested": "7.1",
     "sections": {
@@ -17,24 +17,161 @@
     "cinderwell-alerts": {
       "name": "Cinderwell Alerts",
       "slug": "cinderwell-alerts",
-      "version": "0.1.3",
+      "version": "0.1.4",
       "homepage": "https://github.com/ulinaaron/Cinderwell",
       "plugin_file": "cinderwell-alerts/cinderwell-alerts.php",
-      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-alerts-0.1.3.zip",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-alerts-0.1.4.zip",
       "requires": "6.5",
       "requires_php": "7.4",
       "sections": {
-        "description": "Scheduled, condition-aware alert bars composed with Cinderwell blocks."
+        "description": "Scheduled, condition-aware alerts composed with Cinderwell blocks."
       },
       "sha256": "example"
+    },
+    "cinderwell-cookie-consent": {
+      "name": "Cinderwell Cookie Consent",
+      "slug": "cinderwell-cookie-consent",
+      "version": "0.1.1",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-cookie-consent/cinderwell-cookie-consent.php",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-cookie-consent-0.1.1.zip",
+      "requires": "6.5",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Accessible category consent, prior blocking, withdrawal controls, and privacy-policy guidance."
+      },
+      "sha256": "example"
+    },
+    "cinderwell-help": {
+      "name": "Cinderwell Help",
+      "slug": "cinderwell-help",
+      "version": "0.1.3",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-help/cinderwell-help.php",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-help-0.1.3.zip",
+      "requires": "6.5",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Client-facing, searchable documentation with theme hooks for site-specific guidance."
+      },
+      "sha256": "example"
+    },
+    "cinderwell-performance": {
+      "name": "Cinderwell Performance",
+      "slug": "cinderwell-performance",
+      "version": "0.1.1",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-performance/cinderwell-performance.php",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-performance-0.1.1.zip",
+      "requires": "6.3",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Block-aware HTML, image, resource-hint, and optional hydration optimizations."
+      },
+      "sha256": "example"
+    },
+    "cinderwell-popups": {
+      "name": "Cinderwell Popups",
+      "slug": "cinderwell-popups",
+      "version": "0.1.2",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-popups/cinderwell-popups.php",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-popups-0.1.2.zip",
+      "requires": "6.5",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Accessible block-built modals with automatic display rules and manual button triggers."
+      },
+      "sha256": "example"
+    },
+    "cinderwell-utilities": {
+      "name": "Cinderwell Site Utilities",
+      "slug": "cinderwell-utilities",
+      "version": "0.1.1",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-utilities/cinderwell-utilities.php",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-utilities-0.1.1.zip",
+      "requires": "6.3",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Optional content, media, and site-administration utilities for Cinderwell sites."
+      },
+      "sha256": "example"
+    },
+    "teams": {
+      "name": "Teams",
+      "slug": "teams",
+      "module": "teams",
+      "distribution": "bundled",
+      "version": "0.1.34",
+      "requires": "6.3",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Manage people, team categories, optional profile pages, and focused People loops."
+      }
+    },
+    "portfolio": {
+      "name": "Portfolio",
+      "slug": "portfolio",
+      "module": "portfolio",
+      "distribution": "bundled",
+      "version": "0.1.34",
+      "requires": "6.3",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Manage project work, configurable fields, categories, templates, and focused Portfolio loops."
+      }
+    },
+    "company-details": {
+      "name": "Company Details",
+      "slug": "company-details",
+      "module": "company-details",
+      "distribution": "bundled",
+      "version": "0.1.34",
+      "requires": "6.3",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Define reusable company identity, contact, address, hours, and social-profile information."
+      }
+    },
+    "locations": {
+      "name": "Locations",
+      "slug": "locations",
+      "module": "locations",
+      "distribution": "bundled",
+      "version": "0.1.34",
+      "requires": "6.3",
+      "requires_php": "7.4",
+      "dependencies": ["company-details"],
+      "sections": {
+        "description": "Manage reusable branch, office, campus, or service-area details and optional public location pages."
+      }
+    },
+    "animations": {
+      "name": "Animations",
+      "slug": "animations",
+      "module": "animations",
+      "distribution": "bundled",
+      "version": "0.1.34",
+      "requires": "6.3",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Add token-based entrance animations to whole blocks or their content sections."
+      }
     }
   },
   "theme": {
     "name": "Cinderwell Base",
     "slug": "cinderwell-starter",
-    "version": "0.3.0",
+    "version": "0.3.4",
     "homepage": "https://github.com/ulinaaron/Cinderwell",
-    "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-starter-0.3.0.zip",
+    "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-starter-0.3.4.zip",
     "requires": "6.6",
     "requires_php": "7.4",
     "sha256": "example"

@@ -89,7 +89,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="▦" title={ __( 'Slot Layout', 'cinderwell' ) } description={ __( 'Controlled flexible layout', 'cinderwell' ) } />
-                    <PanelBody title={ `${ __( 'Slots', 'cinderwell' ) } (${ slots.length })` } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ `${ __( 'Slots', 'cinderwell' ) } (${ slots.length })` } initialOpen={ true } className="cw-panel cw-access-layout">
                         { slots.map( ( slot, index ) => (
                             <SortableItemCard
                                 key={ slot.id || index }
@@ -127,7 +127,7 @@ registerBlockType( metadata.name, {
                             <Button variant="secondary" className="cw-add-item cw-add-item--compact" onClick={ addSlot }>+ { __( 'Add', 'cinderwell' ) }</Button>
                         </div>
                     </PanelBody>
-                    <PanelBody title={ __( 'Grid', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Grid', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-layout">
                         <ResponsiveSegmentedControl
                             label={ __( 'Columns', 'cinderwell' ) }
                             values={ { desktop: attributes.columns || '2', tablet: attributes.columnsTablet || 'auto', mobile: attributes.columnsMobile || 'auto' } }

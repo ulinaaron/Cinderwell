@@ -98,7 +98,7 @@ registerBlockType(metadata.name, {
           <PanelBody
             title={__("Icon", "cinderwell")}
             initialOpen={true}
-            className="cw-panel"
+            className="cw-panel cw-access-appearance"
           >
             <SegmentedControl
               label={__("Icon source", "cinderwell")}
@@ -141,7 +141,7 @@ registerBlockType(metadata.name, {
           <PanelBody
             title={__("Link", "cinderwell")}
             initialOpen={false}
-            className="cw-panel"
+            className="cw-panel cw-access-links"
           >
             <LinkSettingsControl
               url={attributes.url}

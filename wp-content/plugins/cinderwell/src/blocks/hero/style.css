@@ -1,127 +1,486 @@
+/* stylelint-disable no-descending-specificity -- state and variation modifiers
+ * intentionally override the stable Hero component selectors below. */
 .cinderwell-hero {
-    padding: var(--cw-spacing-md) var(--cw-layout-gutter);
-    background-color: var(--cw-color-bg);
-    color: var(--cw-color-text);
-    position: relative;
-    overflow: hidden;
+	padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+	background-color: var(--cw-color-bg);
+	color: var(--cw-color-text);
+	position: relative;
+	overflow: hidden;
 }
 
 /* Background image support */
 .cinderwell-hero--has-bg {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: var(--cw-color-white);
-    min-height: 400px;
-    display: flex;
-    align-items: center;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	color: var(--cw-color-white);
+	min-height: 400px;
+	display: flex;
+	align-items: center;
 }
 
 .cinderwell-hero__bg-image {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    z-index: 0;
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: center;
+	z-index: 0;
 }
 
 .cinderwell-hero__overlay {
-    position: absolute;
-    inset: 0;
-    background: var(--cw-color-dark);
-    opacity: 0.45;
-    z-index: 1;
-    pointer-events: none;
+	position: absolute;
+	inset: 0;
+	background: var(--cw-color-dark);
+	opacity: 0.45;
+	z-index: 1;
+	pointer-events: none;
 }
 
-.cinderwell-hero__overlay--soft { opacity: 0.2; }
-.cinderwell-hero__overlay--medium { opacity: 0.45; }
-.cinderwell-hero__overlay--strong { opacity: 0.68; }
+.cinderwell-hero__overlay--soft {
+	opacity: 0.2;
+}
+
+.cinderwell-hero__overlay--medium {
+	opacity: 0.45;
+}
+
+.cinderwell-hero__overlay--strong {
+	opacity: 0.68;
+}
 
 .cinderwell-hero--has-bg .cinderwell-hero__inner {
-    position: relative;
-    z-index: 2;
-}
-
-.cinderwell-hero--has-bg .btn--primary {
-    background-color: var(--cw-color-white);
-    color: var(--cw-color-dark);
-    border-color: var(--cw-color-white);
-}
-
-.cinderwell-hero--has-bg .btn--primary:hover {
-    background-color: var(--cw-color-light);
-    border-color: var(--cw-color-light);
-}
-
-.cinderwell-hero--has-bg .btn--secondary {
-    background-color: transparent;
-    color: var(--cw-color-white);
-    border-color: var(--cw-color-white);
-}
-
-.cinderwell-hero--has-bg .btn--secondary:hover {
-    background-color: var(--cw-color-white);
-    color: var(--cw-color-dark);
-}
-
-.cinderwell-hero--has-bg .btn--ghost {
-    color: var(--cw-color-white);
-}
-
-.cinderwell-hero--has-bg .btn--link {
-    color: var(--cw-color-white);
+	position: relative;
+	z-index: 2;
 }
 
 .cinderwell-hero--bg-white {
-    background-color: var(--cw-color-white);
-    color: var(--cw-color-text);
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-text);
 }
 
 .cinderwell-hero--bg-light {
-    background-color: var(--cw-color-light);
-    color: var(--cw-color-text);
+	background-color: var(--cw-color-light);
+	color: var(--cw-color-text);
 }
 
 .cinderwell-hero--bg-dark {
-    background-color: var(--cw-color-dark);
-    color: var(--cw-color-white);
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
 }
 
 .cinderwell-hero--bg-brand {
-    background-color: var(--cw-color-brand);
-    color: var(--cw-color-brand-contrast);
+	background-color: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
 }
 
 .cinderwell-hero__inner {
-    margin: 0 auto;
-    text-align: center;
+	width: 100%;
+	margin: 0 auto;
 }
 
-.cinderwell-hero__inner > .cinderwell-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
+.cinderwell-hero__content {
+	min-width: 0;
+}
+
+.cinderwell-hero:not([class*="cinderwell-hero--align-"]) .cinderwell-hero__inner {
+	text-align: center;
+}
+
+.cinderwell-hero:not([class*="cinderwell-hero--align-"]) .cinderwell-buttons {
+	justify-content: center;
+}
+
+.cinderwell-hero--align-left .cinderwell-hero__inner,
+.cinderwell-hero--align-left .cinderwell-hero__content {
+	text-align: left;
+}
+
+.cinderwell-hero--align-center .cinderwell-hero__inner,
+.cinderwell-hero--align-center .cinderwell-hero__content {
+	text-align: center;
+}
+
+.cinderwell-hero--align-right .cinderwell-hero__inner,
+.cinderwell-hero--align-right .cinderwell-hero__content {
+	text-align: right;
+}
+
+.cinderwell-hero--split {
+	--cw-hero-split-gap: var(--cw-gap-md);
+	padding-inline: 0;
+}
+
+.cinderwell-hero--split-gap-none {
+	--cw-hero-split-gap: 0;
+}
+
+.cinderwell-hero--split-gap-sm {
+	--cw-hero-split-gap: var(--cw-gap-sm);
+}
+
+.cinderwell-hero--split-gap-md {
+	--cw-hero-split-gap: var(--cw-gap-md);
+}
+
+.cinderwell-hero--split-gap-lg {
+	--cw-hero-split-gap: var(--cw-gap-lg);
+}
+
+.cinderwell-hero--split .cinderwell-hero__inner {
+	position: static;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0;
+	padding-inline: 0;
+	align-items: center;
+}
+
+.cinderwell-hero--split .cinderwell-hero__content {
+	position: relative;
+	z-index: 2;
+	grid-column: 1;
+	padding-inline: var(--cw-layout-gutter);
+	padding-inline-end: calc(var(--cw-layout-gutter) + var(--cw-hero-split-gap));
+}
+
+.cinderwell-hero--image-left .cinderwell-hero__content {
+	grid-column: 2;
+	padding-inline: var(--cw-layout-gutter);
+	padding-inline-start: calc(var(--cw-layout-gutter) + var(--cw-hero-split-gap));
 }
 
 .cinderwell-hero__figure {
-    margin: 1.5rem 0;
+	align-self: stretch;
+	margin: 0;
+}
+
+.cinderwell-hero--split .cinderwell-hero__figure {
+	position: absolute;
+	z-index: 2;
+	inset-block: 0;
+	inset-inline-end: 0;
+	width: 50%;
+	border-radius: 0;
+}
+
+.cinderwell-hero--image-left .cinderwell-hero__figure {
+	inset-inline: 0 auto;
+}
+
+.cinderwell-hero--split .cinderwell-hero__figure .cinderwell-caption {
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: 0;
+	padding: var(--cw-spacing-xs) var(--cw-layout-gutter);
+	background: color-mix(in srgb, var(--cw-color-dark) 78%, transparent);
+	color: var(--cw-color-white);
 }
 
 .cinderwell-hero__image {
-    max-width: 100%;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+	display: block;
+	width: 100%;
+	height: 100%;
+	min-height: 20rem;
+	object-fit: cover;
 }
 
-[dir="rtl"] .cinderwell-hero {
-    text-align: center;
+/* Presentation variations preserve the authored text, actions, and media. */
+.cinderwell-hero--layout-statement .cinderwell-hero__content {
+	width: 100%;
+	max-width: 60rem;
+	margin-inline: auto;
+}
+
+.cinderwell-hero--layout-statement.cinderwell-hero--split {
+	padding-inline: var(--cw-layout-gutter);
+}
+
+.cinderwell-hero--layout-statement.cinderwell-hero--split .cinderwell-hero__inner {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: var(--cw-hero-split-gap);
+	padding-inline: 0;
+}
+
+.cinderwell-hero--layout-statement.cinderwell-hero--split .cinderwell-hero__content {
+	padding-inline: 0;
+}
+
+.cinderwell-hero--layout-statement.cinderwell-hero--split .cinderwell-hero__figure {
+	position: relative;
+	inset: auto;
+	width: 100%;
+	overflow: hidden;
+	border-radius: var(--cw-radius-md);
+}
+
+.cinderwell-hero--layout-statement.cinderwell-hero--image-left .cinderwell-hero__figure,
+.cinderwell-hero--layout-statement.cinderwell-hero--image-top .cinderwell-hero__figure {
+	order: -1;
+}
+
+.cinderwell-hero--layout-editorial:not(.cinderwell-hero--split) .cinderwell-hero__content {
+	max-width: 52rem;
+	padding-inline-start: var(--cw-spacing-lg);
+	border-inline-start: 4px solid var(--cw-color-brand);
+}
+
+.cinderwell-hero--layout-editorial {
+	--cw-hero-editorial-surface: var(--cw-surface-background, var(--cw-color-bg));
+}
+
+.cinderwell-hero--layout-editorial.cinderwell-hero--split {
+	padding-inline: var(--cw-layout-gutter);
+}
+
+.cinderwell-hero--layout-editorial.cinderwell-hero--split .cinderwell-hero__inner {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cinderwell-hero--layout-editorial.cinderwell-hero--split .cinderwell-hero__figure {
+	width: 58%;
+}
+
+.cinderwell-hero--layout-editorial.cinderwell-hero--split .cinderwell-hero__figure::before {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	content: "";
+	background: linear-gradient(to right, var(--cw-hero-editorial-surface), color-mix(in srgb, var(--cw-hero-editorial-surface) 72%, transparent) 15%, transparent 42%);
+	pointer-events: none;
+}
+
+.cinderwell-hero--layout-editorial.cinderwell-hero--image-left .cinderwell-hero__figure::before {
+	background: linear-gradient(to left, var(--cw-hero-editorial-surface), color-mix(in srgb, var(--cw-hero-editorial-surface) 72%, transparent) 15%, transparent 42%);
+}
+
+.cinderwell-hero--layout-editorial .cinderwell-hero__figure .cinderwell-caption {
+	z-index: 2;
+}
+
+.cinderwell-hero--layout-editorial.cinderwell-hero--split .cinderwell-hero__content {
+	--cw-button-secondary-effective-foreground: var(--cw-button-secondary-foreground);
+	position: relative;
+	z-index: 3;
+	align-self: center;
+	width: calc(100% + clamp(2rem, 7vw, 7rem));
+	padding: clamp(var(--cw-gap-lg), 4vw, var(--cw-spacing-md));
+	border-radius: var(--cw-radius-md);
+	background: var(--cw-color-surface);
+	color: var(--cw-color-text);
+	box-shadow: var(--cw-shadow-md);
+}
+
+.cinderwell-hero--layout-editorial.cinderwell-hero--image-left .cinderwell-hero__content {
+	justify-self: end;
+}
+
+.cinderwell-hero--layout-editorial .cinderwell-hero__figure .cw-image-control-overlay {
+	top: 8px;
+	right: 8px;
+	bottom: auto;
+}
+
+.cinderwell-hero--layout-editorial.cinderwell-hero--image-left .cinderwell-hero__figure .cw-image-control-overlay {
+	right: auto;
+	left: 8px;
+}
+
+.cinderwell-hero--layout-immersive {
+	box-sizing: border-box;
+	min-height: clamp(32rem, 72vh, 54rem);
+	display: flex;
+	align-items: flex-end;
+	padding-inline: 0;
+	color: var(--cw-color-white);
+}
+
+.cinderwell-hero--layout-immersive::before {
+	position: absolute;
+	inset: 20% 0 0;
+	z-index: 1;
+	content: "";
+	background: linear-gradient(to bottom, transparent, rgb(0 0 0 / 86%));
+	pointer-events: none;
+}
+
+.cinderwell-hero--layout-immersive .cinderwell-hero__inner {
+	position: static;
+	display: flex;
+	align-self: stretch;
+	align-items: flex-end;
+	padding-inline: var(--cw-layout-gutter);
+}
+
+.cinderwell-hero--layout-immersive .cinderwell-hero__content {
+	position: relative;
+	z-index: 2;
+	width: min(100%, 52rem);
+	padding: 0;
+}
+
+.cinderwell-hero--layout-immersive.cinderwell-hero--align-left .cinderwell-hero__inner {
+	justify-content: flex-start;
+}
+
+.cinderwell-hero--layout-immersive.cinderwell-hero--align-center .cinderwell-hero__inner {
+	justify-content: center;
+}
+
+.cinderwell-hero--layout-immersive.cinderwell-hero--align-right .cinderwell-hero__inner {
+	justify-content: flex-end;
+}
+
+.cinderwell-hero--layout-immersive.cinderwell-hero--split .cinderwell-hero__figure {
+	position: absolute;
+	inset: 0;
+	z-index: auto;
+	width: 100%;
+	margin: 0;
+}
+
+.cinderwell-hero--layout-immersive .cinderwell-hero__image {
+	height: 100%;
+	min-height: 100%;
+}
+
+.cinderwell-hero--layout-immersive .cinderwell-hero__figure .cinderwell-caption {
+	z-index: 3;
+}
+
+.cinderwell-hero--layout-immersive .cinderwell-hero__figure .cw-image-control-overlay {
+	z-index: 4;
+}
+
+.cinderwell-hero--layout-framed.cinderwell-hero--split {
+	padding-inline: var(--cw-layout-gutter);
+}
+
+.cinderwell-hero--layout-framed.cinderwell-hero--split .cinderwell-hero__inner {
+	position: relative;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--cw-hero-split-gap);
+	padding-inline: 0;
+}
+
+.cinderwell-hero--layout-framed.cinderwell-hero--split .cinderwell-hero__content {
+	align-self: center;
+	padding-inline: 0;
+}
+
+.cinderwell-hero--layout-framed.cinderwell-hero--split .cinderwell-hero__figure {
+	position: relative;
+	inset: auto;
+	grid-column: 2;
+	grid-row: 1;
+	width: auto;
+	min-height: clamp(24rem, 48vw, 42rem);
+	overflow: hidden;
+	border-radius: var(--cw-radius-md);
+}
+
+.cinderwell-hero--layout-framed.cinderwell-hero--image-left .cinderwell-hero__figure {
+	grid-column: 1;
+}
+
+[dir="rtl"] .cinderwell-hero--align-left .cinderwell-hero__content {
+	text-align: right;
+}
+
+[dir="rtl"] .cinderwell-hero--align-right .cinderwell-hero__content {
+	text-align: left;
 }
 
 [dir="rtl"] .cinderwell-hero .cinderwell-buttons {
-    flex-direction: row-reverse;
+	flex-direction: row-reverse;
+}
+
+@media (max-width: 768px) {
+
+	.cinderwell-hero--split .cinderwell-hero__inner {
+		position: relative;
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-hero--split .cinderwell-hero__content,
+	.cinderwell-hero--image-left .cinderwell-hero__content {
+		grid-column: 1;
+		padding-inline: var(--cw-layout-gutter);
+	}
+
+	.cinderwell-hero--split .cinderwell-hero__figure,
+	.cinderwell-hero--image-left .cinderwell-hero__figure {
+		position: relative;
+		inset: auto;
+		width: 100%;
+		min-height: 12rem;
+		margin-top: var(--cw-spacing-sm);
+	}
+
+	.cinderwell-hero--image-right .cinderwell-hero__figure {
+		order: -1;
+		margin-top: 0;
+		margin-bottom: var(--cw-spacing-sm);
+	}
+
+	.cinderwell-hero__image {
+		min-height: 0;
+		height: auto;
+	}
+
+	.cinderwell-hero--layout-statement.cinderwell-hero--image-right .cinderwell-hero__figure,
+	.cinderwell-hero--layout-statement.cinderwell-hero--image-bottom .cinderwell-hero__figure {
+		order: initial;
+	}
+
+	.cinderwell-hero--layout-editorial.cinderwell-hero--split .cinderwell-hero__figure {
+		width: 100%;
+		overflow: hidden;
+		border-radius: var(--cw-radius-md);
+	}
+
+	.cinderwell-hero--layout-editorial.cinderwell-hero--split .cinderwell-hero__inner {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.cinderwell-hero--layout-editorial.cinderwell-hero--split .cinderwell-hero__figure::before,
+	.cinderwell-hero--layout-editorial.cinderwell-hero--image-left .cinderwell-hero__figure::before {
+		background: linear-gradient(to bottom, transparent 55%, var(--cw-hero-editorial-surface));
+	}
+
+	.cinderwell-hero--layout-editorial.cinderwell-hero--split .cinderwell-hero__content {
+		width: auto;
+		margin: -2rem 0 0;
+		padding: clamp(var(--cw-gap-md), 6vw, var(--cw-gap-lg));
+	}
+
+	.cinderwell-hero--layout-immersive.cinderwell-hero--split .cinderwell-hero__figure,
+	.cinderwell-hero--layout-immersive.cinderwell-hero--image-left .cinderwell-hero__figure {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		min-height: 100%;
+		margin: 0;
+	}
+
+	.cinderwell-hero--layout-immersive .cinderwell-hero__image {
+		height: 100%;
+		min-height: 100%;
+	}
+
+	.cinderwell-hero--layout-framed.cinderwell-hero--split .cinderwell-hero__inner {
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-hero--layout-framed.cinderwell-hero--split .cinderwell-hero__figure,
+	.cinderwell-hero--layout-framed.cinderwell-hero--image-left .cinderwell-hero__figure {
+		grid-column: 1;
+		grid-row: auto;
+		min-height: 0;
+	}
 }

@@ -60,6 +60,42 @@
 	color: var(--cw-color-text);
 }
 
+.cinderwell-icon-list--color-muted .cinderwell-icon-list__icon {
+	color: var(--cw-color-muted);
+}
+
+.cinderwell-icon-list--color-brand-light .cinderwell-icon-list__icon {
+	color: var(--cw-color-brand-light);
+}
+
+.cinderwell-icon-list--color-brand-dark .cinderwell-icon-list__icon {
+	color: var(--cw-color-brand-dark);
+}
+
+.cinderwell-icon-list--color-info .cinderwell-icon-list__icon {
+	color: var(--cw-color-info);
+}
+
+.cinderwell-icon-list--color-success .cinderwell-icon-list__icon {
+	color: var(--cw-color-success);
+}
+
+.cinderwell-icon-list--color-danger .cinderwell-icon-list__icon {
+	color: var(--cw-color-danger);
+}
+
+.cinderwell-icon-list--color-accent-1 .cinderwell-icon-list__icon {
+	color: var(--cw-color-accent-1);
+}
+
+.cinderwell-icon-list--color-accent-2 .cinderwell-icon-list__icon {
+	color: var(--cw-color-accent-2);
+}
+
+.cinderwell-icon-list--color-accent-3 .cinderwell-icon-list__icon {
+	color: var(--cw-color-accent-3);
+}
+
 .cinderwell-icon-list--color-dark .cinderwell-icon-list__icon {
 	color: var(--cw-color-dark);
 }

@@ -21,7 +21,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="H" title={ __( 'Heading', 'cinderwell' ) } description={ __( 'Standalone heading', 'cinderwell' ) } />
-                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-appearance">
                         <SegmentedControl
                             label={ __( 'Heading level', 'cinderwell' ) }
                             value={ attributes.level }

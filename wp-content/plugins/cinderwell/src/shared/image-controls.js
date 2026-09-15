@@ -65,7 +65,7 @@ export const ImageOverlayControls = ( { imageId = 0, label, onSelect, onRemove }
     const imageLabel = label || __( 'image', 'cinderwell' );
 
     return (
-        <div className={ `cw-image-control-overlay${ hasImage ? '' : ' is-empty' }` }>
+        <div className={ `cw-image-control-overlay cw-access-media${ hasImage ? '' : ' is-empty' }` }>
             <MediaUploadCheck>
                 <MediaUpload
                     value={ imageId }

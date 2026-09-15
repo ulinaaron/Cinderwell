@@ -55,6 +55,153 @@ class Commerce {
         add_action( 'init', [ $this, 'attach_block_styles' ], 100 );
         add_action( 'enqueue_block_assets', [ $this, 'enqueue_editor_style' ] );
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_legacy_style' ], 20 );
+        add_action( 'wp_enqueue_scripts', [ $this, 'dequeue_non_commerce_assets' ], 999 );
+        add_action( 'wp_footer', [ $this, 'dequeue_non_commerce_assets' ], 1 );
+        add_filter( 'hooked_block_types', [ $this, 'filter_header_block_hooks' ], 20, 4 );
+        add_filter( 'woocommerce_enqueue_styles', [ $this, 'filter_legacy_woocommerce_styles' ] );
+    }
+
+    /**
+     * Replace WooCommerce's automatically hooked account and drawer mini-cart
+     * when the active theme provides Cinderwell's lightweight commerce links.
+     *
+     * @param array       $hooked_blocks Hooked block names.
+     * @param string      $position      Relative hook position.
+     * @param string      $anchor_block  Anchor block name.
+     * @param object|null $context       Block template context.
+     * @return array
+     */
+    public function filter_header_block_hooks( $hooked_blocks, $position, $anchor_block, $context ) {
+        if ( ! apply_filters( 'cinderwell_use_lightweight_commerce_header', false ) ) {
+            return $hooked_blocks;
+        }
+
+        if ( 'core/navigation' !== $anchor_block || 'after' !== $position ) {
+            return $hooked_blocks;
+        }
+
+        return array_values(
+            array_diff(
+                $hooked_blocks,
+                [ 'woocommerce/customer-account', 'woocommerce/mini-cart' ]
+            )
+        );
+    }
+
+    /**
+     * WooCommerce's legacy stylesheet bundle is unnecessary on ordinary block
+     * pages. Keep it on every actual commerce route and let individual Woo
+     * blocks enqueue their own styles elsewhere.
+     *
+     * @param array $styles WooCommerce stylesheet definitions.
+     * @return array
+     */
+    public function filter_legacy_woocommerce_styles( $styles ) {
+        if ( is_admin() || ! apply_filters( 'cinderwell_optimize_woocommerce_assets', false ) ) {
+            return $styles;
+        }
+
+        return $this->is_commerce_request() ? $styles : [];
+    }
+
+    /**
+     * Remove WooCommerce's global frontend bundle from pages that contain no
+     * commerce UI. Scripts and styles remain untouched on store routes, pages
+     * containing Woo blocks, and pages using common Woo shortcodes.
+     */
+    public function dequeue_non_commerce_assets() {
+        if (
+            is_admin()
+            || ! apply_filters( 'cinderwell_optimize_woocommerce_assets', false )
+            || $this->is_commerce_request()
+        ) {
+            return;
+        }
+
+        foreach ( [
+            'woocommerce-blocktheme',
+            'woocommerce-inline',
+            'wc-blocks-style',
+            'wc-blocks-packages-style',
+        ] as $handle ) {
+            wp_dequeue_style( $handle );
+        }
+
+        foreach ( [
+            'wc-add-to-cart',
+            'woocommerce',
+            'wc-jquery-blockui',
+            'wc-js-cookie',
+        ] as $handle ) {
+            wp_dequeue_script( $handle );
+        }
+    }
+
+    /**
+     * Determine whether the current response needs WooCommerce's full assets.
+     */
+    private function is_commerce_request() {
+        $is_store_request = ( function_exists( 'is_woocommerce' ) && is_woocommerce() )
+            || ( function_exists( 'is_cart' ) && is_cart() )
+            || ( function_exists( 'is_checkout' ) && is_checkout() )
+            || ( function_exists( 'is_account_page' ) && is_account_page() );
+
+        if ( $is_store_request ) {
+            return true;
+        }
+
+        $post = get_queried_object();
+        if ( ! $post instanceof \WP_Post || '' === trim( (string) $post->post_content ) ) {
+            return (bool) apply_filters( 'cinderwell_is_commerce_request', false, $post );
+        }
+
+        foreach ( parse_blocks( $post->post_content ) as $block ) {
+            if ( $this->contains_woocommerce_block( $block ) ) {
+                return true;
+            }
+        }
+
+        foreach ( [
+            'add_to_cart',
+            'add_to_cart_url',
+            'best_selling_products',
+            'product',
+            'product_attribute',
+            'product_category',
+            'product_page',
+            'products',
+            'recent_products',
+            'sale_products',
+            'top_rated_products',
+            'woocommerce_cart',
+            'woocommerce_checkout',
+            'woocommerce_my_account',
+        ] as $shortcode ) {
+            if ( has_shortcode( $post->post_content, $shortcode ) ) {
+                return true;
+            }
+        }
+
+        return (bool) apply_filters( 'cinderwell_is_commerce_request', false, $post );
+    }
+
+    /**
+     * Recursively inspect parsed content for WooCommerce blocks.
+     *
+     * @param array $block Parsed block.
+     */
+    private function contains_woocommerce_block( $block ) {
+        if ( 0 === strpos( (string) ( $block['blockName'] ?? '' ), 'woocommerce/' ) ) {
+            return true;
+        }
+
+        foreach ( $block['innerBlocks'] ?? [] as $inner_block ) {
+            if ( $this->contains_woocommerce_block( $inner_block ) ) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

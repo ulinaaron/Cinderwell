@@ -9,12 +9,18 @@ This project is in active development.
 | Component | Location | Purpose |
 | --- | --- | --- |
 | Cinderwell | [`wp-content/plugins/cinderwell`](wp-content/plugins/cinderwell) | Blocks, atoms, design tokens, editor controls, dynamic data, and extension hooks |
-| Cinderwell Alerts | [`wp-content/plugins/cinderwell-alerts`](wp-content/plugins/cinderwell-alerts) | Block-built alert bars with scheduling, targeting, priority, and dismissal |
+| Cinderwell Alerts | [`wp-content/plugins/cinderwell-alerts`](wp-content/plugins/cinderwell-alerts) | Block-built alerts with scheduling, targeting, priority, and dismissal |
+| Cinderwell Cookie Consent | [`wp-content/plugins/cinderwell-cookie-consent`](wp-content/plugins/cinderwell-cookie-consent) | Category consent, prior blocking, withdrawal controls, and policy guidance |
+| Cinderwell Help | [`wp-content/plugins/cinderwell-help`](wp-content/plugins/cinderwell-help) | Searchable client documentation with child-theme extension hooks |
+| Cinderwell Performance | [`wp-content/plugins/cinderwell-performance`](wp-content/plugins/cinderwell-performance) | Block-aware HTML, image, resource-hint, and optional hydration optimizations |
 | Cinderwell Base | [`wp-content/themes/cinderwell-starter`](wp-content/themes/cinderwell-starter) | Updateable FSE parent theme with the template hierarchy and default site frame |
 
 The block kit includes Hero, Body, CTA, Card Grid, Image + Text, Icon List, Gallery, Image Carousel, FAQ, Accordion, Tabs, Loop, Two Column, Section, Slot Layout, Mega Menu, and Gravity Forms integration, plus standalone atoms and nested content blocks.
 
 Shared controls cover colors, typography and line height, spacing, widths, surfaces, images, and responsive visibility. The **Visibility** panel can target an entire Cinderwell block or supported content pieces at desktop, tablet, and mobile sizes. Mega menus work inside the native Navigation block.
+
+The opt-in Animations module adds token-based entrance presets for an entire
+block or its staggered content sections, with reduced-motion behavior built in.
 
 ## Build and install
 
@@ -35,7 +41,8 @@ or fork the parent into the client theme. This keeps parent fixes updateable
 while the child owns brand tokens, patterns, parts, and intentional template
 overrides. See the [parent-theme guide](wp-content/themes/cinderwell-starter/README.md).
 
-To use alerts, copy `cinderwell-alerts` into `wp-content/plugins/` and activate it after Cinderwell.
+To use alerts, cookie consent, Help, or Performance, copy the corresponding add-on directory into
+`wp-content/plugins/` and activate it after Cinderwell.
 
 This is a multi-component source repository. GitHub's source ZIP is not a single installable WordPress plugin ZIP; build and install the component directories described above.
 
@@ -56,7 +63,7 @@ For client-specific work, use a child theme and the documented extension hooks.
 Cinderwell's update manifest supports the core plugin, add-ons, and parent
 theme; its schema is documented in
 [`updates/info.example.json`](updates/info.example.json).
-See the [extension guide](wp-content/plugins/cinderwell/EXTENDING.md), [block plugin documentation](wp-content/plugins/cinderwell/README.md), and [Alerts documentation](wp-content/plugins/cinderwell-alerts/README.md).
+See the [extension guide](wp-content/plugins/cinderwell/EXTENDING.md), [block plugin documentation](wp-content/plugins/cinderwell/README.md), [Alerts documentation](wp-content/plugins/cinderwell-alerts/README.md), [Cookie Consent documentation](wp-content/plugins/cinderwell-cookie-consent/README.md), and [Help documentation](wp-content/plugins/cinderwell-help/README.md).
 
 ## Publishing updates
 
@@ -92,9 +99,9 @@ unzip -Z1 dist/packages/cinderwell-*.zip | head
 The tracked `cinderwell-local-update-guard.php` must-use plugin activates only
 when WordPress reports a `local` or `development` environment. It disables the
 Cinderwell release client, removes cached update offers for Cinderwell, Alerts,
-and Cinderwell Base, and blocks a stale/manual update before it can replace the
-source directories. WordPress core and unrelated plugin/theme updates remain
-available.
+Cookie Consent, Help, and Cinderwell Base, and blocks a stale/manual update before it
+can replace the source directories. WordPress core and unrelated plugin/theme
+updates remain available.
 
 The release ZIP intentionally excludes development-only files such as `src/`
 and `node_modules/`, so never update a Cinderwell source checkout with a packaged

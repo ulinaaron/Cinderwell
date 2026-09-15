@@ -30,27 +30,28 @@ registerBlockType( metadata.name, {
                             { key: 'caption', label: __( 'Caption', 'cinderwell' ) },
                             { key: 'body', label: __( 'Body', 'cinderwell' ) },
                             { key: 'footnote', label: __( 'Footnote', 'cinderwell' ) },
-                        ] } values={ secs } onChange={ onSecs }>
-                            { attributes.showImage && (
-                                <ImageSettingsControl
-                                    alt={ attributes.imageAlt }
-                                    fit={ attributes.imageFit }
-                                    position={ attributes.imagePosition }
-                                    aspect={ attributes.imageAspect }
-                                    label={ __( 'Image settings', 'cinderwell' ) }
-                                    onAltChange={ ( imageAlt ) => setAttributes( { imageAlt } ) }
-                                    onFitChange={ ( imageFit ) => setAttributes( { imageFit } ) }
-                                    onPositionChange={ ( imagePosition ) => setAttributes( { imagePosition } ) }
-                                    onAspectChange={ ( imageAspect ) => setAttributes( { imageAspect } ) }
-                                />
-                            ) }
-                        </SectionToggles>
+                        ] } values={ secs } onChange={ onSecs } />
                     </PanelBody>
+                    { attributes.showImage && (
+                        <PanelBody title={ __( 'Media', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-media">
+                            <ImageSettingsControl
+                                alt={ attributes.imageAlt }
+                                fit={ attributes.imageFit }
+                                position={ attributes.imagePosition }
+                                aspect={ attributes.imageAspect }
+                                label={ __( 'Image settings', 'cinderwell' ) }
+                                onAltChange={ ( imageAlt ) => setAttributes( { imageAlt } ) }
+                                onFitChange={ ( imageFit ) => setAttributes( { imageFit } ) }
+                                onPositionChange={ ( imagePosition ) => setAttributes( { imagePosition } ) }
+                                onAspectChange={ ( imageAspect ) => setAttributes( { imageAspect } ) }
+                            />
+                        </PanelBody>
+                    ) }
                     <PanelBody title={ __( 'Buttons', 'cinderwell' ) } initialOpen={ false } className="cinderwell-buttons-panel">
                         <ButtonRepeater buttons={ attributes.buttons } onChange={ ( b ) => setAttributes( { buttons: b } ) } />
                     </PanelBody>
                     <LayoutControls attributes={ attributes } setAttributes={ setAttributes } />
-                    <PanelBody title={ __( 'Direction', 'cinderwell' ) } initialOpen={ false } className="cw-panel">
+                    <PanelBody title={ __( 'Direction', 'cinderwell' ) } initialOpen={ false } className="cw-panel cw-access-layout">
                         <SegmentedControl
                             label={ __( 'Image position', 'cinderwell' ) }
                             value={ attributes.alignment || 'left' }

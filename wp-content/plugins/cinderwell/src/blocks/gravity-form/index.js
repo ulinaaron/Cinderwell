@@ -14,7 +14,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="ƒ" title={ __( 'Gravity Form', 'cinderwell' ) } description={ __( 'Embedded form', 'cinderwell' ) } />
-                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-content">
                         <TextControl label={ __( 'Form ID', 'cinderwell' ) } type="number" value={ attributes.formId } onChange={ ( v ) => setAttributes( { formId: parseInt( v, 10 ) || 0 } ) } />
                         <SectionToggles sections={ [
                             { key: 'title', label: __( 'Title', 'cinderwell' ) },

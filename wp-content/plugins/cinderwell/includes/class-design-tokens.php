@@ -46,6 +46,20 @@ class Design_Tokens {
                 'default'     => '#b84c00',
                 'description' => __( 'Primary brand color', 'cinderwell' ),
             ],
+            'cw_color_brand_light' => [
+                'label'       => __( 'Brand Light', 'cinderwell' ),
+                'type'        => 'derived-color',
+                'default'     => 'color-mix(in srgb, var(--cw-color-brand) 20%, white)',
+                'description' => __( 'Automatically derived from the Brand color for subtle backgrounds and accents', 'cinderwell' ),
+                'editable'    => false,
+            ],
+            'cw_color_brand_dark' => [
+                'label'       => __( 'Brand Dark', 'cinderwell' ),
+                'type'        => 'derived-color',
+                'default'     => 'color-mix(in srgb, var(--cw-color-brand) 75%, black)',
+                'description' => __( 'Automatically derived from the Brand color for stronger emphasis and hover states', 'cinderwell' ),
+                'editable'    => false,
+            ],
             'cw_color_text'     => [
                 'label'       => __( 'Text', 'cinderwell' ),
                 'type'        => 'color',
@@ -71,10 +85,46 @@ class Design_Tokens {
                 'description' => __( 'Cards, controls, and raised content surfaces', 'cinderwell' ),
             ],
             'cw_color_muted' => [
-                'label'       => __( 'Muted Text', 'cinderwell' ),
+                'label'       => __( 'Muted', 'cinderwell' ),
                 'type'        => 'color',
                 'default'     => '#666666',
-                'description' => __( 'Secondary text and subdued interface content', 'cinderwell' ),
+                'description' => __( 'Secondary text, metadata, and subdued interface content', 'cinderwell' ),
+            ],
+            'cw_color_info' => [
+                'label'       => __( 'Info', 'cinderwell' ),
+                'type'        => 'color',
+                'default'     => '#005ea8',
+                'description' => __( 'Informational notices, messages, and interface states', 'cinderwell' ),
+            ],
+            'cw_color_success' => [
+                'label'       => __( 'Success', 'cinderwell' ),
+                'type'        => 'color',
+                'default'     => '#287d3c',
+                'description' => __( 'Successful actions, confirmations, and positive states', 'cinderwell' ),
+            ],
+            'cw_color_danger' => [
+                'label'       => __( 'Danger', 'cinderwell' ),
+                'type'        => 'color',
+                'default'     => '#b42318',
+                'description' => __( 'Errors, destructive actions, and urgent states', 'cinderwell' ),
+            ],
+            'cw_color_accent_1' => [
+                'label'       => __( 'Accent 1', 'cinderwell' ),
+                'type'        => 'color',
+                'default'     => '#6f42c1',
+                'description' => __( 'Optional supporting accent color', 'cinderwell' ),
+            ],
+            'cw_color_accent_2' => [
+                'label'       => __( 'Accent 2', 'cinderwell' ),
+                'type'        => 'color',
+                'default'     => '#007c83',
+                'description' => __( 'Optional supporting accent color', 'cinderwell' ),
+            ],
+            'cw_color_accent_3' => [
+                'label'       => __( 'Accent 3', 'cinderwell' ),
+                'type'        => 'color',
+                'default'     => '#9a6700',
+                'description' => __( 'Optional supporting accent color', 'cinderwell' ),
             ],
             'cw_color_border' => [
                 'label'       => __( 'Border', 'cinderwell' ),
@@ -99,6 +149,78 @@ class Design_Tokens {
                 'type'        => 'color',
                 'default'     => '#b84c00',
                 'description' => __( 'Keyboard focus indicator color', 'cinderwell' ),
+            ],
+            'cw_button_primary_background' => [
+                'label'       => __( 'Primary Background', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-brand)',
+                'description' => __( 'Background and border for primary buttons', 'cinderwell' ),
+            ],
+            'cw_button_primary_foreground' => [
+                'label'       => __( 'Primary Text', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-brand-contrast)',
+                'description' => __( 'Text and icon color for primary buttons', 'cinderwell' ),
+            ],
+            'cw_button_primary_hover_background' => [
+                'label'       => __( 'Primary Hover Background', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-dark)',
+                'description' => __( 'Background and border for primary buttons on hover', 'cinderwell' ),
+            ],
+            'cw_button_primary_hover_foreground' => [
+                'label'       => __( 'Primary Hover Text', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-white)',
+                'description' => __( 'Text and icon color for primary buttons on hover', 'cinderwell' ),
+            ],
+            'cw_button_secondary_foreground' => [
+                'label'       => __( 'Secondary Text and Border', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-brand)',
+                'description' => __( 'Text, icon, and border color for secondary buttons', 'cinderwell' ),
+            ],
+            'cw_button_secondary_hover_background' => [
+                'label'       => __( 'Secondary Hover Background', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-brand)',
+                'description' => __( 'Background and border for secondary buttons on hover', 'cinderwell' ),
+            ],
+            'cw_button_secondary_hover_foreground' => [
+                'label'       => __( 'Secondary Hover Text', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-brand-contrast)',
+                'description' => __( 'Text and icon color for secondary buttons on hover', 'cinderwell' ),
+            ],
+            'cw_button_ghost_foreground' => [
+                'label'       => __( 'Ghost Text', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-text)',
+                'description' => __( 'Text and icon color for ghost buttons', 'cinderwell' ),
+            ],
+            'cw_button_ghost_background' => [
+                'label'       => __( 'Ghost Background', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'color-mix(in srgb, var(--cw-button-ghost-foreground) 7%, transparent)',
+                'description' => __( 'Subtle background for ghost buttons', 'cinderwell' ),
+            ],
+            'cw_button_ghost_hover_background' => [
+                'label'       => __( 'Ghost Hover Background', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'color-mix(in srgb, var(--cw-button-ghost-foreground) 13%, transparent)',
+                'description' => __( 'Background for ghost buttons on hover', 'cinderwell' ),
+            ],
+            'cw_button_link_foreground' => [
+                'label'       => __( 'Link Button Text', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-link)',
+                'description' => __( 'Text and icon color for link-style buttons', 'cinderwell' ),
+            ],
+            'cw_button_link_hover_foreground' => [
+                'label'       => __( 'Link Button Hover Text', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => 'var(--cw-color-link-hover)',
+                'description' => __( 'Text and icon color for link-style buttons on hover', 'cinderwell' ),
             ],
             'cw_font_heading'   => [
                 'label'       => __( 'Heading Font', 'cinderwell' ),
@@ -338,7 +460,42 @@ class Design_Tokens {
                 'default'     => 'ease',
                 'description' => __( 'Default motion timing function', 'cinderwell' ),
             ],
+            'cw_motion_distance' => [
+                'label'       => __( 'Motion Distance', 'cinderwell' ),
+                'type'        => 'text',
+                'default'     => '24px',
+                'description' => __( 'Entrance animation travel distance', 'cinderwell' ),
+            ],
         ];
+
+        $palette_tokens = [
+            'cw_color_white'       => [ 'slug' => 'white', 'contexts' => [ 'background', 'text' ], 'automatic_foreground' => true ],
+            'cw_color_light'       => [ 'slug' => 'light', 'contexts' => [ 'background', 'text' ], 'automatic_foreground' => true ],
+            'cw_color_dark'        => [ 'slug' => 'dark', 'contexts' => [ 'background', 'text' ], 'automatic_foreground' => true ],
+            'cw_color_brand'       => [ 'slug' => 'brand', 'contexts' => [ 'background', 'text' ] ],
+            'cw_color_brand_light' => [ 'slug' => 'brand-light', 'contexts' => [ 'background', 'text' ] ],
+            'cw_color_brand_dark'  => [ 'slug' => 'brand-dark', 'contexts' => [ 'background', 'text' ] ],
+            'cw_color_text'        => [ 'slug' => 'text', 'contexts' => [ 'text' ], 'automatic_foreground' => true ],
+            'cw_color_muted'       => [ 'slug' => 'muted', 'contexts' => [ 'background', 'text' ] ],
+            'cw_color_info'        => [ 'slug' => 'info', 'contexts' => [ 'background', 'text' ] ],
+            'cw_color_success'     => [ 'slug' => 'success', 'contexts' => [ 'background', 'text' ] ],
+            'cw_color_danger'      => [ 'slug' => 'danger', 'contexts' => [ 'background', 'text' ] ],
+            'cw_color_accent_1'    => [ 'slug' => 'accent-1', 'contexts' => [ 'background', 'text' ] ],
+            'cw_color_accent_2'    => [ 'slug' => 'accent-2', 'contexts' => [ 'background', 'text' ] ],
+            'cw_color_accent_3'    => [ 'slug' => 'accent-3', 'contexts' => [ 'background', 'text' ] ],
+        ];
+
+        foreach ( $palette_tokens as $key => $palette ) {
+            $manifest[ $key ]['palette'] = $palette;
+        }
+
+        if ( ! apply_filters( 'cinderwell_enable_accent_colors', true ) ) {
+            unset(
+                $manifest['cw_color_accent_1'],
+                $manifest['cw_color_accent_2'],
+                $manifest['cw_color_accent_3']
+            );
+        }
 
         /**
          * Filter the token manifest.
@@ -379,6 +536,8 @@ class Design_Tokens {
                 'value'       => $resolved[ $key ] ?? $token['default'],
                 'category'    => self::get_token_category( $key, $token ),
                 'options'     => $token['options'] ?? [],
+                'editable'    => $token['editable'] ?? true,
+                'palette'     => $token['palette'] ?? null,
             ];
         }
 
@@ -386,10 +545,255 @@ class Design_Tokens {
     }
 
     /**
+     * Return registered editor colors with resolved values and safe slugs.
+     *
+     * Client tokens opt in by adding a `palette` definition to their token
+     * manifest entry. This keeps utility colors such as borders and focus
+     * rings out of content controls unless a theme intentionally exposes them.
+     */
+    public static function get_color_registry( $locale = null ) {
+        $manifest = self::get_manifest();
+        $resolved = self::get_resolved_tokens( $locale );
+        $colors   = [];
+
+        foreach ( $manifest as $key => $token ) {
+            $palette = $token['palette'] ?? null;
+            if ( ! preg_match( '/^cw_[a-z0-9_]+$/', $key ) || ! is_array( $palette ) || ! in_array( $token['type'] ?? '', [ 'color', 'derived-color' ], true ) ) {
+                continue;
+            }
+
+            $slug = sanitize_title( $palette['slug'] ?? preg_replace( '/^cw_color_/', '', $key ) );
+            if ( '' === $slug || isset( $colors[ $slug ] ) ) {
+                continue;
+            }
+
+            $contexts = array_values( array_intersect( (array) ( $palette['contexts'] ?? [] ), [ 'background', 'text' ] ) );
+            if ( empty( $contexts ) ) {
+                continue;
+            }
+
+            $value = $resolved[ $key ] ?? ( $token['default'] ?? '' );
+            $colors[ $slug ] = [
+                'key'                 => $key,
+                'slug'                => $slug,
+                'label'               => $token['label'] ?? $slug,
+                'cssVariable'         => '--' . str_replace( '_', '-', $key ),
+                'value'               => $value,
+                'resolvedColor'       => self::resolve_color_value( $value, $resolved ),
+                'contexts'            => $contexts,
+                'automaticForeground' => ! empty( $palette['automatic_foreground'] ),
+            ];
+        }
+
+        return array_values( $colors );
+    }
+
+    /**
+     * Return valid palette slugs for a block control context.
+     */
+    public static function get_color_slugs( $context ) {
+        $slugs = [];
+        foreach ( self::get_color_registry() as $color ) {
+            if ( in_array( $context, $color['contexts'], true ) ) {
+                $slugs[] = $color['slug'];
+            }
+        }
+        return $slugs;
+    }
+
+    /**
+     * Resolve supported token color values to six-digit hex for contrast math.
+     */
+    private static function resolve_color_value( $value, $tokens ) {
+        $value = strtolower( trim( (string) $value ) );
+        if ( preg_match( '/^#([0-9a-f]{3}|[0-9a-f]{6})$/', $value, $match ) ) {
+            $hex = $match[1];
+            if ( 3 === strlen( $hex ) ) {
+                $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+            }
+            return '#' . $hex;
+        }
+
+        if ( preg_match( '/^var\(\s*--([a-z0-9-]+)\s*\)$/', $value, $match ) ) {
+            $source_key = str_replace( '-', '_', $match[1] );
+            return isset( $tokens[ $source_key ] ) ? self::resolve_color_value( $tokens[ $source_key ], $tokens ) : '';
+        }
+
+        if ( preg_match( '/^color-mix\(\s*in\s+srgb\s*,\s*var\(\s*--([a-z0-9-]+)\s*\)\s+([0-9]+(?:\.[0-9]+)?)%\s*,\s*(white|black)(?:\s+[0-9]+(?:\.[0-9]+)?%)?\s*\)$/', $value, $match ) ) {
+            $source_key = str_replace( '-', '_', $match[1] );
+            $source     = isset( $tokens[ $source_key ] ) ? self::resolve_color_value( $tokens[ $source_key ], $tokens ) : '';
+            if ( '' === $source ) {
+                return '';
+            }
+
+            $weight = min( 1, max( 0, (float) $match[2] / 100 ) );
+            $mix    = 'white' === $match[3] ? [ 255, 255, 255 ] : [ 0, 0, 0 ];
+            $rgb    = [
+                hexdec( substr( $source, 1, 2 ) ),
+                hexdec( substr( $source, 3, 2 ) ),
+                hexdec( substr( $source, 5, 2 ) ),
+            ];
+            $result = array_map(
+                static function ( $channel, $index ) use ( $weight, $mix ) {
+                    return (int) round( ( $channel * $weight ) + ( $mix[ $index ] * ( 1 - $weight ) ) );
+                },
+                $rgb,
+                array_keys( $rgb )
+            );
+
+            return sprintf( '#%02x%02x%02x', $result[0], $result[1], $result[2] );
+        }
+
+        return '';
+    }
+
+    /**
+     * Calculate WCAG relative luminance for a resolved hex color.
+     */
+    private static function get_color_luminance( $hex ) {
+        $channels = [
+            hexdec( substr( $hex, 1, 2 ) ) / 255,
+            hexdec( substr( $hex, 3, 2 ) ) / 255,
+            hexdec( substr( $hex, 5, 2 ) ) / 255,
+        ];
+        $channels = array_map(
+            static function ( $channel ) {
+                return $channel <= 0.04045 ? $channel / 12.92 : pow( ( $channel + 0.055 ) / 1.055, 2.4 );
+            },
+            $channels
+        );
+        return ( 0.2126 * $channels[0] ) + ( 0.7152 * $channels[1] ) + ( 0.0722 * $channels[2] );
+    }
+
+    /**
+     * Calculate the WCAG contrast ratio between two resolved hex colors.
+     */
+    private static function get_contrast_ratio( $first, $second ) {
+        $first_luminance  = self::get_color_luminance( $first );
+        $second_luminance = self::get_color_luminance( $second );
+        return ( max( $first_luminance, $second_luminance ) + 0.05 ) / ( min( $first_luminance, $second_luminance ) + 0.05 );
+    }
+
+    /**
+     * Choose the strongest registered automatic foreground for a background.
+     */
+    private static function get_automatic_foreground( $background, $registry ) {
+        $best       = null;
+        $best_ratio = 0;
+
+        foreach ( $registry as $color ) {
+            if ( empty( $color['automaticForeground'] ) || ! in_array( 'text', $color['contexts'], true ) || empty( $color['resolvedColor'] ) ) {
+                continue;
+            }
+
+            $ratio = self::get_contrast_ratio( $background['resolvedColor'], $color['resolvedColor'] );
+            if ( $ratio > $best_ratio ) {
+                $best       = $color;
+                $best_ratio = $ratio;
+            }
+        }
+
+        return $best;
+    }
+
+    /**
+     * Generate palette classes and enforce AA fallbacks for unsafe pairings.
+     */
+    public static function get_palette_css() {
+        $registry             = self::get_color_registry();
+        $resolved             = self::get_resolved_tokens();
+        $secondary_foreground = self::resolve_color_value( $resolved['cw_button_secondary_foreground'] ?? '', $resolved );
+        $css                  = '';
+
+        foreach ( $registry as $text_color ) {
+            if ( in_array( 'text', $text_color['contexts'], true ) && ! empty( $text_color['resolvedColor'] ) ) {
+                $css .= sprintf(
+                    '.cinderwell-text-color-%1$s{color:var(%2$s,%3$s)!important;}',
+                    $text_color['slug'],
+                    $text_color['cssVariable'],
+                    $text_color['resolvedColor']
+                );
+            }
+        }
+
+        foreach ( $registry as $background ) {
+            if ( ! in_array( 'background', $background['contexts'], true ) || empty( $background['resolvedColor'] ) ) {
+                continue;
+            }
+
+            $foreground = self::get_automatic_foreground( $background, $registry );
+            if ( ! $foreground ) {
+                continue;
+            }
+
+            $selector = sprintf( '[class*="cinderwell-"][class*="--bg-%s"]', $background['slug'] );
+            $css     .= sprintf(
+                '%1$s{--cw-surface-background:var(%2$s,%4$s);--cw-surface-foreground:var(%3$s,%5$s);--cw-tabs-accent:var(%3$s,%5$s);--cw-tabs-accent-contrast:var(%2$s,%4$s);background-color:var(%2$s,%4$s);color:var(%3$s,%5$s);}',
+                $selector,
+                $background['cssVariable'],
+                $foreground['cssVariable'],
+                $background['resolvedColor'],
+                $foreground['resolvedColor']
+            );
+
+            // Secondary buttons are transparent, so their text and border must
+            // contrast with the authored surface behind them. Preserve the
+            // configured button token when it passes AA; otherwise inherit the
+            // same automatically selected foreground as the surface content.
+            if ( $secondary_foreground && self::get_contrast_ratio( $background['resolvedColor'], $secondary_foreground ) < 4.5 ) {
+                $css .= sprintf(
+                    '%1$s{--cw-button-secondary-effective-foreground:var(%2$s,%3$s);}',
+                    $selector,
+                    $foreground['cssVariable'],
+                    $foreground['resolvedColor']
+                );
+            }
+
+            // A Primary button using the Brand fill disappears on the Brand
+            // surface. Invert only that exact surface through the computed AA
+            // foreground/background pair; derived brand surfaces keep the
+            // normal Primary recipe.
+            if ( 'brand' === $background['slug'] ) {
+                $css .= sprintf(
+                    '%1$s:not([class*="--bg-brand-"]){--cw-button-primary-effective-background:var(%2$s,%3$s);--cw-button-primary-effective-foreground:var(%4$s,%5$s);}',
+                    $selector,
+                    $foreground['cssVariable'],
+                    $foreground['resolvedColor'],
+                    $background['cssVariable'],
+                    $background['resolvedColor']
+                );
+            }
+
+            $unsafe_text_slugs = [];
+            foreach ( $registry as $text_color ) {
+                if ( ! in_array( 'text', $text_color['contexts'], true ) || empty( $text_color['resolvedColor'] ) ) {
+                    continue;
+                }
+                if ( self::get_contrast_ratio( $background['resolvedColor'], $text_color['resolvedColor'] ) >= 4.5 ) {
+                    continue;
+                }
+
+                $unsafe_text_slugs[] = '.cinderwell-text-color-' . $text_color['slug'];
+            }
+            if ( $unsafe_text_slugs ) {
+                $css .= sprintf(
+                    '%1$s:is(%2$s),%1$s :is(%2$s){color:var(%3$s,%4$s)!important;}',
+                    $selector,
+                    implode( ',', $unsafe_text_slugs ),
+                    $foreground['cssVariable'],
+                    $foreground['resolvedColor']
+                );
+            }
+        }
+
+        return $css;
+    }
+
+    /**
      * Assign manifest tokens to editor-facing categories.
      */
     private static function get_token_category( $key, $token ) {
-        if ( 'color' === $token['type'] ) {
+        if ( in_array( $token['type'], [ 'color', 'derived-color' ], true ) ) {
             return 'colors';
         }
 
@@ -403,6 +807,10 @@ class Design_Tokens {
 
         if ( 0 === strpos( $key, 'cw_line_height_' ) ) {
             return 'type-scale';
+        }
+
+        if ( 0 === strpos( $key, 'cw_button_' ) ) {
+            return 'buttons';
         }
 
         if ( 0 === strpos( $key, 'cw_spacing_' ) ) {
@@ -425,7 +833,7 @@ class Design_Tokens {
             return 'elevation';
         }
 
-        if ( 0 === strpos( $key, 'cw_duration_' ) || 0 === strpos( $key, 'cw_ease_' ) ) {
+        if ( 0 === strpos( $key, 'cw_duration_' ) || 0 === strpos( $key, 'cw_ease_' ) || 0 === strpos( $key, 'cw_motion_' ) ) {
             return 'motion';
         }
 
@@ -562,19 +970,25 @@ class Design_Tokens {
             ARRAY_FILTER_USE_BOTH
         );
 
-        if ( empty( $tokens ) ) {
+        $palette_css = self::get_palette_css();
+        if ( empty( $tokens ) && '' === $palette_css ) {
             return;
         }
 
-        echo '<style id="cinderwell-tokens">:root {';
-        foreach ( $tokens as $key => $value ) {
-            if ( ! preg_match( '/^cw_[a-z0-9_]+$/', $key ) ) {
-                continue;
+        echo '<style id="cinderwell-tokens">';
+        if ( ! empty( $tokens ) ) {
+            echo ':root {';
+            foreach ( $tokens as $key => $value ) {
+                if ( ! preg_match( '/^cw_[a-z0-9_]+$/', $key ) ) {
+                    continue;
+                }
+                $css_key = str_replace( '_', '-', $key );
+                echo '--' . esc_attr( $css_key ) . ': ' . esc_attr( $value ) . ';';
             }
-            $css_key = str_replace( '_', '-', $key );
-            echo '--' . esc_attr( $css_key ) . ': ' . esc_attr( $value ) . ';';
+            echo '}';
         }
-        echo '}</style>' . "\n";
+        echo $palette_css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Generated exclusively from validated token keys and sanitized slugs.
+        echo '</style>' . "\n";
     }
 
     /**

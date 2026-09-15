@@ -89,7 +89,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="&#9638;" title={ __( 'Image Carousel', 'cinderwell' ) } description={ __( 'Accessible image slider', 'cinderwell' ) } />
-                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-layout">
                         <SectionToggles
                             sections={ [
                                 { key: 'eyebrow', label: __( 'Eyebrow', 'cinderwell' ) },
@@ -104,7 +104,7 @@ registerBlockType( metadata.name, {
                             } ) }
                         />
                     </PanelBody>
-                    <PanelBody title={ `${ __( 'Images', 'cinderwell' ) } (${ images.length })` } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ `${ __( 'Images', 'cinderwell' ) } (${ images.length })` } initialOpen={ true } className="cw-panel cw-access-media">
                         <div className="cw-thumb-strip">
                             { images.map( ( image, index ) => (
                                 <button
@@ -162,7 +162,7 @@ registerBlockType( metadata.name, {
                             </Popover>
                         ) }
                     </PanelBody>
-                    <PanelBody title={ __( 'Carousel', 'cinderwell' ) } initialOpen={ false } className="cw-panel">
+                    <PanelBody title={ __( 'Carousel', 'cinderwell' ) } initialOpen={ false } className="cw-panel cw-access-layout">
                         <ToggleControl label={ __( 'Show previous and next buttons', 'cinderwell' ) } checked={ attributes.showArrows } onChange={ ( value ) => setAttributes( { showArrows: value } ) } />
                         <ToggleControl label={ __( 'Show slide indicators', 'cinderwell' ) } checked={ attributes.showIndicators } onChange={ ( value ) => setAttributes( { showIndicators: value } ) } />
                         <SelectControl label={ __( 'Image aspect ratio', 'cinderwell' ) } value={ attributes.imageAspect } options={ imageAspectOptions } onChange={ ( value ) => setAttributes( { imageAspect: value } ) } />

@@ -44,7 +44,7 @@ class Admin_Bar {
             'parent' => $root_id,
             'title'  => $title,
             'href'   => admin_url( 'edit.php?post_type=' . Post_Type::POST_TYPE ),
-            'meta'   => [ 'title' => esc_attr__( 'Manage alert bars', 'cinderwell-alerts' ) ],
+            'meta'   => [ 'title' => esc_attr__( 'Manage alerts', 'cinderwell-alerts' ) ],
         ] );
 
         if ( $context['is_frontend'] ) {

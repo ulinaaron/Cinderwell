@@ -1,0 +1,35 @@
+.cinderwell-media-replace {
+	min-width: 0;
+}
+
+.cinderwell-media-replace__button[aria-disabled="true"] {
+	cursor: wait;
+	opacity: 0.65;
+	pointer-events: none;
+}
+
+.cinderwell-media-replace__file,
+.cinderwell-media-replace__status {
+	margin: 8px 0 0;
+	font-size: 12px;
+}
+
+.cinderwell-media-replace__file {
+	color: #646970;
+}
+
+.cinderwell-media-replace__status:empty {
+	display: none;
+}
+
+.cinderwell-media-replace__status.is-success {
+	color: #008a20;
+}
+
+.cinderwell-media-replace__status.is-error {
+	color: #b32d2e;
+}
+
+.compat-field-cinderwell_replace_media .field {
+	padding-top: 4px;
+}

@@ -14,6 +14,22 @@ const getEntryPoints = () => {
 
     // Gutenberg editor-level tools.
     entryPoints[ 'editor/index' ] = path.resolve( __dirname, 'src/editor/index.js' );
+    entryPoints[ 'admin/settings' ] = path.resolve( __dirname, 'src/admin/settings.js' );
+
+    // Optional core modules. Their assets are built with core but enqueued only
+    // while the corresponding module is enabled.
+    const modulesDir = path.resolve( __dirname, 'src/modules' );
+    if ( fs.existsSync( modulesDir ) ) {
+        fs.readdirSync( modulesDir ).forEach( ( module ) => {
+            const stylePath = path.join( modulesDir, module, 'frontend.css' );
+            const scriptPath = path.join( modulesDir, module, 'frontend.js' );
+            if ( fs.existsSync( scriptPath ) ) {
+                entryPoints[ `modules/${ module }/frontend` ] = scriptPath;
+            } else if ( fs.existsSync( stylePath ) ) {
+                entryPoints[ `modules/${ module }/frontend` ] = stylePath;
+            }
+        } );
+    }
 
     // Blocks.
     const blocksDir = path.resolve( __dirname, 'src/blocks' );

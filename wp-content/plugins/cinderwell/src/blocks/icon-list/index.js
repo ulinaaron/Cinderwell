@@ -98,7 +98,7 @@ registerBlockType(metadata.name, {
           <PanelBody
             title={__("Default icon", "cinderwell")}
             initialOpen={true}
-            className="cw-panel"
+            className="cw-panel cw-access-appearance"
           >
             <IconSettingsControl
               icon={attributes.defaultIcon}
@@ -141,7 +141,7 @@ registerBlockType(metadata.name, {
           <PanelBody
             title={__("Layout", "cinderwell")}
             initialOpen={false}
-            className="cw-panel"
+            className="cw-panel cw-access-layout"
           >
             <SegmentedControl
               label={__("Item spacing", "cinderwell")}

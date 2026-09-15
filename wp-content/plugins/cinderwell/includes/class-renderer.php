@@ -73,11 +73,91 @@ class Renderer {
 		if ( ! Condition_Evaluator::should_show( $attributes ) ) {
 			return '';
 		}
+		if ( 'cinderwell/hero' === $block['blockName'] ) {
+			$content = $this->enhance_hero_alignment( $content, $attributes );
+			$content = $this->enhance_block_variation( $content, $block['blockName'], $attributes, 'split' );
+		}
+		if ( 'cinderwell/card-grid' === $block['blockName'] ) {
+			$content = $this->enhance_block_variation( $content, $block['blockName'], $attributes, 'raised' );
+		}
 		$content = $this->add_responsive_visibility( $content, $attributes );
 		if ( 'cinderwell/card-grid' === $block['blockName'] && false !== strpos( $content, 'data-cw-custom-icon' ) ) {
 			$content = $this->sanitize_custom_svgs( $content );
 		}
 		return $this->replace_dynamic_data( $content, $attributes );
+	}
+
+	/**
+	 * Resolve a live presentation variation without changing static saved markup.
+	 *
+	 * @param string $content    Rendered block HTML.
+	 * @param string $block_name Full block name.
+	 * @param array  $attributes Block attributes.
+	 * @param string $fallback   Fallback variation slug.
+	 * @return string
+	 */
+	private function enhance_block_variation( $content, $block_name, $attributes, $fallback ) {
+		$variations = Block_Variations::get( $block_name );
+		$requested  = sanitize_key( $attributes['layout'] ?? $fallback ) ?: $fallback;
+		$definition = $variations[ $requested ] ?? ( $variations[ $fallback ] ?? reset( $variations ) );
+
+		if ( ! is_array( $definition ) ) {
+			return $content;
+		}
+
+		$style_handle = $definition['style_handle'];
+		if ( $style_handle && wp_style_is( $style_handle, 'registered' ) ) {
+			wp_enqueue_style( $style_handle );
+		}
+
+		if ( is_callable( $definition['render_callback'] ) ) {
+			$custom_content = call_user_func( $definition['render_callback'], $content, $attributes, $definition );
+			if ( is_string( $custom_content ) && '' !== trim( $custom_content ) ) {
+				$content = $custom_content;
+			}
+		}
+
+		if ( ! class_exists( '\\WP_HTML_Tag_Processor' ) ) {
+			return $content;
+		}
+
+		$processor = new \WP_HTML_Tag_Processor( $content );
+		if ( $processor->next_tag() ) {
+			$block_slug = sanitize_html_class( str_replace( '/', '-', $block_name ) );
+			$processor->add_class( $block_slug . '--layout-' . $definition['slug'] );
+			return $processor->get_updated_html();
+		}
+
+		return $content;
+	}
+
+	/**
+	 * Apply saved Hero alignment to legacy markup that predates modifier classes.
+	 *
+	 * @param string $content    Rendered block content.
+	 * @param array  $attributes Block attributes.
+	 * @return string
+	 */
+	private function enhance_hero_alignment( $content, $attributes ) {
+		if ( ! class_exists( '\\WP_HTML_Tag_Processor' ) ) {
+			return $content;
+		}
+
+		$alignment = isset( $attributes['alignment'] ) ? sanitize_key( $attributes['alignment'] ) : 'center';
+		if ( ! in_array( $alignment, [ 'left', 'center', 'right' ], true ) ) {
+			$alignment = 'center';
+		}
+
+		$processor = new \WP_HTML_Tag_Processor( $content );
+		if ( $processor->next_tag() ) {
+			$processor->remove_class( 'cinderwell-hero--align-left' );
+			$processor->remove_class( 'cinderwell-hero--align-center' );
+			$processor->remove_class( 'cinderwell-hero--align-right' );
+			$processor->add_class( 'cinderwell-hero--align-' . $alignment );
+			return $processor->get_updated_html();
+		}
+
+		return $content;
 	}
 
 	/**

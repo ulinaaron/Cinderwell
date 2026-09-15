@@ -1,0 +1,57 @@
+.cinderwell-commerce-links {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    gap: var(--cw-space-xs, 0.5rem);
+}
+
+.cinderwell-commerce-links__link {
+    align-items: center;
+    border-radius: var(--cw-radius-sm, 4px);
+    color: inherit;
+    display: inline-flex;
+    justify-content: center;
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+    padding: var(--cw-space-xs, 0.5rem);
+    position: relative;
+    text-decoration: none;
+}
+
+.cinderwell-commerce-links__link:hover {
+    background: color-mix(in srgb, currentColor 8%, transparent);
+}
+
+.cinderwell-commerce-links__link:focus-visible {
+    outline: 2px solid var(--cw-color-brand, currentColor);
+    outline-offset: 2px;
+}
+
+.cinderwell-commerce-links__link svg {
+    fill: none;
+    height: 1.5rem;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.75;
+    width: 1.5rem;
+}
+
+.cinderwell-commerce-links__count {
+    align-items: center;
+    background: var(--cw-color-dark, #1a1a1a);
+    border: 2px solid var(--cw-color-white, #fff);
+    border-radius: 999px;
+    color: var(--cw-color-white, #fff);
+    display: flex;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    height: 1.25rem;
+    justify-content: center;
+    line-height: 1;
+    min-width: 1.25rem;
+    padding-inline: 0.2rem;
+    position: absolute;
+    right: 0;
+    top: 0;
+}

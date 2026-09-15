@@ -13,6 +13,7 @@ import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { ConditionsPanel } from './conditions-panel';
 import { EditableLink, LinkSettingsControl } from './link-control';
+import { getContrastSafeTextOptions, getPaletteOptions, useColorRegistry } from './color-registry';
 
 /**
  * Block identity strip — compact, pinned at top.
@@ -76,7 +77,7 @@ export const HelpTooltip = ( { text } ) => (
 /**
  * Segmented control — for spacing, width, alignment.
  */
-export const SegmentedControl = ( { label, value, options, onChange } ) => {
+export const SegmentedControl = ( { label, value, options, onChange, help = '' } ) => {
     return (
         <div className="cw-field">
             { label && <div className="cw-field__label">{ label }</div> }
@@ -88,13 +89,39 @@ export const SegmentedControl = ( { label, value, options, onChange } ) => {
                         className={ value === opt.value ? 'is-active' : '' }
                         onClick={ () => onChange( opt.value ) }
                         aria-pressed={ value === opt.value }
+                        disabled={ opt.disabled }
                     >
                         { opt.label }
                     </button>
                 ) ) }
             </div>
+            { help && <p className="cw-field__help">{ help }</p> }
         </div>
     );
+};
+
+/**
+ * Segmented choices with a compact, reversible site-default state.
+ */
+export const InheritedSegmentedControl = ( {
+    label,
+    value,
+    defaultValue,
+    options,
+    onChange,
+    inheritValue = 'inherit',
+} ) => {
+    const inherited = value === inheritValue;
+
+    return <div className="cw-inherited-control">
+        <div className="cw-inherited-control__header">
+            <span className="cw-field__label">{ label }</span>
+            { inherited
+                ? <span className="cw-inherited-control__status">{ __( 'Site default', 'cinderwell' ) }</span>
+                : <Button className="cw-inherited-control__reset" variant="link" onClick={ () => onChange( inheritValue ) }>{ __( 'Use site default', 'cinderwell' ) }</Button> }
+        </div>
+        <SegmentedControl value={ inherited ? defaultValue : value } options={ options } onChange={ onChange } />
+    </div>;
 };
 
 /**
@@ -261,6 +288,30 @@ export const ColorTokenControl = ( { label = __( 'Color', 'cinderwell' ), value,
     </div>
 );
 
+/**
+ * Token swatches with the same compact inheritance treatment.
+ */
+export const InheritedColorTokenControl = ( {
+    label = __( 'Color', 'cinderwell' ),
+    value,
+    defaultValue,
+    options,
+    onChange,
+    inheritValue = 'inherit',
+} ) => {
+    const inherited = value === inheritValue;
+
+    return <div className="cw-inherited-control">
+        <div className="cw-inherited-control__header">
+            <span className="cw-field__label">{ label }</span>
+            { inherited
+                ? <span className="cw-inherited-control__status">{ __( 'Site default', 'cinderwell' ) }</span>
+                : <Button className="cw-inherited-control__reset" variant="link" onClick={ () => onChange( inheritValue ) }>{ __( 'Use site default', 'cinderwell' ) }</Button> }
+        </div>
+        <ColorTokenControl label="" value={ inherited ? defaultValue : value } options={ options } onChange={ onChange } />
+    </div>;
+};
+
 const backgroundFitOptions = [
     { value: 'cover', label: __( 'Cover', 'cinderwell' ) },
     { value: 'contain', label: __( 'Contain', 'cinderwell' ) },
@@ -369,22 +420,32 @@ export const IconGroup = ( { label, value, options, onChange } ) => {
 /**
  * Layout panel — spacing, width, alignment.
  */
-export const LayoutControls = ( { attributes, setAttributes, showAlignment = false } ) => {
+export const LayoutControls = ( { attributes, setAttributes, showAlignment = false, disableWidth = false, widthHelp = '', children } ) => {
     return (
         <>
-        <PanelBody title={ __( 'Layout', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+        <PanelBody title={ __( 'Spacing', 'cinderwell' ) } initialOpen={ false } className="cw-panel cw-access-spacing">
             <ResponsiveSpacingControl attributes={ attributes } setAttributes={ setAttributes } />
-            <SegmentedControl
-                label={ __( 'Content Width', 'cinderwell' ) }
-                value={ attributes.width || 'standard' }
-                options={ [
-                    { value: 'narrow', label: __( 'Narrow', 'cinderwell' ) },
-                    { value: 'standard', label: __( 'Standard', 'cinderwell' ) },
-                    { value: 'wide', label: __( 'Wide', 'cinderwell' ) },
-                    { value: 'full', label: __( 'Full', 'cinderwell' ) },
-                ] }
-                onChange={ ( v ) => setAttributes( { width: v } ) }
-            />
+        </PanelBody>
+        <PanelBody title={ __( 'Layout', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-layout">
+            <div className={ `cw-control-lock${ disableWidth ? ' is-locked' : '' }` }>
+                <SegmentedControl
+                    label={ __( 'Content Width', 'cinderwell' ) }
+                    value={ attributes.width || 'standard' }
+                    options={ [
+                        { value: 'narrow', label: __( 'Narrow', 'cinderwell' ), disabled: disableWidth },
+                        { value: 'standard', label: __( 'Standard', 'cinderwell' ), disabled: disableWidth },
+                        { value: 'wide', label: __( 'Wide', 'cinderwell' ), disabled: disableWidth },
+                        { value: 'full', label: __( 'Full', 'cinderwell' ), disabled: disableWidth },
+                    ] }
+                    onChange={ ( v ) => setAttributes( { width: v } ) }
+                />
+                { disableWidth && widthHelp && (
+                    <div className="cw-control-notice" role="note">
+                        <span className="cw-control-notice__icon" aria-hidden="true">i</span>
+                        <span>{ widthHelp }</span>
+                    </div>
+                ) }
+            </div>
             { showAlignment && (
                 <IconGroup
                     label={ __( 'Alignment', 'cinderwell' ) }
@@ -397,6 +458,7 @@ export const LayoutControls = ( { attributes, setAttributes, showAlignment = fal
                     onChange={ ( v ) => setAttributes( { alignment: v } ) }
                 />
             ) }
+            { children }
         </PanelBody>
         </>
     );
@@ -406,12 +468,8 @@ export const LayoutControls = ( { attributes, setAttributes, showAlignment = fal
  * Background panel — square swatches mapped to design tokens.
  */
 export const BackgroundControls = ( { value, onChange, attributes, setAttributes, media, children } ) => {
-    const swatches = [
-        { slug: 'white', color: 'var(--cw-color-white, #ffffff)', fallback: '#ffffff' },
-        { slug: 'light', color: 'var(--cw-color-light, #f8f5ef)', fallback: '#f8f5ef' },
-        { slug: 'dark', color: 'var(--cw-color-dark, #1a1a1a)', fallback: '#1a1a1a' },
-        { slug: 'brand', color: 'var(--cw-color-brand, #b84c00)', fallback: '#b84c00' },
-    ];
+    const colorRegistry = useColorRegistry();
+    const swatches = getPaletteOptions( colorRegistry, 'background' );
 
     const backgroundMedia = media || ( attributes && setAttributes ? {
         imageId: attributes.backgroundImage || 0,
@@ -429,7 +487,7 @@ export const BackgroundControls = ( { value, onChange, attributes, setAttributes
     } : null );
 
     return (
-        <PanelBody title={ __( 'Background', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+        <PanelBody title={ __( 'Background', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-appearance">
             <ColorTokenControl value={ value } options={ swatches } onChange={ onChange } />
             { backgroundMedia && <BackgroundImageControl { ...backgroundMedia } /> }
             { children && <div className="cw-background-media">{ children }</div> }
@@ -563,38 +621,32 @@ const typographySizes = [
     { value: 'lg', label: __( 'Large', 'cinderwell' ) },
 ];
 
-const typographyColors = [
-    { slug: 'auto', label: __( 'Automatic', 'cinderwell' ), color: 'linear-gradient(135deg, #ffffff 0 50%, #1a1a1a 50%)' },
-    { slug: 'text', label: __( 'Text', 'cinderwell' ), color: 'var(--cw-color-text, #1a1a1a)' },
-    { slug: 'brand', label: __( 'Brand', 'cinderwell' ), color: 'var(--cw-color-brand, #b84c00)' },
-    { slug: 'dark', label: __( 'Dark', 'cinderwell' ), color: 'var(--cw-color-dark, #1a1a1a)' },
-    { slug: 'light', label: __( 'Light', 'cinderwell' ), color: 'var(--cw-color-light, #f8f5ef)' },
-    { slug: 'white', label: __( 'White', 'cinderwell' ), color: 'var(--cw-color-white, #ffffff)' },
-];
-
-const getSafeTypographyColors = ( background = 'auto' ) => {
-    if ( 'dark' === background || 'brand' === background ) {
-        return typographyColors.filter( ( option ) => [ 'auto', 'light', 'white' ].includes( option.slug ) );
-    }
-
-    if ( 'white' === background || 'light' === background ) {
-        return typographyColors.filter( ( option ) => [ 'auto', 'text', 'dark', 'brand' ].includes( option.slug ) );
-    }
-
-    return typographyColors.filter( ( option ) => 'auto' === option.slug );
+const automaticTypographyColor = {
+    slug: 'auto',
+    label: __( 'Automatic', 'cinderwell' ),
+    color: 'linear-gradient(135deg, #ffffff 0 50%, #1a1a1a 50%)',
 };
 
-const TypographyFields = ( { size, color, background, onSizeChange, onColorChange } ) => (
-    <>
+const TypographyFields = ( { size, color, background, onSizeChange, onColorChange } ) => {
+    const colorRegistry = useColorRegistry();
+    const safeColors = getPaletteOptions( getContrastSafeTextOptions( colorRegistry, background ), 'text' );
+    const selectedColorIsUnsafe = color && color !== 'auto' && ! safeColors.some( ( option ) => option.slug === color );
+
+    return <>
         <SegmentedControl
             label={ __( 'Size', 'cinderwell' ) }
             value={ size || 'auto' }
             options={ typographySizes }
             onChange={ onSizeChange }
         />
-        <ColorTokenControl value={ color || 'auto' } options={ getSafeTypographyColors( background ) } onChange={ onColorChange } />
-    </>
-);
+        <ColorTokenControl value={ color || 'auto' } options={ [ automaticTypographyColor, ...safeColors ] } onChange={ onColorChange } />
+        { selectedColorIsUnsafe && (
+            <p className="cw-field__help" role="status">
+                { __( 'This text color no longer meets AA contrast on the selected background. Automatic contrast is being used.', 'cinderwell' ) }
+            </p>
+        ) }
+    </>;
+};
 
 /**
  * Text panel — a compact, token-only type scale and color palette.
@@ -615,7 +667,7 @@ export const TypographyControls = ( { attributes, setAttributes, sections = [] }
 
     return (
         <>
-        <PanelBody title={ __( 'Text', 'cinderwell' ) } initialOpen={ false } className="cw-panel">
+        <PanelBody title={ __( 'Text', 'cinderwell' ) } initialOpen={ false } className="cw-panel cw-access-appearance">
             <span className="cw-type-label">{ __( 'All text', 'cinderwell' ) }</span>
             <TypographyFields
                 size={ attributes.textSize }

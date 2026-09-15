@@ -1,0 +1,97 @@
+.cinderwell-utilities-group {
+    margin-bottom: 2rem;
+}
+
+.cinderwell-utilities-group__title {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #c3c4c7;
+}
+
+.cinderwell-utilities-module {
+    margin-bottom: 0.5rem;
+    padding: 1rem 1.25rem !important;
+}
+
+.cinderwell-utilities-module__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.cinderwell-utilities-module__toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.cinderwell-utilities-module__toggle input {
+    margin: 0;
+}
+
+.cinderwell-utilities-module__desc {
+    color: #646970;
+    font-size: 13px;
+}
+
+.cinderwell-utilities-module__body {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #e0e0e0;
+}
+
+.cinderwell-utilities-module__body .form-table th {
+    width: 200px;
+}
+
+.cinderwell-utilities-module__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.cinderwell-sortable-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-width: 600px;
+}
+
+.cinderwell-sortable-item {
+    padding: 8px 12px;
+    margin: 2px 0;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    cursor: move;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    transition: background 0.15s;
+}
+
+.cinderwell-sortable-item:hover {
+    background: #f0f0f1;
+}
+
+.cinderwell-sortable-item.dragging {
+    opacity: 0.5;
+    background: #e0e0e0;
+}
+
+.cinderwell-sortable-handle {
+    color: #787c82;
+    cursor: move;
+    font-size: 16px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.cinderwell-sortable-item small {
+    color: #787c82;
+}

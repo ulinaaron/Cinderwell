@@ -1,0 +1,48 @@
+.cw-popup-field,
+.cw-popup-fieldset {
+	margin: 0 0 16px;
+}
+
+.cw-popup-field > label,
+.cw-popup-fieldset > legend,
+.cw-popup-post-picker > label {
+	display: block;
+	margin-bottom: 6px;
+	font-weight: 600;
+}
+
+.cw-popup-fieldset > label {
+	display: block;
+	margin: 6px 0;
+}
+
+.cw-popup-post-picker {
+	margin: 12px 0;
+}
+
+.cw-popup-post-picker__add {
+	display: flex;
+	gap: 6px;
+}
+
+.cw-popup-post-list {
+	margin: 8px 0 0;
+}
+
+.cw-popup-post-list li {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	margin: 0 0 4px;
+	padding: 8px;
+	border: 1px solid #dcdcde;
+	background: #fff;
+}
+
+.cw-popup-post-list li span {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}

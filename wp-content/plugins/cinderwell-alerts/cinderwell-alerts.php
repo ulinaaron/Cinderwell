@@ -3,8 +3,8 @@
  * Plugin Name: Cinderwell Alerts
  * Plugin URI: https://github.com/ulinaaron/Cinderwell/tree/main/wp-content/plugins/cinderwell-alerts
  * Update URI: https://cinderwell-updates.surge.sh/cinderwell-alerts/
- * Description: Scheduled, condition-aware alert bars composed with Cinderwell blocks.
- * Version: 0.1.3
+ * Description: Scheduled, condition-aware alerts composed with Cinderwell blocks.
+ * Version: 0.1.6
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Requires Plugins: cinderwell
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CINDERWELL_ALERTS_VERSION', '0.1.3' );
+define( 'CINDERWELL_ALERTS_VERSION', '0.1.6' );
 define( 'CINDERWELL_ALERTS_FILE', __FILE__ );
 define( 'CINDERWELL_ALERTS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CINDERWELL_ALERTS_URL', plugin_dir_url( __FILE__ ) );
@@ -48,3 +48,18 @@ register_activation_hook( __FILE__, static function () {
 } );
 
 register_deactivation_hook( __FILE__, 'flush_rewrite_rules' );
+
+add_filter( 'cinderwell_addon_catalog', static function ( $catalog ) {
+    if ( isset( $catalog['cinderwell-alerts'] ) ) {
+        $catalog['cinderwell-alerts']['icon']         = 'dashicons-megaphone';
+        $catalog['cinderwell-alerts']['settings_url'] = admin_url( 'edit.php?post_type=cw_alert' );
+        $catalog['cinderwell-alerts']['health_callback'] = static function () {
+            $counts = wp_count_posts( 'cw_alert' );
+            $count  = isset( $counts->publish ) ? absint( $counts->publish ) : 0;
+            return $count
+                ? [ 'status' => 'good', 'message' => sprintf( _n( '%d published alert.', '%d published alerts.', $count, 'cinderwell-alerts' ), $count ) ]
+                : [ 'status' => 'warning', 'message' => __( 'No published alerts yet.', 'cinderwell-alerts' ) ];
+        };
+    }
+    return $catalog;
+} );

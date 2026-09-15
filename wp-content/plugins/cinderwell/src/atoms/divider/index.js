@@ -22,7 +22,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="—" title={ __( 'Divider', 'cinderwell' ) } description={ __( 'Visual separator', 'cinderwell' ) } />
-                    <PanelBody title={ __( 'Style', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Style', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-appearance">
                         <SegmentedControl
                             label={ __( 'Weight', 'cinderwell' ) }
                             value={ attributes.weight }

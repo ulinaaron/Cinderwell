@@ -21,6 +21,15 @@
 
 .cinderwell-atom-icon--color-brand { color: var(--cw-color-brand); }
 .cinderwell-atom-icon--color-text { color: var(--cw-color-text); }
+.cinderwell-atom-icon--color-muted { color: var(--cw-color-muted); }
+.cinderwell-atom-icon--color-brand-light { color: var(--cw-color-brand-light); }
+.cinderwell-atom-icon--color-brand-dark { color: var(--cw-color-brand-dark); }
+.cinderwell-atom-icon--color-info { color: var(--cw-color-info); }
+.cinderwell-atom-icon--color-success { color: var(--cw-color-success); }
+.cinderwell-atom-icon--color-danger { color: var(--cw-color-danger); }
+.cinderwell-atom-icon--color-accent-1 { color: var(--cw-color-accent-1); }
+.cinderwell-atom-icon--color-accent-2 { color: var(--cw-color-accent-2); }
+.cinderwell-atom-icon--color-accent-3 { color: var(--cw-color-accent-3); }
 .cinderwell-atom-icon--color-dark { color: var(--cw-color-dark); }
 .cinderwell-atom-icon--color-light { color: var(--cw-color-light); }
 .cinderwell-atom-icon--color-white { color: var(--cw-color-white); }

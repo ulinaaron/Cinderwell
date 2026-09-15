@@ -37,6 +37,58 @@ const components = [
 		header: 'cinderwell-alerts.php',
 		pluginFile: 'cinderwell-alerts/cinderwell-alerts.php',
 		exclude: new Set(),
+		description: 'Scheduled, condition-aware alerts composed with Cinderwell blocks.',
+	},
+	{
+		type: 'addon',
+		name: 'Cinderwell Cookie Consent',
+		slug: 'cinderwell-cookie-consent',
+		source: join( repoRoot, 'wp-content/plugins/cinderwell-cookie-consent' ),
+		header: 'cinderwell-cookie-consent.php',
+		pluginFile: 'cinderwell-cookie-consent/cinderwell-cookie-consent.php',
+		exclude: new Set(),
+		description: 'Accessible category consent, prior blocking, withdrawal controls, and privacy-policy guidance.',
+	},
+	{
+		type: 'addon',
+		name: 'Cinderwell Help',
+		slug: 'cinderwell-help',
+		source: join( repoRoot, 'wp-content/plugins/cinderwell-help' ),
+		header: 'cinderwell-help.php',
+		pluginFile: 'cinderwell-help/cinderwell-help.php',
+		exclude: new Set(),
+		description: 'Client-facing, searchable documentation with theme hooks for site-specific guidance.',
+	},
+	{
+		type: 'addon',
+		name: 'Cinderwell Performance',
+		slug: 'cinderwell-performance',
+		source: join( repoRoot, 'wp-content/plugins/cinderwell-performance' ),
+		header: 'cinderwell-performance.php',
+		pluginFile: 'cinderwell-performance/cinderwell-performance.php',
+		exclude: new Set( [ 'docs', 'node_modules', 'package.json', 'package-lock.json' ] ),
+		description: 'Block-aware HTML, image, resource-hint, and optional hydration optimizations.',
+	},
+	{
+		type: 'addon',
+		name: 'Cinderwell Popups',
+		slug: 'cinderwell-popups',
+		source: join( repoRoot, 'wp-content/plugins/cinderwell-popups' ),
+		header: 'cinderwell-popups.php',
+		pluginFile: 'cinderwell-popups/cinderwell-popups.php',
+		exclude: new Set( [ 'docs', 'node_modules', 'package.json', 'package-lock.json', 'src', 'webpack.config.js' ] ),
+		description: 'Accessible block-built modals with automatic display rules and manual button triggers.',
+		requiresBuild: true,
+	},
+	{
+		type: 'addon',
+		name: 'Cinderwell Site Utilities',
+		slug: 'cinderwell-utilities',
+		source: join( repoRoot, 'wp-content/plugins/cinderwell-utilities' ),
+		header: 'cinderwell-utilities.php',
+		pluginFile: 'cinderwell-utilities/cinderwell-utilities.php',
+		exclude: new Set( [ 'docs', 'node_modules', 'package.json', 'package-lock.json', 'src', 'templates', 'vendor' ] ),
+		description: 'Optional content, media, and site-administration utilities for Cinderwell sites.',
 	},
 	{
 		type: 'theme',
@@ -88,8 +140,8 @@ for ( const component of components ) {
 		throw new Error( `Missing component directory: ${ component.source }` );
 	}
 
-	if ( component.type === 'plugin' && ! existsSync( join( component.source, 'build' ) ) ) {
-		throw new Error( 'Cinderwell build directory is missing. Run npm run build before packaging.' );
+	if ( ( component.type === 'plugin' || component.requiresBuild ) && ! existsSync( join( component.source, 'build' ) ) ) {
+		throw new Error( `${ component.name } build directory is missing. Run npm run build before packaging.` );
 	}
 
 	const version = parseHeader( join( component.source, component.header ), 'Version' );
@@ -122,8 +174,11 @@ for ( const component of components ) {
 		data.sections = {
 			description: component.type === 'plugin'
 				? 'Cinderwell block system and extension layer.'
-				: 'Scheduled, condition-aware alert bars composed with Cinderwell blocks.',
+				: component.description,
 		};
+		if ( component.type === 'addon' ) {
+			data.distribution = 'plugin';
+		}
 
 		if ( component.type === 'plugin' ) {
 			manifest.plugin = data;
@@ -132,6 +187,72 @@ for ( const component of components ) {
 		}
 	}
 }
+
+manifest.addons[ 'teams' ] = {
+	name: 'Teams',
+	slug: 'teams',
+	module: 'teams',
+	distribution: 'bundled',
+	version: manifest.plugin.version,
+	requires: manifest.plugin.requires,
+	requires_php: manifest.plugin.requires_php,
+	sections: {
+		description: 'Manage people, team categories, optional profile pages, and focused People loops.',
+	},
+};
+
+manifest.addons[ 'portfolio' ] = {
+	name: 'Portfolio',
+	slug: 'portfolio',
+	module: 'portfolio',
+	distribution: 'bundled',
+	version: manifest.plugin.version,
+	requires: manifest.plugin.requires,
+	requires_php: manifest.plugin.requires_php,
+	sections: {
+		description: 'Manage project work, configurable fields, categories, templates, and focused Portfolio loops.',
+	},
+};
+
+manifest.addons[ 'company-details' ] = {
+	name: 'Company Details',
+	slug: 'company-details',
+	module: 'company-details',
+	distribution: 'bundled',
+	version: manifest.plugin.version,
+	requires: manifest.plugin.requires,
+	requires_php: manifest.plugin.requires_php,
+	sections: {
+		description: 'Define reusable company identity, contact, address, hours, and social-profile information.',
+	},
+};
+
+manifest.addons.locations = {
+	name: 'Locations',
+	slug: 'locations',
+	module: 'locations',
+	distribution: 'bundled',
+	version: manifest.plugin.version,
+	requires: manifest.plugin.requires,
+	requires_php: manifest.plugin.requires_php,
+	dependencies: [ 'company-details' ],
+	sections: {
+		description: 'Manage reusable branch, office, campus, or service-area details and optional public location pages.',
+	},
+};
+
+manifest.addons.animations = {
+	name: 'Animations',
+	slug: 'animations',
+	module: 'animations',
+	distribution: 'bundled',
+	version: manifest.plugin.version,
+	requires: manifest.plugin.requires,
+	requires_php: manifest.plugin.requires_php,
+	sections: {
+		description: 'Add token-based entrance animations to whole blocks or their content sections.',
+	},
+};
 
 writeFileSync( join( outputDirectory, 'info.json' ), `${ JSON.stringify( manifest, null, 2 ) }\n` );
 writeFileSync(

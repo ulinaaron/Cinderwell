@@ -3,15 +3,35 @@
 	--cw-color-light: #f8f5ef;
 	--cw-color-dark: #1a1a1a;
 	--cw-color-brand: #b84c00;
+	--cw-color-brand-light: color-mix(in srgb, var(--cw-color-brand) 20%, white);
+	--cw-color-brand-dark: color-mix(in srgb, var(--cw-color-brand) 75%, black);
 	--cw-color-text: #1a1a1a;
 	--cw-color-bg: #fff;
 	--cw-color-brand-contrast: #fff;
 	--cw-color-surface: #fff;
 	--cw-color-muted: #666;
+	--cw-color-info: #005ea8;
+	--cw-color-success: #287d3c;
+	--cw-color-danger: #b42318;
+	--cw-color-accent-1: #6f42c1;
+	--cw-color-accent-2: #007c83;
+	--cw-color-accent-3: #9a6700;
 	--cw-color-border: #d9d6d0;
 	--cw-color-link: #b84c00;
 	--cw-color-link-hover: #1a1a1a;
 	--cw-color-focus: #b84c00;
+	--cw-button-primary-background: var(--cw-color-brand);
+	--cw-button-primary-foreground: var(--cw-color-brand-contrast);
+	--cw-button-primary-hover-background: var(--cw-color-dark);
+	--cw-button-primary-hover-foreground: var(--cw-color-white);
+	--cw-button-secondary-foreground: var(--cw-color-brand);
+	--cw-button-secondary-hover-background: var(--cw-color-brand);
+	--cw-button-secondary-hover-foreground: var(--cw-color-brand-contrast);
+	--cw-button-ghost-foreground: var(--cw-color-text);
+	--cw-button-ghost-background: color-mix(in srgb, var(--cw-button-ghost-foreground) 7%, transparent);
+	--cw-button-ghost-hover-background: color-mix(in srgb, var(--cw-button-ghost-foreground) 13%, transparent);
+	--cw-button-link-foreground: var(--cw-color-link);
+	--cw-button-link-hover-foreground: var(--cw-color-link-hover);
 	--cw-font-heading: inherit;
 	--cw-font-body: inherit;
 	--cw-line-height-tight: 1.2;
@@ -54,6 +74,97 @@
 	--cw-duration-normal: 200ms;
 	--cw-duration-slow: 300ms;
 	--cw-ease-standard: ease;
+	--cw-motion-distance: 24px;
+}
+
+[class*="cinderwell-"][class*="--bg-brand-light"] {
+	--cw-surface-background: var(--cw-color-brand-light);
+	--cw-surface-foreground: var(--cw-color-text);
+	--cw-tabs-accent: var(--cw-color-brand-dark);
+	--cw-tabs-accent-contrast: var(--cw-color-white);
+
+	background-color: var(--cw-color-brand-light);
+	color: var(--cw-color-text);
+}
+
+[class*="cinderwell-"][class*="--bg-brand-dark"] {
+	--cw-surface-background: var(--cw-color-brand-dark);
+	--cw-surface-foreground: var(--cw-color-white);
+	--cw-tabs-accent: var(--cw-color-white);
+	--cw-tabs-accent-contrast: var(--cw-color-brand-dark);
+
+	background-color: var(--cw-color-brand-dark);
+	color: var(--cw-color-white);
+}
+
+[class*="cinderwell-"][class*="--bg-muted"] {
+	--cw-surface-background: var(--cw-color-muted);
+	--cw-surface-foreground: var(--cw-color-white);
+	--cw-tabs-accent: var(--cw-color-white);
+	--cw-tabs-accent-contrast: var(--cw-color-muted);
+
+	background-color: var(--cw-color-muted);
+	color: var(--cw-color-white);
+}
+
+[class*="cinderwell-"][class*="--bg-info"] {
+	--cw-surface-background: var(--cw-color-info);
+	--cw-surface-foreground: var(--cw-color-white);
+	--cw-tabs-accent: var(--cw-color-white);
+	--cw-tabs-accent-contrast: var(--cw-color-info);
+
+	background-color: var(--cw-color-info);
+	color: var(--cw-color-white);
+}
+
+[class*="cinderwell-"][class*="--bg-success"] {
+	--cw-surface-background: var(--cw-color-success);
+	--cw-surface-foreground: var(--cw-color-white);
+	--cw-tabs-accent: var(--cw-color-white);
+	--cw-tabs-accent-contrast: var(--cw-color-success);
+
+	background-color: var(--cw-color-success);
+	color: var(--cw-color-white);
+}
+
+[class*="cinderwell-"][class*="--bg-danger"] {
+	--cw-surface-background: var(--cw-color-danger);
+	--cw-surface-foreground: var(--cw-color-white);
+	--cw-tabs-accent: var(--cw-color-white);
+	--cw-tabs-accent-contrast: var(--cw-color-danger);
+
+	background-color: var(--cw-color-danger);
+	color: var(--cw-color-white);
+}
+
+[class*="cinderwell-"][class*="--bg-accent-1"] {
+	--cw-surface-background: var(--cw-color-accent-1);
+	--cw-surface-foreground: var(--cw-color-white);
+	--cw-tabs-accent: var(--cw-color-white);
+	--cw-tabs-accent-contrast: var(--cw-color-accent-1);
+
+	background-color: var(--cw-color-accent-1);
+	color: var(--cw-color-white);
+}
+
+[class*="cinderwell-"][class*="--bg-accent-2"] {
+	--cw-surface-background: var(--cw-color-accent-2);
+	--cw-surface-foreground: var(--cw-color-white);
+	--cw-tabs-accent: var(--cw-color-white);
+	--cw-tabs-accent-contrast: var(--cw-color-accent-2);
+
+	background-color: var(--cw-color-accent-2);
+	color: var(--cw-color-white);
+}
+
+[class*="cinderwell-"][class*="--bg-accent-3"] {
+	--cw-surface-background: var(--cw-color-accent-3);
+	--cw-surface-foreground: var(--cw-color-white);
+	--cw-tabs-accent: var(--cw-color-white);
+	--cw-tabs-accent-contrast: var(--cw-color-accent-3);
+
+	background-color: var(--cw-color-accent-3);
+	color: var(--cw-color-white);
 }
 
 /* Shared slot atom styles */
@@ -154,6 +265,42 @@
 	color: var(--cw-color-text) !important;
 }
 
+.cinderwell-text-color-muted {
+	color: var(--cw-color-muted) !important;
+}
+
+.cinderwell-text-color-brand-light {
+	color: var(--cw-color-brand-light) !important;
+}
+
+.cinderwell-text-color-brand-dark {
+	color: var(--cw-color-brand-dark) !important;
+}
+
+.cinderwell-text-color-info {
+	color: var(--cw-color-info) !important;
+}
+
+.cinderwell-text-color-success {
+	color: var(--cw-color-success) !important;
+}
+
+.cinderwell-text-color-danger {
+	color: var(--cw-color-danger) !important;
+}
+
+.cinderwell-text-color-accent-1 {
+	color: var(--cw-color-accent-1) !important;
+}
+
+.cinderwell-text-color-accent-2 {
+	color: var(--cw-color-accent-2) !important;
+}
+
+.cinderwell-text-color-accent-3 {
+	color: var(--cw-color-accent-3) !important;
+}
+
 .cinderwell-text-color-brand {
 	color: var(--cw-color-brand) !important;
 }
@@ -246,6 +393,15 @@
 
 :where(
 .cinderwell-text-color-text,
+.cinderwell-text-color-muted,
+.cinderwell-text-color-brand-light,
+.cinderwell-text-color-brand-dark,
+.cinderwell-text-color-info,
+.cinderwell-text-color-success,
+.cinderwell-text-color-danger,
+.cinderwell-text-color-accent-1,
+.cinderwell-text-color-accent-2,
+.cinderwell-text-color-accent-3,
 .cinderwell-text-color-brand,
 .cinderwell-text-color-dark,
 .cinderwell-text-color-light,

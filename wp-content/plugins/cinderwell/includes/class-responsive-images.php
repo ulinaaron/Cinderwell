@@ -11,6 +11,9 @@ defined( 'ABSPATH' ) || exit;
 
 class Responsive_Images {
 
+    /** @var array<int, bool> Background rules already emitted this request. */
+    private $rendered_backgrounds = [];
+
     public function __construct() {
         add_filter( 'render_block', [ $this, 'enhance_block_images' ], 30, 2 );
     }
@@ -20,6 +23,8 @@ class Responsive_Images {
         if ( '' === $block_content || 0 !== strpos( $block_name, 'cinderwell/' ) || ! class_exists( '\\WP_HTML_Tag_Processor' ) ) {
             return $block_content;
         }
+
+        $block_content = $this->enhance_background_image( $block_content, $block_name, $block['attrs'] ?? [] );
 
         $images = $this->get_block_images( $block_name, $block['attrs'] ?? [] );
         if ( empty( $images ) ) {
@@ -70,6 +75,68 @@ class Responsive_Images {
             if ( ! empty( $image['loading'] ) ) {
                 $processor->set_attribute( 'loading', $image['loading'] );
             }
+        }
+
+        return $processor->get_updated_html();
+    }
+
+    /**
+     * Serve token-controlled block backgrounds at viewport-appropriate sizes.
+     * CSS backgrounds cannot use srcset, so saved full-size URLs otherwise make
+     * every phone download the original upload.
+     *
+     * @param string $block_content Rendered block markup.
+     * @param string $block_name    Block name.
+     * @param array  $attributes    Block attributes.
+     * @return string
+     */
+    private function enhance_background_image( $block_content, $block_name, $attributes ) {
+        $attachment_id = 'cinderwell/hero' === $block_name
+            ? absint( $attributes['bgImage'] ?? 0 )
+            : absint( $attributes['backgroundImage'] ?? 0 );
+
+        if (
+            ! $attachment_id
+            || ! wp_attachment_is_image( $attachment_id )
+            || ( 'cinderwell/hero' === $block_name && false === ( $attributes['showBgImage'] ?? true ) )
+        ) {
+            return $block_content;
+        }
+
+        $mobile_url  = wp_get_attachment_image_url( $attachment_id, 'large' );
+        $desktop_url = wp_get_attachment_image_url( $attachment_id, '1536x1536' ) ?: $mobile_url;
+        $wide_url    = wp_get_attachment_image_url( $attachment_id, '2048x2048' ) ?: $desktop_url;
+
+        if ( ! $mobile_url ) {
+            return $block_content;
+        }
+
+        $class_name = 'cw-responsive-bg-' . $attachment_id;
+        $processor  = new \WP_HTML_Tag_Processor( $block_content );
+        if ( ! $processor->next_tag() ) {
+            return $block_content;
+        }
+
+        $processor->add_class( $class_name );
+        $style = (string) $processor->get_attribute( 'style' );
+        $style = preg_replace( '/(^|;)\\s*background-image\\s*:[^;]+;?/i', '$1', $style );
+        $style = trim( preg_replace( '/;{2,}/', ';', (string) $style ), " ;\t\n\r\0\x0B" );
+        if ( '' === $style ) {
+            $processor->remove_attribute( 'style' );
+        } else {
+            $processor->set_attribute( 'style', $style );
+        }
+
+        if ( empty( $this->rendered_backgrounds[ $attachment_id ] ) ) {
+            $css = sprintf(
+                '.%1$s{background-image:url(%2$s)!important}@media(min-width:900px){.%1$s{background-image:url(%3$s)!important}}@media(min-width:1600px){.%1$s{background-image:url(%4$s)!important}}',
+                $class_name,
+                wp_json_encode( esc_url_raw( $mobile_url ) ),
+                wp_json_encode( esc_url_raw( $desktop_url ) ),
+                wp_json_encode( esc_url_raw( $wide_url ) )
+            );
+            wp_add_inline_style( 'cinderwell-base', $css );
+            $this->rendered_backgrounds[ $attachment_id ] = true;
         }
 
         return $processor->get_updated_html();

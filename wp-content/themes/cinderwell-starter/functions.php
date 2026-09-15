@@ -1,7 +1,62 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-define( 'CINDERWELL_STARTER_VERSION', '0.3.0' );
+define( 'CINDERWELL_STARTER_VERSION', '0.3.7' );
+
+// The starter supplies lightweight account/cart links in its header. Disable
+// WooCommerce's automatically injected drawer application and global legacy
+// styles outside real commerce routes.
+add_filter( 'cinderwell_use_lightweight_commerce_header', '__return_true' );
+add_filter( 'cinderwell_optimize_woocommerce_assets', '__return_true' );
+
+// Give high-density screens an appropriately sized logo candidate instead of
+// forcing the original 880px PNG into a roughly 150–220px header slot.
+add_action( 'after_setup_theme', function () {
+    add_image_size( 'cinderwell-logo', 440, 100, false );
+} );
+
+add_filter( 'get_custom_logo_image_attributes', function ( $attributes ) {
+    $attributes['sizes'] = '(max-width: 600px) 150px, 220px';
+    return $attributes;
+} );
+
+/**
+ * Remove optional accent presets when a client theme does not use them.
+ *
+ * A child theme can opt out with:
+ * add_filter( 'cinderwell_enable_accent_colors', '__return_false' );
+ */
+add_filter( 'wp_theme_json_data_theme', function ( $theme_json ) {
+    if ( apply_filters( 'cinderwell_enable_accent_colors', true ) ) {
+        return $theme_json;
+    }
+
+    $data    = $theme_json->get_data();
+    $palette = $data['settings']['color']['palette']['theme'] ?? [];
+
+    if ( ! is_array( $palette ) ) {
+        return $theme_json;
+    }
+
+    $accent_slugs = [ 'accent-1', 'accent-2', 'accent-3' ];
+    $palette      = array_values(
+        array_filter(
+            $palette,
+            static function ( $color ) use ( $accent_slugs ) {
+                return ! in_array( $color['slug'] ?? '', $accent_slugs, true );
+            }
+        )
+    );
+
+    return $theme_json->update_with( [
+        'version'  => 3,
+        'settings' => [
+            'color' => [
+                'palette' => $palette,
+            ],
+        ],
+    ] );
+} );
 
 // Theme setup.
 add_action( 'after_setup_theme', function () {

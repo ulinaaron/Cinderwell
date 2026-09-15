@@ -29,7 +29,7 @@ class Admin_Bar {
         }
 
         $settings_url = current_user_can( 'manage_options' )
-            ? admin_url( 'options-general.php?page=cinderwell' )
+            ? admin_url( 'admin.php?page=cinderwell' )
             : false;
 
         $admin_bar->add_node( [

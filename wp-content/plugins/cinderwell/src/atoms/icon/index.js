@@ -34,7 +34,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="◇" title={ __( 'Icon', 'cinderwell' ) } description={ __( 'Lucide icon or custom SVG', 'cinderwell' ) } />
-                    <PanelBody title={ __( 'Icon', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Icon', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-appearance">
                         <IconSettingsControl
                             icon={ attributes.icon || 'star' }
                             source={ attributes.iconSource || 'library' }

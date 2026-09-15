@@ -50,6 +50,22 @@ template changes into the client child theme and reset the database version.
 The Cinderwell **Settings → Template Updates** screen identifies these update
 blockers.
 
+## Page headers
+
+The default Page template includes the dynamic Cinderwell Page Header block.
+Its visual defaults live in **Cinderwell → Page Headers**. Editors can hide or
+customize it for one Page from that Page's document sidebar without creating a
+template override. Client themes can replace `templates/page.html` when a
+different structural treatment is intentional.
+
+## Utility bar
+
+The default Header template part includes a Cinderwell Utility Bar. It reads
+live phone, email, contact, and social values from Company Details and outputs
+nothing until one of its enabled values is available. Remove the block from the
+Header template part to turn it off for a site, or use the
+`cinderwell_utility_bar_enabled` filter in a child theme to suppress it globally.
+
 ## Ownership boundary
 
 - Cinderwell plugin: blocks, tokens, accessibility, responsive behavior,

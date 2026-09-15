@@ -39,7 +39,7 @@ class Update_Mechanism {
             return $transient;
         }
 
-        foreach ( $this->get_plugin_packages( $this->fetch_update_info() ) as $package ) {
+        foreach ( $this->get_plugin_packages( $this->get_manifest() ) as $package ) {
             $data        = $package['data'];
             $plugin_file = $package['plugin_file'];
 
@@ -71,7 +71,7 @@ class Update_Mechanism {
             return $transient;
         }
 
-        $manifest = $this->fetch_update_info();
+        $manifest = $this->get_manifest();
         $data     = $manifest->theme ?? null;
         $slug     = 'cinderwell-starter';
 
@@ -108,7 +108,7 @@ class Update_Mechanism {
             return $response;
         }
 
-        foreach ( $this->get_plugin_packages( $this->fetch_update_info() ) as $package ) {
+        foreach ( $this->get_plugin_packages( $this->get_manifest() ) as $package ) {
             $data = $package['data'];
 
             if ( $args->slug !== $data->slug ) {
@@ -176,12 +176,28 @@ class Update_Mechanism {
         return $packages;
     }
 
-    private function fetch_update_info() {
-        if ( $this->update_info_loaded ) {
+    /**
+     * Return the shared release/add-on catalog.
+     *
+     * The request cache avoids duplicate HTTP calls in one page load, while
+     * the transient keeps the Add-Ons screen from depending on Surge latency.
+     */
+    public function get_manifest( $force = false ) {
+        if ( $this->update_info_loaded && ! $force ) {
             return $this->update_info;
         }
 
         $this->update_info_loaded = true;
+        $cache_key = 'cinderwell_update_manifest';
+
+        if ( ! $force ) {
+            $cached = get_site_transient( $cache_key );
+            if ( is_object( $cached ) ) {
+                $this->update_info = $cached;
+                return $this->update_info;
+            }
+        }
+
         $update_url = apply_filters( 'cinderwell_update_manifest_url', $this->update_url );
         $response   = wp_remote_get( esc_url_raw( $update_url ), [
             'timeout' => 10,
@@ -195,6 +211,9 @@ class Update_Mechanism {
         $data = json_decode( $body );
 
         $this->update_info = is_object( $data ) ? $data : null;
+        if ( $this->update_info ) {
+            set_site_transient( $cache_key, $this->update_info, 6 * HOUR_IN_SECONDS );
+        }
 
         return $this->update_info;
     }

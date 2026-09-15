@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Cinderwell Local Update Guard
  * Description: Protects local Cinderwell source directories from package updates.
- * Version: 1.0.0
+ * Version: 1.0.1
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -26,6 +26,8 @@ function cinderwell_local_guard_plugin_updates( $transient ) {
     $plugins = [
         'cinderwell/cinderwell.php',
         'cinderwell-alerts/cinderwell-alerts.php',
+        'cinderwell-cookie-consent/cinderwell-cookie-consent.php',
+        'cinderwell-help/cinderwell-help.php',
     ];
 
     foreach ( $plugins as $plugin ) {
@@ -59,7 +61,7 @@ add_filter( 'site_transient_update_themes', 'cinderwell_local_guard_theme_update
 add_filter( 'auto_update_plugin', static function ( $update, $item ) {
     $plugin = isset( $item->plugin ) ? $item->plugin : '';
 
-    return in_array( $plugin, [ 'cinderwell/cinderwell.php', 'cinderwell-alerts/cinderwell-alerts.php' ], true )
+    return in_array( $plugin, [ 'cinderwell/cinderwell.php', 'cinderwell-alerts/cinderwell-alerts.php', 'cinderwell-cookie-consent/cinderwell-cookie-consent.php', 'cinderwell-help/cinderwell-help.php' ], true )
         ? false
         : $update;
 }, PHP_INT_MAX, 2 );
@@ -86,7 +88,7 @@ add_filter( 'upgrader_pre_install', static function ( $response, $hook_extra ) {
             isset( $hook_extra['plugins'] ) && is_array( $hook_extra['plugins'] ) ? $hook_extra['plugins'] : []
         ) );
 
-        if ( array_intersect( $plugins, [ 'cinderwell/cinderwell.php', 'cinderwell-alerts/cinderwell-alerts.php' ] ) ) {
+        if ( array_intersect( $plugins, [ 'cinderwell/cinderwell.php', 'cinderwell-alerts/cinderwell-alerts.php', 'cinderwell-cookie-consent/cinderwell-cookie-consent.php', 'cinderwell-help/cinderwell-help.php' ] ) ) {
             return new WP_Error(
                 'cinderwell_local_update_blocked',
                 __( 'Cinderwell package updates are disabled on this local development site.', 'cinderwell' )

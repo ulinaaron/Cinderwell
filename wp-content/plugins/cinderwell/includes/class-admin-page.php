@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin page — Settings → Cinderwell.
+ * Top-level Cinderwell admin page.
  *
  * @package Cinderwell
  */
@@ -13,65 +13,162 @@ class Admin_Page {
 
     public function __construct() {
         add_action( 'admin_menu', [ $this, 'add_menu' ] );
+		add_action( 'admin_menu', [ $this, 'order_submenu' ], 1000 );
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_assets' ] );
     }
 
-    public function add_menu() {
-        add_options_page(
-            __( 'Cinderwell Settings', 'cinderwell' ),
-            __( 'Cinderwell', 'cinderwell' ),
-            'manage_options',
-            'cinderwell',
-            [ $this, 'render_page' ]
+    public function enqueue_assets( $hook_suffix ) {
+        if ( 'toplevel_page_cinderwell' !== $hook_suffix ) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'cinderwell-admin-settings',
+            CINDERWELL_BUILD_URL . 'admin/settings.css',
+            [],
+            CINDERWELL_VERSION
+        );
+        wp_enqueue_media();
+        $asset_path = CINDERWELL_BUILD_DIR . 'admin/settings.asset.php';
+        $asset      = file_exists( $asset_path ) ? include $asset_path : [ 'dependencies' => [], 'version' => CINDERWELL_VERSION ];
+        wp_enqueue_script(
+            'cinderwell-admin-settings',
+            CINDERWELL_BUILD_URL . 'admin/settings.js',
+            $asset['dependencies'],
+            $asset['version'],
+            true
         );
     }
 
+    public function add_menu() {
+        /**
+         * Controls who can see the shared Cinderwell admin menu container.
+         *
+         * Add-ons may lower this capability so their own screens can be shown
+         * to editors. The settings screen itself always requires
+         * `manage_options`.
+         *
+         * @param string $capability Menu capability.
+         */
+        $menu_capability = apply_filters( 'cinderwell_admin_menu_capability', 'manage_options' );
+
+        add_menu_page(
+            __( 'Cinderwell Settings', 'cinderwell' ),
+            __( 'Cinderwell', 'cinderwell' ),
+            $menu_capability,
+            'cinderwell',
+            [ $this, 'render_page' ],
+            'dashicons-layout',
+            58
+        );
+
+		// Register the settings destination explicitly. WordPress otherwise creates
+		// it implicitly using the parent capability, which add-ons may lower so
+		// editor-facing screens such as Help remain available.
+		add_submenu_page(
+			'cinderwell',
+			__( 'Cinderwell Settings', 'cinderwell' ),
+			__( 'Settings', 'cinderwell' ),
+			'manage_options',
+			'cinderwell',
+			[ $this, 'render_page' ]
+		);
+    }
+
     public function render_page() {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            wp_die(
+                esc_html__( 'You do not have permission to manage Cinderwell settings.', 'cinderwell' ),
+                esc_html__( 'Access denied', 'cinderwell' ),
+                [ 'response' => 403 ]
+            );
+        }
+
         $requested_tab = isset( $_GET['tab'] ) ? sanitize_key( wp_unslash( $_GET['tab'] ) ) : 'general';
-        $active_tab    = in_array( $requested_tab, [ 'general', 'permissions', 'tokens', 'templates' ], true )
-            ? $requested_tab
-            : 'general';
+        $requested_tab = 'permissions' === $requested_tab ? 'editor-access' : $requested_tab;
+        $tabs          = apply_filters( 'cinderwell_settings_tabs', [
+            'general' => [
+                'label'    => __( 'General', 'cinderwell' ),
+                'group'    => 'overview',
+                'callback' => [ $this, 'render_general_tab' ],
+            ],
+            'editor-access' => [
+                'label'    => __( 'Editor Access', 'cinderwell' ),
+                'group'    => 'design',
+                'callback' => [ $this, 'render_editor_access_tab' ],
+            ],
+            'tokens' => [
+                'label'    => __( 'Design Tokens', 'cinderwell' ),
+                'group'    => 'design',
+                'callback' => [ $this, 'render_tokens_tab' ],
+            ],
+            'templates' => [
+                'label'    => __( 'Template Updates', 'cinderwell' ),
+                'group'    => 'maintenance',
+                'callback' => [ $this, 'render_templates_tab' ],
+            ],
+			'advanced' => [
+				'label'    => __( 'Advanced', 'cinderwell' ),
+				'group'    => 'maintenance',
+				'callback' => [ $this, 'render_advanced_tab' ],
+			],
+        ] );
+        $active_tab    = isset( $tabs[ $requested_tab ] ) ? $requested_tab : 'general';
+        $groups        = apply_filters( 'cinderwell_settings_groups', [
+            'overview' => __( 'Overview', 'cinderwell' ),
+            'content' => __( 'Content', 'cinderwell' ),
+            'design' => __( 'Design & Editing', 'cinderwell' ),
+            'extensions' => __( 'Extensions', 'cinderwell' ),
+            'maintenance' => __( 'Maintenance', 'cinderwell' ),
+        ] );
+
+        foreach ( $tabs as $tab_key => $tab ) {
+            if ( empty( $tab['group'] ) || ! isset( $groups[ $tab['group'] ] ) ) {
+                $tabs[ $tab_key ]['group'] = 'extensions';
+            }
+        }
         ?>
-        <div class="wrap">
-            <h1><?php esc_html_e( 'Cinderwell Settings', 'cinderwell' ); ?></h1>
+        <div class="wrap cw-settings-wrap">
+            <header class="cw-settings-header">
+                <div>
+                    <span class="cw-settings-header__eyebrow"><?php esc_html_e( 'Cinderwell', 'cinderwell' ); ?></span>
+                    <h1><?php echo esc_html( $tabs[ $active_tab ]['label'] ?? __( 'Settings', 'cinderwell' ) ); ?></h1>
+                </div>
+                <p><?php esc_html_e( 'Configure the foundation, reusable site content, and optional capabilities in one place.', 'cinderwell' ); ?></p>
+            </header>
 
-            <nav class="nav-tab-wrapper">
-                <a href="?page=cinderwell&tab=general" class="nav-tab <?php echo 'general' === $active_tab ? 'nav-tab-active' : ''; ?>">
-                    <?php esc_html_e( 'General', 'cinderwell' ); ?>
-                </a>
-                <a href="?page=cinderwell&tab=permissions" class="nav-tab <?php echo 'permissions' === $active_tab ? 'nav-tab-active' : ''; ?>">
-                    <?php esc_html_e( 'Permissions', 'cinderwell' ); ?>
-                </a>
-                <a href="?page=cinderwell&tab=tokens" class="nav-tab <?php echo 'tokens' === $active_tab ? 'nav-tab-active' : ''; ?>">
-                    <?php esc_html_e( 'Design Tokens', 'cinderwell' ); ?>
-                </a>
-                <a href="?page=cinderwell&tab=templates" class="nav-tab <?php echo 'templates' === $active_tab ? 'nav-tab-active' : ''; ?>">
-                    <?php esc_html_e( 'Template Updates', 'cinderwell' ); ?>
-                </a>
-            </nav>
+            <div class="cw-settings-layout">
+                <aside class="cw-settings-sidebar">
+                    <nav aria-label="<?php esc_attr_e( 'Cinderwell settings', 'cinderwell' ); ?>">
+                        <?php foreach ( $groups as $group_key => $group_label ) : ?>
+                            <?php $group_tabs = array_filter( $tabs, static function ( $tab ) use ( $group_key ) { return $group_key === $tab['group']; } ); ?>
+                            <?php if ( ! $group_tabs ) { continue; } ?>
+                            <section class="cw-settings-nav-group">
+                                <h2><?php echo esc_html( $group_label ); ?></h2>
+                                <?php foreach ( $group_tabs as $tab_key => $tab ) : ?>
+                                    <a href="<?php echo esc_url( add_query_arg( [ 'page' => 'cinderwell', 'tab' => $tab_key ], admin_url( 'admin.php' ) ) ); ?>" <?php echo $tab_key === $active_tab ? 'class="is-active" aria-current="page"' : ''; ?>>
+                                        <?php echo esc_html( $tab['label'] ?? $tab_key ); ?>
+                                    </a>
+                                <?php endforeach; ?>
+                            </section>
+                        <?php endforeach; ?>
+                    </nav>
+                </aside>
 
-            <div class="tab-content" style="margin-top: 20px;">
-                <?php
-                switch ( $active_tab ) {
-                    case 'permissions':
-                        $this->render_permissions_tab();
-                        break;
-                    case 'tokens':
-                        $this->render_tokens_tab();
-                        break;
-                    case 'templates':
-                        $this->render_templates_tab();
-                        break;
-                    default:
-                        $this->render_general_tab();
-                        break;
-                }
-                ?>
+                <main class="cw-settings-content">
+                    <?php
+                    $callback = $tabs[ $active_tab ]['callback'] ?? null;
+                    if ( is_callable( $callback ) ) {
+                        call_user_func( $callback );
+                    }
+                    ?>
+                </main>
             </div>
         </div>
         <?php
     }
 
-    private function render_general_tab() {
+    public function render_general_tab() {
         $blocks    = $this->get_registered_blocks();
         $patterns  = $this->get_registered_patterns();
         $theme     = wp_get_theme();
@@ -127,7 +224,7 @@ class Admin_Page {
                                 ?>
                             </strong>
                             &mdash;
-                            <a href="<?php echo esc_url( admin_url( 'options-general.php?page=cinderwell&tab=templates' ) ); ?>">
+                            <a href="<?php echo esc_url( admin_url( 'admin.php?page=cinderwell&tab=templates' ) ); ?>">
                                 <?php esc_html_e( 'Review update blockers', 'cinderwell' ); ?>
                             </a>
                         <?php else : ?>
@@ -167,7 +264,7 @@ class Admin_Page {
         <?php
     }
 
-    private function render_templates_tab() {
+    public function render_templates_tab() {
         $overrides = $this->get_template_overrides();
         $theme     = wp_get_theme();
         ?>
@@ -236,14 +333,49 @@ class Admin_Page {
         <?php
     }
 
-    private function render_permissions_tab() {
-        echo '<div class="card" style="max-width: 600px; margin-top: 20px;">';
-        echo '<h2>' . esc_html__( 'Block Permissions', 'cinderwell' ) . '</h2>';
-        echo '<p>' . esc_html__( 'Block permissions by role will be available in v0.2.', 'cinderwell' ) . '</p>';
-        echo '</div>';
+    public function render_editor_access_tab() {
+        Editor_Access::render_settings();
     }
 
-    private function render_tokens_tab() {
+	public function render_advanced_tab() {
+		Editor_Utilities::render_settings();
+	}
+
+	/**
+	 * Keep Settings ahead of editor-facing add-on content screens.
+	 */
+	public function order_submenu() {
+		global $submenu;
+
+		if ( empty( $submenu['cinderwell'] ) || ! is_array( $submenu['cinderwell'] ) ) {
+			return;
+		}
+
+		$priority = [
+			'cinderwell'                                => 0,
+			'edit.php?post_type=cinderwell_popup'       => 10,
+			'edit.php?post_type=cw_alert'               => 20,
+			'cinderwell-help'                           => 90,
+		];
+		$indexed = [];
+		foreach ( array_values( $submenu['cinderwell'] ) as $index => $item ) {
+			$indexed[] = [
+				'item'  => $item,
+				'index' => $index,
+				'rank'  => $priority[ $item[2] ?? '' ] ?? 50,
+			];
+		}
+
+		usort( $indexed, static function ( $left, $right ) {
+			return $left['rank'] === $right['rank']
+				? $left['index'] <=> $right['index']
+				: $left['rank'] <=> $right['rank'];
+		} );
+
+		$submenu['cinderwell'] = array_column( $indexed, 'item' );
+	}
+
+    public function render_tokens_tab() {
         $manifest = Design_Tokens::get_manifest();
         $saved    = get_option( 'cinderwell_design_tokens', [] );
 

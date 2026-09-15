@@ -1,0 +1,21 @@
+.cinderwell-hydrating {
+    opacity: 1;
+}
+
+.is-hydrated {
+    /* No visual change — seamless hydration */
+}
+
+.cinderwell-hydration-error {
+    /* Error state — content already rendered by server, so no visible degradation */
+}
+
+.cinderwell-hydrating[data-debug="true"]::before {
+    content: 'Hydrating…';
+    position: absolute;
+    background: rgba(255, 0, 0, 0.5);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    z-index: 99999;
+}

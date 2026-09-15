@@ -117,7 +117,7 @@ registerBlockType(metadata.name, {
           <PanelBody
             title={__("Layout", "cinderwell")}
             initialOpen={true}
-            className="cw-panel"
+            className="cw-panel cw-access-layout"
           >
             <SegmentedControl
               label={__("Columns", "cinderwell")}

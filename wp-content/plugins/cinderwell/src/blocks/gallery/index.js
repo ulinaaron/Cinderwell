@@ -25,7 +25,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="&#9871;" title={ __( 'Gallery', 'cinderwell' ) } description={ __( 'Image gallery grid', 'cinderwell' ) } />
-                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-layout">
                         <SectionToggles sections={ [
                             { key: 'eyebrow', label: __( 'Eyebrow', 'cinderwell' ) },
                             { key: 'heading', label: __( 'Heading', 'cinderwell' ) },
@@ -33,7 +33,7 @@ registerBlockType( metadata.name, {
                             { key: 'footnote', label: __( 'Footnote', 'cinderwell' ) },
                         ] } values={ secs } onChange={ onSecs } />
                     </PanelBody>
-                    <PanelBody title={ `${ __( 'Images', 'cinderwell' ) } (${ images.length })` } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ `${ __( 'Images', 'cinderwell' ) } (${ images.length })` } initialOpen={ true } className="cw-panel cw-access-media">
                         <div className="cw-thumb-strip">
                             { images.map( ( img, i ) => (
                                 <button

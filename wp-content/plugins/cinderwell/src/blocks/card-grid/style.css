@@ -1,324 +1,617 @@
+/* stylelint-disable no-descending-specificity -- variation modifiers
+ * intentionally override the stable component selectors below. */
 .cinderwell-card-grid {
-    padding: var(--cw-spacing-md) var(--cw-layout-gutter);
-    background-color: var(--cw-color-bg);
-    color: var(--cw-color-text);
+	padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+	background-color: var(--cw-color-bg);
+	color: var(--cw-color-text);
 }
 
-.cinderwell-card-grid--bg-white { background-color: var(--cw-color-white); color: var(--cw-color-text); }
-.cinderwell-card-grid--bg-light { background-color: var(--cw-color-light); color: var(--cw-color-text); }
-.cinderwell-card-grid--bg-dark { background-color: var(--cw-color-dark); color: var(--cw-color-white); }
-.cinderwell-card-grid--bg-brand { background-color: var(--cw-color-brand); color: var(--cw-color-brand-contrast); }
+.cinderwell-card-grid--bg-white {
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-card-grid--bg-light {
+	background-color: var(--cw-color-light);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-card-grid--bg-dark {
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+.cinderwell-card-grid--bg-brand {
+	background-color: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
 
 .cinderwell-card-grid__inner {
-    margin: 0 auto;
+	margin: 0 auto;
 }
 
 .cinderwell-card-grid__grid {
-    display: grid;
-    gap: var(--cw-gap-md);
-    margin-top: 1.5rem;
+	display: grid;
+	gap: var(--cw-gap-md);
+	margin-top: 1.5rem;
 }
 
 .cinderwell-card-grid__inner > .cinderwell-card-grid__grid:first-child {
-    margin-top: 0;
+	margin-top: 0;
 }
 
 .cinderwell-card-grid--cols-1 .cinderwell-card-grid__grid {
-    grid-template-columns: 1fr;
+	grid-template-columns: 1fr;
 }
 
 .cinderwell-card-grid--cols-2 .cinderwell-card-grid__grid {
-    grid-template-columns: repeat(2, 1fr);
+	grid-template-columns: repeat(2, 1fr);
 }
 
 .cinderwell-card-grid--cols-3 .cinderwell-card-grid__grid {
-    grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(3, 1fr);
 }
 
 .cinderwell-card-grid--cols-4 .cinderwell-card-grid__grid {
-    grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(4, 1fr);
 }
 
 .cinderwell-card-grid__card {
-    background: var(--cw-color-surface);
-    color: var(--cw-color-text);
-    border-radius: var(--cw-radius-md);
-    overflow: hidden;
-    box-shadow: var(--cw-shadow-sm);
-    transition: transform var(--cw-duration-normal) var(--cw-ease-standard), box-shadow var(--cw-duration-normal) var(--cw-ease-standard);
-    display: flex;
-    flex-direction: column;
+	background: var(--cw-color-surface);
+	color: var(--cw-color-text);
+	border-radius: var(--cw-radius-md);
+	overflow: hidden;
+	box-shadow: var(--cw-shadow-sm);
+	transition: transform var(--cw-duration-normal) var(--cw-ease-standard), box-shadow var(--cw-duration-normal) var(--cw-ease-standard);
+	display: flex;
+	flex-direction: column;
 }
 
 .cinderwell-card-grid--bg-dark .cinderwell-card-grid__card,
 .cinderwell-card-grid--bg-brand .cinderwell-card-grid__card {
-    background: var(--cw-color-dark);
-    color: var(--cw-color-white);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+	background: var(--cw-color-dark);
+	color: var(--cw-color-white);
+	border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cinderwell-card-grid--cards-white .cinderwell-card-grid__card {
-    background: var(--cw-color-white);
-    color: var(--cw-color-text);
-    border: 1px solid color-mix(in srgb, var(--cw-color-text) 10%, transparent);
+	background: var(--cw-color-white);
+	color: var(--cw-color-text);
+	border: 1px solid color-mix(in srgb, var(--cw-color-text) 10%, transparent);
 }
 
 .cinderwell-card-grid--cards-light .cinderwell-card-grid__card {
-    background: var(--cw-color-light);
-    color: var(--cw-color-text);
-    border: 1px solid color-mix(in srgb, var(--cw-color-text) 10%, transparent);
+	background: var(--cw-color-light);
+	color: var(--cw-color-text);
+	border: 1px solid color-mix(in srgb, var(--cw-color-text) 10%, transparent);
 }
 
 .cinderwell-card-grid--cards-dark .cinderwell-card-grid__card {
-    background: var(--cw-color-dark);
-    color: var(--cw-color-white);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+	background: var(--cw-color-dark);
+	color: var(--cw-color-white);
+	border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .cinderwell-card-grid--cards-brand .cinderwell-card-grid__card {
-    background: var(--cw-color-brand);
-    color: var(--cw-color-brand-contrast);
-    border: 1px solid rgba(255, 255, 255, 0.16);
+	background: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+	border: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .cinderwell-card-grid--cards-dark .cinderwell-card-grid__card-label,
 .cinderwell-card-grid--cards-brand .cinderwell-card-grid__card-label {
-    color: currentColor;
+	color: currentcolor;
 }
 
 .cinderwell-card-grid__card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--cw-shadow-md);
+	transform: translateY(-4px);
+	box-shadow: var(--cw-shadow-md);
 }
 
 .cinderwell-card-grid__card-image {
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
+	aspect-ratio: 16 / 10;
+	overflow: hidden;
 }
 
 .cinderwell-card-grid__card-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    transition: transform var(--cw-duration-slow) var(--cw-ease-standard);
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform var(--cw-duration-slow) var(--cw-ease-standard);
 }
 
 .cinderwell-card-grid__card:hover .cinderwell-card-grid__card-image img {
-    transform: scale(1.05);
+	transform: scale(1.05);
 }
 
 .cinderwell-card-grid__card-icon {
-    display: flex;
-    align-items: center;
-    min-height: 4rem;
-    padding: 1.25rem 1.25rem 0;
+	display: flex;
+	align-items: center;
+	min-height: 4rem;
+	padding: 1.25rem 1.25rem 0;
 }
 
 .cinderwell-card-grid__card-icon-glyph {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--cw-radius-pill);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--cw-radius-pill);
 }
 
 .cinderwell-card-grid__card-icon svg,
 .cinderwell-card-grid__card-icon-glyph svg {
-    display: block;
+	display: block;
 }
 
-.cinderwell-card-grid__card-icon--size-sm svg { width: 2rem; height: 2rem; }
-.cinderwell-card-grid__card-icon--size-md svg { width: 3rem; height: 3rem; }
-.cinderwell-card-grid__card-icon--size-lg svg { width: 4rem; height: 4rem; }
+.cinderwell-card-grid__card-icon--size-sm svg {
+	width: 2rem;
+	height: 2rem;
+}
 
-.cinderwell-card-grid__card-icon--color-brand { color: var(--cw-color-brand); }
-.cinderwell-card-grid__card-icon--color-text { color: var(--cw-color-text); }
-.cinderwell-card-grid__card-icon--color-dark { color: var(--cw-color-dark); }
-.cinderwell-card-grid__card-icon--color-light { color: var(--cw-color-light); }
-.cinderwell-card-grid__card-icon--color-white { color: var(--cw-color-white); }
+.cinderwell-card-grid__card-icon--size-md svg {
+	width: 3rem;
+	height: 3rem;
+}
+
+.cinderwell-card-grid__card-icon--size-lg svg {
+	width: 4rem;
+	height: 4rem;
+}
+
+.cinderwell-card-grid__card-icon--color-brand {
+	color: var(--cw-color-brand);
+}
+
+.cinderwell-card-grid__card-icon--color-text {
+	color: var(--cw-color-text);
+}
+
+.cinderwell-card-grid__card-icon--color-muted {
+	color: var(--cw-color-muted);
+}
+
+.cinderwell-card-grid__card-icon--color-brand-light {
+	color: var(--cw-color-brand-light);
+}
+
+.cinderwell-card-grid__card-icon--color-brand-dark {
+	color: var(--cw-color-brand-dark);
+}
+
+.cinderwell-card-grid__card-icon--color-info {
+	color: var(--cw-color-info);
+}
+
+.cinderwell-card-grid__card-icon--color-success {
+	color: var(--cw-color-success);
+}
+
+.cinderwell-card-grid__card-icon--color-danger {
+	color: var(--cw-color-danger);
+}
+
+.cinderwell-card-grid__card-icon--color-accent-1 {
+	color: var(--cw-color-accent-1);
+}
+
+.cinderwell-card-grid__card-icon--color-accent-2 {
+	color: var(--cw-color-accent-2);
+}
+
+.cinderwell-card-grid__card-icon--color-accent-3 {
+	color: var(--cw-color-accent-3);
+}
+
+.cinderwell-card-grid__card-icon--color-dark {
+	color: var(--cw-color-dark);
+}
+
+.cinderwell-card-grid__card-icon--color-light {
+	color: var(--cw-color-light);
+}
+
+.cinderwell-card-grid__card-icon--color-white {
+	color: var(--cw-color-white);
+}
 
 .cinderwell-card-grid__card-icon--treatment-soft .cinderwell-card-grid__card-icon-glyph,
 .cinderwell-card-grid__card-icon-glyph.cinderwell-card-grid__card-icon--treatment-soft {
-    padding: 0.75rem;
-    background: color-mix(in srgb, currentColor 12%, transparent);
+	padding: 0.75rem;
+	background: color-mix(in srgb, currentcolor 12%, transparent);
 }
 
 .cinderwell-card-grid__card-icon--treatment-solid .cinderwell-card-grid__card-icon-glyph,
 .cinderwell-card-grid__card-icon-glyph.cinderwell-card-grid__card-icon--treatment-solid {
-    padding: 0.75rem;
-    background: currentColor;
+	padding: 0.75rem;
+	background: currentcolor;
 }
 
 .cinderwell-card-grid__card-icon--treatment-solid .cinderwell-card-grid__card-icon-glyph svg,
 .cinderwell-card-grid__card-icon-glyph.cinderwell-card-grid__card-icon--treatment-solid svg {
-    color: var(--cw-color-white);
+	color: var(--cw-color-white);
 }
 
-.cinderwell-card-grid__card-icon--align-left { justify-content: flex-start; }
-.cinderwell-card-grid__card-icon--align-center { justify-content: center; }
-.cinderwell-card-grid__card-icon--align-right { justify-content: flex-end; }
+.cinderwell-card-grid__card-icon--align-left {
+	justify-content: flex-start;
+}
+
+.cinderwell-card-grid__card-icon--align-center {
+	justify-content: center;
+}
+
+.cinderwell-card-grid__card-icon--align-right {
+	justify-content: flex-end;
+}
 
 .cinderwell-card-grid__card-content {
-    padding: 1.25rem;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+	padding: 1.25rem;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
 }
 
 .cinderwell-card-grid__card-label {
-    font-size: var(--cw-font-size-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--cw-color-brand);
-    margin-bottom: 0.5rem;
+	font-size: var(--cw-font-size-xs);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	color: var(--cw-color-brand);
+	margin-bottom: 0.5rem;
 }
 
 .cinderwell-card-grid__card-title {
-    font-family: var(--cw-font-heading);
-    font-size: var(--cw-type-lead);
-    font-weight: 700;
-    margin: 0 0 0.5rem;
-    line-height: 1.3;
+	font-family: var(--cw-font-heading);
+	font-size: var(--cw-type-lead);
+	font-weight: 700;
+	margin: 0 0 0.5rem;
+	line-height: 1.3;
 }
 
 .cinderwell-card-grid__card-description {
-    font-size: var(--cw-font-size-sm);
-    line-height: var(--cw-line-height-body);
-    margin: 0 0 1rem;
-    opacity: 0.85;
-    flex: 1;
+	font-size: var(--cw-font-size-sm);
+	line-height: var(--cw-line-height-body);
+	margin: 0 0 1rem;
+	opacity: 0.85;
+	flex: 1;
 }
 
 .cinderwell-card-grid__card-content .btn {
-    align-self: flex-start;
+	align-self: flex-start;
 }
 
 .cinderwell-card-grid__card-content .btn:hover {
-    transform: translateY(-1px);
+	transform: translateY(-1px);
 }
 
-/* Automatic cards on dark block surfaces and explicitly dark cards need
- * light-aware button states so hover never disappears into the card. */
-:is(
-    .cinderwell-card-grid--cards-dark,
-    .cinderwell-card-grid--bg-dark:not([class*="cinderwell-card-grid--cards-"]),
-    .cinderwell-card-grid--bg-brand:not([class*="cinderwell-card-grid--cards-"])
-) .cinderwell-card-grid__card .btn--primary:hover {
-    border-color: var(--cw-color-white);
-    background-color: var(--cw-color-white);
-    color: var(--cw-color-dark);
+/* Presentation variations preserve the authored cards and their order. */
+.cinderwell-card-grid--layout-bordered .cinderwell-card-grid__card {
+	border: 1px solid color-mix(in srgb, currentcolor 16%, transparent);
+	box-shadow: none;
 }
 
-:is(
-    .cinderwell-card-grid--cards-dark,
-    .cinderwell-card-grid--bg-dark:not([class*="cinderwell-card-grid--cards-"]),
-    .cinderwell-card-grid--bg-brand:not([class*="cinderwell-card-grid--cards-"])
-) .cinderwell-card-grid__card .btn--secondary {
-    border-color: var(--cw-color-white);
-    color: var(--cw-color-white);
+.cinderwell-card-grid--layout-bordered .cinderwell-card-grid__card:hover {
+	transform: none;
+	border-color: color-mix(in srgb, currentcolor 32%, transparent);
+	box-shadow: none;
 }
 
-:is(
-    .cinderwell-card-grid--cards-dark,
-    .cinderwell-card-grid--bg-dark:not([class*="cinderwell-card-grid--cards-"]),
-    .cinderwell-card-grid--bg-brand:not([class*="cinderwell-card-grid--cards-"])
-) .cinderwell-card-grid__card .btn--secondary:hover {
-    background-color: var(--cw-color-white);
-    color: var(--cw-color-dark);
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__grid {
+	grid-template-columns: 1fr;
 }
 
-:is(
-    .cinderwell-card-grid--cards-dark,
-    .cinderwell-card-grid--bg-dark:not([class*="cinderwell-card-grid--cards-"]),
-    .cinderwell-card-grid--bg-brand:not([class*="cinderwell-card-grid--cards-"])
-) .cinderwell-card-grid__card :is(.btn--ghost, .btn--link) {
-    color: var(--cw-color-white);
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card {
+	display: grid;
+	grid-template-columns: minmax(220px, 48%) minmax(0, 1fr);
+	border-radius: 0;
+	box-shadow: none;
 }
 
-:is(
-    .cinderwell-card-grid--cards-dark,
-    .cinderwell-card-grid--bg-dark:not([class*="cinderwell-card-grid--cards-"]),
-    .cinderwell-card-grid--bg-brand:not([class*="cinderwell-card-grid--cards-"])
-) .cinderwell-card-grid__card .btn--ghost:hover {
-    background-color: rgb(255 255 255 / 12%);
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card-image {
+	min-height: 210px;
+	aspect-ratio: auto;
 }
 
-:is(
-    .cinderwell-card-grid--cards-dark,
-    .cinderwell-card-grid--bg-dark:not([class*="cinderwell-card-grid--cards-"]),
-    .cinderwell-card-grid--bg-brand:not([class*="cinderwell-card-grid--cards-"])
-) .cinderwell-card-grid__card .btn--link:hover {
-    color: var(--cw-color-light);
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card-icon {
+	align-self: stretch;
+	min-height: 0;
+	padding: var(--cw-spacing-md);
 }
 
-.cinderwell-card-grid--cards-brand .cinderwell-card-grid__card .btn--primary {
-    border-color: var(--cw-color-white);
-    background-color: var(--cw-color-white);
-    color: var(--cw-color-brand);
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card-content {
+	justify-content: center;
+	padding: clamp(var(--cw-spacing-md), 5vw, var(--cw-spacing-xl));
 }
 
-.cinderwell-card-grid--cards-brand .cinderwell-card-grid__card .btn--primary:hover {
-    border-color: var(--cw-color-dark);
-    background-color: var(--cw-color-dark);
-    color: var(--cw-color-white);
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card-content:only-child {
+	grid-column: 1 / -1;
 }
 
-.cinderwell-card-grid--cards-brand .cinderwell-card-grid__card .btn--secondary {
-    border-color: var(--cw-color-white);
-    color: var(--cw-color-white);
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card:nth-child(even) .cinderwell-card-grid__card-image,
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card:nth-child(even) .cinderwell-card-grid__card-icon {
+	grid-column: 2;
+	grid-row: 1;
 }
 
-.cinderwell-card-grid--cards-brand .cinderwell-card-grid__card :is(.btn--ghost, .btn--link) {
-    border-color: transparent;
-    color: var(--cw-color-white);
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card:nth-child(even) .cinderwell-card-grid__card-content {
+	grid-column: 1;
+	grid-row: 1;
 }
 
-.cinderwell-card-grid--cards-brand .cinderwell-card-grid__card .btn--secondary:hover {
-    background-color: var(--cw-color-white);
-    color: var(--cw-color-brand);
+.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card:hover {
+	transform: none;
 }
 
-.cinderwell-card-grid--cards-brand .cinderwell-card-grid__card .btn--ghost:hover {
-    background-color: rgb(255 255 255 / 14%);
+.cinderwell-card-grid--layout-featured .cinderwell-card-grid__grid {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	grid-auto-flow: dense;
 }
 
-.cinderwell-card-grid--cards-brand .cinderwell-card-grid__card .btn--link {
-    border-color: transparent;
+.cinderwell-card-grid--layout-featured .cinderwell-card-grid__card:first-child {
+	grid-column: span 2;
+	grid-row: span 2;
 }
 
-.cinderwell-card-grid--cards-brand .cinderwell-card-grid__card .btn--link:hover {
-    color: var(--cw-color-light);
+.cinderwell-card-grid--layout-featured .cinderwell-card-grid__card:first-child .cinderwell-card-grid__card-image {
+	min-height: clamp(280px, 36vw, 520px);
+	flex: 1;
+}
+
+.cinderwell-card-grid--layout-featured .cinderwell-card-grid__card:first-child .cinderwell-card-grid__card-icon {
+	align-self: stretch;
+	min-height: 0;
+	padding: clamp(var(--cw-spacing-md), 4vw, var(--cw-spacing-xl));
+}
+
+.cinderwell-card-grid--layout-featured .cinderwell-card-grid__card:first-child .cinderwell-card-grid__card-content {
+	padding: clamp(var(--cw-spacing-md), 4vw, var(--cw-spacing-xl));
+}
+
+.cinderwell-card-grid--layout-featured .cinderwell-card-grid__card:first-child .cinderwell-card-grid__card-content:only-child {
+	grid-column: 1 / -1;
+}
+
+.cinderwell-card-grid--layout-featured .cinderwell-card-grid__card:first-child .cinderwell-card-grid__card-title {
+	font-size: clamp(var(--cw-type-lead), 3vw, var(--cw-font-size-2xl));
+}
+
+.cinderwell-card-grid--layout-poster {
+	--cw-poster-surface: var(--cw-color-dark);
+	--cw-poster-text: var(--cw-color-white);
+}
+
+.cinderwell-card-grid--layout-poster.cinderwell-card-grid--cards-white {
+	--cw-poster-surface: var(--cw-color-white);
+	--cw-poster-text: var(--cw-color-text);
+}
+
+.cinderwell-card-grid--layout-poster.cinderwell-card-grid--cards-light {
+	--cw-poster-surface: var(--cw-color-light);
+	--cw-poster-text: var(--cw-color-text);
+}
+
+.cinderwell-card-grid--layout-poster.cinderwell-card-grid--cards-dark {
+	--cw-poster-surface: var(--cw-color-dark);
+	--cw-poster-text: var(--cw-color-white);
+}
+
+.cinderwell-card-grid--layout-poster.cinderwell-card-grid--cards-brand {
+	--cw-poster-surface: var(--cw-color-brand);
+	--cw-poster-text: var(--cw-color-brand-contrast);
+}
+
+.cinderwell-card-grid--layout-poster .cinderwell-card-grid__card {
+	position: relative;
+	min-height: clamp(340px, 42vw, 540px);
+	isolation: isolate;
+	justify-content: flex-end;
+	background: var(--cw-poster-surface);
+	color: var(--cw-poster-text);
+}
+
+.cinderwell-card-grid--layout-poster .cinderwell-card-grid__card::after {
+	position: absolute;
+	inset: 24% 0 0;
+	z-index: 1;
+	content: "";
+	background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--cw-poster-surface) 97%, transparent));
+	pointer-events: none;
+}
+
+.cinderwell-card-grid--layout-poster .cinderwell-card-grid__card-image {
+	position: absolute;
+	inset: 0;
+	z-index: auto;
+	width: 100%;
+	height: 100%;
+	aspect-ratio: auto;
+}
+
+/* Keep the editor's media action above the poster gradient and content. The
+ * image host must not form its own stacking context or its nested control
+ * cannot rise above those sibling layers. */
+.cinderwell-card-grid--layout-poster .cw-image-control-overlay {
+	top: 8px;
+	right: 8px;
+	bottom: auto;
+	z-index: 4;
+}
+
+.cinderwell-card-grid--layout-poster .cinderwell-card-grid__card-icon {
+	position: absolute;
+	inset: var(--cw-spacing-md) auto auto var(--cw-spacing-md);
+	padding: 0;
+	z-index: 2;
+	color: var(--cw-poster-text);
+}
+
+.cinderwell-card-grid--layout-poster .cinderwell-card-grid__card-content {
+	position: relative;
+	z-index: 2;
+	flex: 0 0 auto;
+	padding: clamp(var(--cw-spacing-md), 3vw, var(--cw-spacing-lg));
+}
+
+.cinderwell-card-grid--layout-poster .cinderwell-card-grid__card-label {
+	color: currentcolor;
+}
+
+.cinderwell-card-grid--layout-directory .cinderwell-card-grid__grid {
+	grid-template-columns: 1fr;
+	gap: 0;
+	counter-reset: cw-card-directory;
+}
+
+.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card {
+	position: relative;
+	display: grid;
+	grid-template-columns: clamp(96px, 15vw, 180px) minmax(0, 1fr);
+	border-width: 0 0 1px;
+	border-style: solid;
+	border-color: color-mix(in srgb, currentcolor 18%, transparent);
+	border-radius: 0;
+	box-shadow: none;
+	counter-increment: cw-card-directory;
+}
+
+.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card::after {
+	position: absolute;
+	top: var(--cw-spacing-sm);
+	right: var(--cw-spacing-sm);
+	content: counter(cw-card-directory, decimal-leading-zero);
+	font-family: var(--cw-font-heading);
+	font-size: var(--cw-font-size-sm);
+	font-weight: 700;
+	color: var(--cw-color-muted);
+}
+
+.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card-image {
+	height: 100%;
+	min-height: 150px;
+	aspect-ratio: auto;
+}
+
+.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card-icon {
+	justify-content: center;
+	padding: var(--cw-spacing-md);
+}
+
+.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card-content {
+	justify-content: center;
+	padding: var(--cw-spacing-lg) clamp(var(--cw-spacing-xl), 7vw, 6rem) var(--cw-spacing-lg) var(--cw-spacing-lg);
+}
+
+.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card-content:only-child {
+	grid-column: 1 / -1;
+}
+
+.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card:hover {
+	transform: none;
+	background: color-mix(in srgb, currentcolor 4%, var(--cw-color-surface));
+	box-shadow: none;
 }
 
 [dir="rtl"] .cinderwell-card-grid {
-    text-align: right;
+	text-align: right;
 }
 
 [dir="rtl"] .cinderwell-card-grid__card-content .btn {
-    align-self: flex-end;
+	align-self: flex-end;
 }
 
 @media (max-width: 1024px) {
-    .cinderwell-card-grid--cols-4 .cinderwell-card-grid__grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
 
-    .cinderwell-card-grid--tablet-cols-1 .cinderwell-card-grid__grid { grid-template-columns: 1fr; }
-    .cinderwell-card-grid--tablet-cols-2 .cinderwell-card-grid__grid { grid-template-columns: repeat(2, 1fr); }
-    .cinderwell-card-grid--tablet-cols-3 .cinderwell-card-grid__grid { grid-template-columns: repeat(3, 1fr); }
-    .cinderwell-card-grid--tablet-cols-4 .cinderwell-card-grid__grid { grid-template-columns: repeat(4, 1fr); }
+	.cinderwell-card-grid--cols-4 .cinderwell-card-grid__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.cinderwell-card-grid--tablet-cols-1 .cinderwell-card-grid__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-card-grid--tablet-cols-2 .cinderwell-card-grid__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.cinderwell-card-grid--tablet-cols-3 .cinderwell-card-grid__grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.cinderwell-card-grid--tablet-cols-4 .cinderwell-card-grid__grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
 }
 
 @media (max-width: 768px) {
-    .cinderwell-card-grid--cols-2 .cinderwell-card-grid__grid,
-    .cinderwell-card-grid--cols-3 .cinderwell-card-grid__grid,
-    .cinderwell-card-grid--cols-4 .cinderwell-card-grid__grid {
-        grid-template-columns: 1fr;
-    }
 
-    .cinderwell-card-grid--mobile-cols-1 .cinderwell-card-grid__grid { grid-template-columns: 1fr; }
-    .cinderwell-card-grid--mobile-cols-2 .cinderwell-card-grid__grid { grid-template-columns: repeat(2, 1fr); }
-    .cinderwell-card-grid--mobile-cols-3 .cinderwell-card-grid__grid { grid-template-columns: repeat(3, 1fr); }
-    .cinderwell-card-grid--mobile-cols-4 .cinderwell-card-grid__grid { grid-template-columns: repeat(4, 1fr); }
+	.cinderwell-card-grid--cols-2 .cinderwell-card-grid__grid,
+	.cinderwell-card-grid--cols-3 .cinderwell-card-grid__grid,
+	.cinderwell-card-grid--cols-4 .cinderwell-card-grid__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-card-grid--mobile-cols-1 .cinderwell-card-grid__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-card-grid--mobile-cols-2 .cinderwell-card-grid__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.cinderwell-card-grid--mobile-cols-3 .cinderwell-card-grid__grid {
+		grid-template-columns: repeat(3, 1fr);
+	}
+
+	.cinderwell-card-grid--mobile-cols-4 .cinderwell-card-grid__grid {
+		grid-template-columns: repeat(4, 1fr);
+	}
+
+	.cinderwell-card-grid--layout-featured .cinderwell-card-grid__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card,
+	.cinderwell-card-grid--layout-featured .cinderwell-card-grid__card:first-child {
+		grid-template-columns: 1fr;
+		grid-column: auto;
+		grid-row: auto;
+	}
+
+	.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card:nth-child(even) .cinderwell-card-grid__card-image,
+	.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card:nth-child(even) .cinderwell-card-grid__card-icon,
+	.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card:nth-child(even) .cinderwell-card-grid__card-content {
+		grid-column: auto;
+		grid-row: auto;
+	}
+
+	.cinderwell-card-grid--layout-horizontal .cinderwell-card-grid__card-image,
+	.cinderwell-card-grid--layout-featured .cinderwell-card-grid__card:first-child .cinderwell-card-grid__card-image {
+		min-height: 0;
+		aspect-ratio: 16 / 10;
+	}
+
+	.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card {
+		grid-template-columns: 84px minmax(0, 1fr);
+	}
+
+	.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card-image {
+		min-height: 112px;
+	}
+
+	.cinderwell-card-grid--layout-directory .cinderwell-card-grid__card-content {
+		padding: var(--cw-spacing-md) var(--cw-spacing-xl) var(--cw-spacing-md) var(--cw-spacing-md);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.cinderwell-card-grid__card,
+	.cinderwell-card-grid__card-image img {
+		transition: none;
+	}
+
+	.cinderwell-card-grid__card:hover,
+	.cinderwell-card-grid__card:hover .cinderwell-card-grid__card-image img {
+		transform: none;
+	}
 }

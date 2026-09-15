@@ -111,7 +111,7 @@ registerBlockType( metadata.name, {
                             onChange={ ( childBackgroundMode ) => setAttributes( { childBackgroundMode } ) }
                         />
                     </PanelBody>
-                    <PanelBody title={ __( 'Tabs', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Tabs', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-content">
                         <SegmentedControl label={ __( 'Tab style', 'cinderwell' ) } value={ attributes.tabStyle || 'underline' } options={ styleOptions } onChange={ ( tabStyle ) => setAttributes( { tabStyle } ) } />
                         <ResponsiveSegmentedControl
                             label={ __( 'Orientation', 'cinderwell' ) }

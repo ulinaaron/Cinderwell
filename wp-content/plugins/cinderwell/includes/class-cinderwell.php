@@ -67,11 +67,13 @@ class Cinderwell {
                 'cinderwell/image-text',
                 'cinderwell/image-carousel',
                 'cinderwell/loop',
+				'cinderwell/page-header',
                 'cinderwell/quote',
                 'cinderwell/section',
                 'cinderwell/slot-layout',
                 'cinderwell/tabs',
                 'cinderwell/two-column',
+                'cinderwell/utility-bar',
             ];
             $action_blocks = [
                 'cinderwell/button',
@@ -131,6 +133,13 @@ class Cinderwell {
                     'isGlobalStyles' => false,
                 ];
             }
+            $palette_css = Design_Tokens::get_palette_css();
+            if ( $palette_css ) {
+                $settings['styles'][] = [
+                    'css' => $palette_css,
+                    'isGlobalStyles' => false,
+                ];
+            }
             return $settings;
         } );
 
@@ -171,18 +180,31 @@ class Cinderwell {
                 'cinderwellEditorSettings',
                 [
                     'tokens'       => Design_Tokens::get_editor_tokens(),
+                    'colorRegistry' => Design_Tokens::get_color_registry(),
                     'canManage'    => current_user_can( 'manage_options' ),
                     'dataSources'  => Data_Sources::get_groups(),
                     'acfFields'    => Data_Sources::get_acf_fields( $post_id ),
-                    'conditions'   => Conditions::get_client_visible(),
+					'conditions'   => Conditions::get_client_visible(),
+					'editorAccess' => Editor_Access::get_current_policy(),
+					'features'     => [
+						'blockSettingsClipboard' => Editor_Utilities::block_settings_clipboard_enabled(),
+					],
+					'pageHeader'   => Page_Header::get_settings(),
+					'variations'   => Block_Variations::get_editor_catalog(),
+					'addons'       => [
+						'teams' => Addons::is_enabled( 'teams' ) ? Teams::get_editor_settings() : [ 'enabled' => false ],
+						'portfolio' => Addons::is_enabled( 'portfolio' ) ? Portfolio::get_editor_settings() : [ 'enabled' => false ],
+						'locations' => Addons::is_enabled( 'locations' ) ? Locations::get_editor_settings() : [ 'enabled' => false ],
+						'animations' => Addons::is_enabled( 'animations' ) ? Animations::get_editor_settings() : [ 'enabled' => false ],
+					],
 					'siteName'     => get_bloginfo( 'name' ),
 					'siteTagline'  => get_bloginfo( 'description' ),
-					'previewValues' => [
+					'previewValues' => apply_filters( 'cinderwell_editor_preview_values', [
 						'post_permalink'   => $post_id ? get_permalink( $post_id ) : '',
 						'post_date'        => $post_id ? get_the_date( '', $post_id ) : '',
 						'post_author'      => $post_id ? get_the_author_meta( 'display_name', (int) get_post_field( 'post_author', $post_id ) ) : '',
 						'current_user_name' => $user->exists() ? $user->display_name : '',
-					],
+					] ),
 					'acfValues'    => Data_Sources::get_acf_preview_values( $post_id ),
                 ]
             );
@@ -197,6 +219,7 @@ class Cinderwell {
 
     private function register_components() {
         new Design_Tokens();
+        new Block_Variations();
         new Block_Loader();
         new Pattern_Loader();
         new Extension_API();
@@ -207,7 +230,29 @@ class Cinderwell {
         new Commerce();
         new Schema_Aggregator();
         new Admin_Bar();
+        new Settings_Transfer();
+        new Editor_Access();
+		new Editor_Utilities();
+		new Page_Header();
+
+        $updates = new Update_Mechanism();
+        new Addons( $updates );
+        if ( Addons::is_enabled( 'teams' ) ) {
+            new Teams();
+        }
+        if ( Addons::is_enabled( 'portfolio' ) ) {
+            new Portfolio();
+        }
+        if ( Addons::is_enabled( 'company-details' ) ) {
+            new Company_Details();
+        }
+        if ( Addons::is_enabled( 'locations' ) && Addons::is_enabled( 'company-details' ) ) {
+            new Locations();
+        }
+        if ( Addons::is_enabled( 'animations' ) ) {
+            new Animations();
+        }
+
         new Admin_Page();
-        new Update_Mechanism();
     }
 }

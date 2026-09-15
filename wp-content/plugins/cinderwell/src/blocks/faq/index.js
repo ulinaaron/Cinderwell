@@ -27,7 +27,7 @@ registerBlockType( metadata.name, {
                             { key: 'footnote', label: __( 'Footnote', 'cinderwell' ) },
                         ] } values={ secs } onChange={ onSecs } />
                     </PanelBody>
-                    <PanelBody title={ __( 'FAQ items', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'FAQ items', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-content">
                         { items.map( ( item, i ) => (
                             <SortableItemCard
                                 key={ item.id || i }

@@ -1,0 +1,15 @@
+.wp-block-cinderwell-popups-popup-content {
+	min-height: 240px;
+	padding: var(--cw-spacing-sm, 1.5rem);
+	border: 1px dashed var(--cw-color-border, #d9d6d0);
+}
+
+.wp-block-cinderwell-popups-popup-content::before {
+	display: block;
+	margin-bottom: var(--cw-gap-sm, 1rem);
+	color: var(--cw-color-muted, #666);
+	font-size: 12px;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	content: "Popup content";
+}

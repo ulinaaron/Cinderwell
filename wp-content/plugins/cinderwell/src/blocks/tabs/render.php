@@ -7,7 +7,8 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$allowed_backgrounds = [ 'white', 'light', 'dark', 'brand' ];
+$allowed_backgrounds = \Cinderwell\Design_Tokens::get_color_slugs( 'background' );
+$allowed_text_colors = \Cinderwell\Design_Tokens::get_color_slugs( 'text' );
 $allowed_styles      = [ 'underline', 'pills', 'boxed' ];
 $allowed_orientation = [ 'horizontal', 'vertical' ];
 $allowed_positions   = [ 'start', 'center', 'end', 'stretch' ];
@@ -54,7 +55,7 @@ foreach ( [ 'desktop', 'tablet', 'mobile' ] as $breakpoint ) {
 if ( in_array( $attributes['textSize'] ?? '', [ 'sm', 'md', 'lg' ], true ) ) {
 	$classes[] = 'cinderwell-text-size-' . $attributes['textSize'];
 }
-if ( in_array( $attributes['textColor'] ?? '', [ 'text', 'brand', 'dark', 'light', 'white' ], true ) ) {
+if ( in_array( $attributes['textColor'] ?? '', $allowed_text_colors, true ) ) {
 	$classes[] = 'cinderwell-text-color-' . $attributes['textColor'];
 }
 
@@ -90,14 +91,14 @@ $wrapper_attributes = get_block_wrapper_attributes(
 	]
 );
 $text_styles = is_array( $attributes['textStyles'] ?? null ) ? $attributes['textStyles'] : [];
-$part_class  = static function ( $slot ) use ( $text_styles ) {
+$part_class  = static function ( $slot ) use ( $text_styles, $allowed_text_colors ) {
 	$style   = is_array( $text_styles[ $slot ] ?? null ) ? $text_styles[ $slot ] : [];
 	$classes = [];
 	if ( in_array( $style['size'] ?? '', [ 'sm', 'md', 'lg' ], true ) ) {
-		$classes[] = 'cinderwell-part-size-' . $style['size'];
+		$classes[] = 'cinderwell-text-size-' . $style['size'];
 	}
-	if ( in_array( $style['color'] ?? '', [ 'text', 'brand', 'dark', 'light', 'white' ], true ) ) {
-		$classes[] = 'cinderwell-part-color-' . $style['color'];
+	if ( in_array( $style['color'] ?? '', $allowed_text_colors, true ) ) {
+		$classes[] = 'cinderwell-text-color-' . $style['color'];
 	}
 	return $classes ? ' ' . implode( ' ', $classes ) : '';
 };

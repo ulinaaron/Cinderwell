@@ -3,14 +3,80 @@ import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-edi
 import { PanelBody } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { BlockIdentity, SectionToggles, LayoutControls, BackgroundControls, TypographyControls, getTypographyClassName, getTextStyleClassName, getHeadingTagName, ButtonRepeater, ButtonSave } from '../../shared/inspector-controls';
+import { BlockIdentity, SectionToggles, LayoutControls, BackgroundControls, TypographyControls, getSpacingClassName, getTypographyClassName, getTextStyleClassName, getHeadingTagName, SegmentedControl, ButtonRepeater, ButtonSave } from '../../shared/inspector-controls';
 import { ImageOverlayControls, ImageSettingsControl } from '../../shared/image-controls';
 import { getImageClassName, getMediaUrl } from '../../shared/media';
 import { ALLOWED_INLINE_FORMATS } from '../../shared/rich-text';
+import { canEditControl, filterEditorAccessChanges } from '../../shared/editor-access';
+import { VariationPicker, resolveBlockVariation } from '../../shared/variation-picker';
 import metadata from './block.json';
+
+const saveHero = ( attributes, includeResponsiveSpacing = true, useContentLayout = true, includeImageSide = true, includeSplitGap = true ) => {
+    const hasBg = attributes.showBgImage && attributes.bgImage > 0;
+    const hasImage = attributes.showImage && attributes.image > 0;
+    const backgroundOverlay = attributes.bgOverlay ? ( attributes.bgOverlayPreset || 'medium' ) : 'none';
+    const backgroundOverlayClass = backgroundOverlay !== 'medium' ? ` cinderwell-hero__overlay--${ backgroundOverlay }` : '';
+    const spacingClassName = includeResponsiveSpacing ? getSpacingClassName( attributes ) : '';
+    const imageSideClassName = hasImage && includeImageSide ? ` cinderwell-hero--image-${ attributes.imageSide || 'right' }` : '';
+    const splitGapClassName = hasImage && includeSplitGap ? ` cinderwell-hero--split-gap-${ attributes.splitGap || 'md' }` : '';
+    const layoutClassName = useContentLayout ? ` cinderwell-hero--align-${ attributes.alignment || 'center' }${ hasImage ? ` cinderwell-hero--split${ imageSideClassName }${ splitGapClassName }` : '' }` : '';
+    const blockProps = useBlockProps.save( {
+        className: `cinderwell-hero cinderwell-hero--bg-${ attributes.background }${ layoutClassName }${ getTypographyClassName( attributes ) }${ spacingClassName }${ hasBg ? ' cinderwell-hero--has-bg' : '' }`,
+    } );
+
+    const primaryTextContent = (
+        <>
+            { attributes.showEyebrow && attributes.eyebrow && <RichText.Content tagName="span" className={ `cinderwell-eyebrow${ getTextStyleClassName( attributes, 'eyebrow' ) }` } value={ attributes.eyebrow } /> }
+            { attributes.showHeading && attributes.heading && <RichText.Content tagName={ getHeadingTagName( attributes.headingLevel, 1 ) } className={ `cinderwell-heading${ getTextStyleClassName( attributes, 'heading' ) }` } value={ attributes.heading } /> }
+            { attributes.showSubheading && attributes.subheading && <RichText.Content tagName="p" className={ `cinderwell-subheading${ getTextStyleClassName( attributes, 'subheading' ) }` } value={ attributes.subheading } /> }
+        </>
+    );
+
+    const actionContent = (
+        <>
+            { attributes.buttons?.length > 0 && <ButtonSave buttons={ attributes.buttons } /> }
+            { attributes.showFootnote && attributes.footnote && <RichText.Content tagName="p" className={ `cinderwell-footnote${ getTextStyleClassName( attributes, 'footnote' ) }` } value={ attributes.footnote } /> }
+        </>
+    );
+
+    const imageContent = hasImage && (
+        <figure className="cinderwell-hero__figure">
+            <img src={ attributes.imageUrl || `wp-content/uploads/${ attributes.image }` } alt={ attributes.imageAlt } className={ `cinderwell-hero__image${ getImageClassName( attributes.imageFit, attributes.imagePosition, attributes.imageAspect ) }` } />
+            { attributes.showCaption && attributes.caption && <RichText.Content tagName="figcaption" className={ `cinderwell-caption${ getTextStyleClassName( attributes, 'caption' ) }` } value={ attributes.caption } /> }
+        </figure>
+    );
+
+    return (
+        <section { ...blockProps }>
+            { hasBg && (
+                <>
+                    <img className={ `cinderwell-hero__bg-image${ getImageClassName( attributes.bgImageFit, attributes.bgImagePosition ) }` } src={ attributes.bgImageUrl || `wp-content/uploads/${ attributes.bgImage }` } alt="" aria-hidden="true" />
+                    { attributes.bgOverlay && <div className={ `cinderwell-hero__overlay${ backgroundOverlayClass }` } /> }
+                </>
+            ) }
+            <div className="cinderwell-hero__inner" style={ { maxWidth: `var(--cw-width-${ attributes.width })` } }>
+                { useContentLayout ? (
+                    <>
+                        <div className="cinderwell-hero__content">{ primaryTextContent }{ actionContent }</div>
+                        { imageContent }
+                    </>
+                ) : (
+                    <>
+                        { primaryTextContent }
+                        { imageContent }
+                        { actionContent }
+                    </>
+                ) }
+            </div>
+        </section>
+    );
+};
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => {
+        const resolvedLayout = resolveBlockVariation( metadata.name, attributes.layout, 'split' );
+        const activeLayout = resolvedLayout?.slug || 'split';
+        const isStatementLayout = activeLayout === 'statement';
         const hasBg = attributes.showBgImage && attributes.bgImage > 0;
         const imageMedia = useSelect( ( select ) => attributes.image > 0 ? select( 'core' ).getMedia( attributes.image ) : null, [ attributes.image ] );
         const backgroundMedia = useSelect( ( select ) => attributes.bgImage > 0 ? select( 'core' ).getMedia( attributes.bgImage ) : null, [ attributes.bgImage ] );
@@ -19,8 +85,9 @@ registerBlockType( metadata.name, {
         const backgroundOverlay = attributes.bgOverlay ? ( attributes.bgOverlayPreset || 'medium' ) : 'none';
         const backgroundOverlayClass = backgroundOverlay !== 'medium' ? ` cinderwell-hero__overlay--${ backgroundOverlay }` : '';
         const backgroundPositions = { top: 'center top', bottom: 'center bottom', left: 'left center', right: 'right center', 'top-left': 'left top', 'top-right': 'right top', 'bottom-left': 'left bottom', 'bottom-right': 'right bottom' };
+        const hasImage = attributes.showImage && attributes.image > 0;
         const blockProps = useBlockProps( {
-            className: `cinderwell-hero cinderwell-hero--bg-${ attributes.background }${ getTypographyClassName( attributes ) }${ hasBg ? ' cinderwell-hero--has-bg cw-image-control-host' : '' }`,
+            className: `cinderwell-hero cinderwell-hero--bg-${ attributes.background } cinderwell-hero--layout-${ activeLayout } cinderwell-hero--align-${ attributes.alignment || 'center' }${ attributes.showImage ? ` cinderwell-hero--split cinderwell-hero--image-${ attributes.imageSide || 'right' } cinderwell-hero--split-gap-${ attributes.splitGap || 'md' }` : '' }${ getTypographyClassName( attributes ) }${ getSpacingClassName( attributes ) }${ hasBg ? ' cinderwell-hero--has-bg cw-image-control-host' : '' }`,
             style: hasBg && backgroundImageUrl ? {
                 backgroundImage: `url(${ backgroundImageUrl })`,
                 backgroundSize: attributes.bgImageFit && attributes.bgImageFit !== 'auto' ? attributes.bgImageFit : undefined,
@@ -49,6 +116,15 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="▲" title={ __( 'Hero', 'cinderwell' ) } description={ __( 'Page-level hero with heading and buttons', 'cinderwell' ) } />
+                    { canEditControl( 'layout' ) && (
+                        <VariationPicker
+                            blockName={ metadata.name }
+                            value={ attributes.layout }
+                            fallback="split"
+                            title={ __( 'Variation', 'cinderwell' ) }
+                            onChange={ ( variation ) => setAttributes( filterEditorAccessChanges( variation.attributes || {}, attributes ) ) }
+                        />
+                    ) }
                     <PanelBody title={ __( 'Sections', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-sections-panel">
                         <SectionToggles
                             sections={ [
@@ -65,6 +141,18 @@ registerBlockType( metadata.name, {
                     </PanelBody>
                     { attributes.showImage && (
                     <PanelBody title={ __( 'Media', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-fields-panel">
+                            <SegmentedControl
+                                label={ __( 'Image position', 'cinderwell' ) }
+                                value={ isStatementLayout ? ( attributes.imageSide === 'top' ? 'top' : 'bottom' ) : ( attributes.imageSide === 'left' ? 'left' : 'right' ) }
+                                options={ isStatementLayout ? [
+                                    { value: 'top', label: __( 'Top', 'cinderwell' ) },
+                                    { value: 'bottom', label: __( 'Bottom', 'cinderwell' ) },
+                                ] : [
+                                    { value: 'left', label: __( 'Left', 'cinderwell' ) },
+                                    { value: 'right', label: __( 'Right', 'cinderwell' ) },
+                                ] }
+                                onChange={ ( imageSide ) => setAttributes( { imageSide } ) }
+                            />
                             <ImageSettingsControl
                                 alt={ attributes.imageAlt }
                                 fit={ attributes.imageFit }
@@ -78,10 +166,28 @@ registerBlockType( metadata.name, {
                             />
                     </PanelBody>
                     ) }
-                    <PanelBody title={ __( 'Buttons', 'cinderwell' ) } initialOpen={ false } className="cw-panel">
+                    <PanelBody title={ __( 'Buttons', 'cinderwell' ) } initialOpen={ false } className="cw-panel cw-access-links">
                         <ButtonRepeater buttons={ attributes.buttons } onChange={ ( b ) => setAttributes( { buttons: b } ) } />
                     </PanelBody>
-                    <LayoutControls attributes={ attributes } setAttributes={ setAttributes } />
+                    <LayoutControls
+                        attributes={ attributes }
+                        setAttributes={ setAttributes }
+                        showAlignment={ true }
+                    >
+                        { attributes.showImage && (
+                            <SegmentedControl
+                                label={ __( 'Content gap', 'cinderwell' ) }
+                                value={ attributes.splitGap || 'md' }
+                                options={ [
+                                    { value: 'none', label: __( 'None', 'cinderwell' ) },
+                                    { value: 'sm', label: __( 'Small', 'cinderwell' ) },
+                                    { value: 'md', label: __( 'Medium', 'cinderwell' ) },
+                                    { value: 'lg', label: __( 'Large', 'cinderwell' ) },
+                                ] }
+                                onChange={ ( splitGap ) => setAttributes( { splitGap } ) }
+                            />
+                        ) }
+                    </LayoutControls>
                     <BackgroundControls value={ attributes.background } onChange={ ( v ) => setAttributes( { background: v } ) } media={ {
                         imageId: attributes.bgImage,
                         imageUrl: backgroundImageUrl,
@@ -115,15 +221,21 @@ registerBlockType( metadata.name, {
                         />
                     ) }
                     <div className="cinderwell-hero__inner" style={ { maxWidth: `var(--cw-width-${ attributes.width })` } }>
-                        { attributes.showEyebrow && (
-                            <RichText tagName="span" identifier="eyebrow" className={ `cinderwell-eyebrow${ getTextStyleClassName( attributes, 'eyebrow' ) }` } value={ attributes.eyebrow } onChange={ ( v ) => setAttributes( { eyebrow: v } ) } placeholder={ __( 'Eyebrow…', 'cinderwell' ) } allowedFormats={ ALLOWED_INLINE_FORMATS } />
-                        ) }
-                        { attributes.showHeading && (
-                            <RichText tagName={ getHeadingTagName( attributes.headingLevel, 1 ) } identifier="heading" className={ `cinderwell-heading${ getTextStyleClassName( attributes, 'heading' ) }` } value={ attributes.heading } onChange={ ( v ) => setAttributes( { heading: v } ) } placeholder={ __( 'Heading…', 'cinderwell' ) } allowedFormats={ ALLOWED_INLINE_FORMATS } />
-                        ) }
-                        { attributes.showSubheading && (
-                            <RichText tagName="p" identifier="subheading" className={ `cinderwell-subheading${ getTextStyleClassName( attributes, 'subheading' ) }` } value={ attributes.subheading } onChange={ ( v ) => setAttributes( { subheading: v } ) } placeholder={ __( 'Subheading…', 'cinderwell' ) } allowedFormats={ ALLOWED_INLINE_FORMATS } />
-                        ) }
+                        <div className="cinderwell-hero__content">
+                            { attributes.showEyebrow && (
+                                <RichText tagName="span" identifier="eyebrow" className={ `cinderwell-eyebrow${ getTextStyleClassName( attributes, 'eyebrow' ) }` } value={ attributes.eyebrow } onChange={ ( v ) => setAttributes( { eyebrow: v } ) } placeholder={ __( 'Eyebrow…', 'cinderwell' ) } allowedFormats={ ALLOWED_INLINE_FORMATS } />
+                            ) }
+                            { attributes.showHeading && (
+                                <RichText tagName={ getHeadingTagName( attributes.headingLevel, 1 ) } identifier="heading" className={ `cinderwell-heading${ getTextStyleClassName( attributes, 'heading' ) }` } value={ attributes.heading } onChange={ ( v ) => setAttributes( { heading: v } ) } placeholder={ __( 'Heading…', 'cinderwell' ) } allowedFormats={ ALLOWED_INLINE_FORMATS } />
+                            ) }
+                            { attributes.showSubheading && (
+                                <RichText tagName="p" identifier="subheading" className={ `cinderwell-subheading${ getTextStyleClassName( attributes, 'subheading' ) }` } value={ attributes.subheading } onChange={ ( v ) => setAttributes( { subheading: v } ) } placeholder={ __( 'Subheading…', 'cinderwell' ) } allowedFormats={ ALLOWED_INLINE_FORMATS } />
+                            ) }
+                            { attributes.buttons?.length > 0 && <ButtonSave buttons={ attributes.buttons } onChange={ ( buttons ) => setAttributes( { buttons } ) } /> }
+                            { attributes.showFootnote && (
+                                <RichText tagName="p" identifier="footnote" className={ `cinderwell-footnote${ getTextStyleClassName( attributes, 'footnote' ) }` } value={ attributes.footnote } onChange={ ( v ) => setAttributes( { footnote: v } ) } placeholder={ __( 'Footnote…', 'cinderwell' ) } allowedFormats={ ALLOWED_INLINE_FORMATS } />
+                            ) }
+                        </div>
                         { attributes.showImage && attributes.image > 0 ? (
                             <figure className="cinderwell-hero__figure cw-image-control-host">
                                 <img src={ imageUrl } alt={ attributes.imageAlt } className={ `cinderwell-hero__image${ getImageClassName( attributes.imageFit, attributes.imagePosition, attributes.imageAspect ) }` } />
@@ -143,45 +255,29 @@ registerBlockType( metadata.name, {
                                 <ImageOverlayControls imageId={ 0 } label={ __( 'hero image', 'cinderwell' ) } onSelect={ ( media ) => setAttributes( { image: media.id, imageUrl: getMediaUrl( media ), imageAlt: media.alt || '' } ) } />
                             </div>
                         ) : null }
-                        { attributes.buttons?.length > 0 && <ButtonSave buttons={ attributes.buttons } onChange={ ( buttons ) => setAttributes( { buttons } ) } /> }
-                        { attributes.showFootnote && (
-                            <RichText tagName="p" identifier="footnote" className={ `cinderwell-footnote${ getTextStyleClassName( attributes, 'footnote' ) }` } value={ attributes.footnote } onChange={ ( v ) => setAttributes( { footnote: v } ) } placeholder={ __( 'Footnote…', 'cinderwell' ) } allowedFormats={ ALLOWED_INLINE_FORMATS } />
-                        ) }
                     </div>
                 </section>
             </>
         );
     },
 
-    save: ( { attributes } ) => {
-        const hasBg = attributes.showBgImage && attributes.bgImage > 0;
-        const backgroundOverlay = attributes.bgOverlay ? ( attributes.bgOverlayPreset || 'medium' ) : 'none';
-        const backgroundOverlayClass = backgroundOverlay !== 'medium' ? ` cinderwell-hero__overlay--${ backgroundOverlay }` : '';
-        const blockProps = useBlockProps.save( {
-            className: `cinderwell-hero cinderwell-hero--bg-${ attributes.background }${ getTypographyClassName( attributes ) }${ hasBg ? ' cinderwell-hero--has-bg' : '' }`,
-        } );
-        return (
-            <section { ...blockProps }>
-                { hasBg && (
-                    <>
-                        <img className={ `cinderwell-hero__bg-image${ getImageClassName( attributes.bgImageFit, attributes.bgImagePosition ) }` } src={ attributes.bgImageUrl || `wp-content/uploads/${ attributes.bgImage }` } alt="" aria-hidden="true" />
-                        { attributes.bgOverlay && <div className={ `cinderwell-hero__overlay${ backgroundOverlayClass }` } /> }
-                    </>
-                ) }
-                <div className="cinderwell-hero__inner" style={ { maxWidth: `var(--cw-width-${ attributes.width })` } }>
-                    { attributes.showEyebrow && attributes.eyebrow && <RichText.Content tagName="span" className={ `cinderwell-eyebrow${ getTextStyleClassName( attributes, 'eyebrow' ) }` } value={ attributes.eyebrow } /> }
-                    { attributes.showHeading && attributes.heading && <RichText.Content tagName={ getHeadingTagName( attributes.headingLevel, 1 ) } className={ `cinderwell-heading${ getTextStyleClassName( attributes, 'heading' ) }` } value={ attributes.heading } /> }
-                    { attributes.showSubheading && attributes.subheading && <RichText.Content tagName="p" className={ `cinderwell-subheading${ getTextStyleClassName( attributes, 'subheading' ) }` } value={ attributes.subheading } /> }
-                    { attributes.showImage && attributes.image > 0 && (
-                        <figure className="cinderwell-hero__figure">
-                            <img src={ attributes.imageUrl || `wp-content/uploads/${ attributes.image }` } alt={ attributes.imageAlt } className={ `cinderwell-hero__image${ getImageClassName( attributes.imageFit, attributes.imagePosition, attributes.imageAspect ) }` } />
-                            { attributes.showCaption && attributes.caption && <RichText.Content tagName="figcaption" className={ `cinderwell-caption${ getTextStyleClassName( attributes, 'caption' ) }` } value={ attributes.caption } /> }
-                        </figure>
-                    ) }
-                    { attributes.buttons?.length > 0 && <ButtonSave buttons={ attributes.buttons } /> }
-                    { attributes.showFootnote && attributes.footnote && <RichText.Content tagName="p" className={ `cinderwell-footnote${ getTextStyleClassName( attributes, 'footnote' ) }` } value={ attributes.footnote } /> }
-                </div>
-            </section>
-        );
-    },
+    save: ( { attributes } ) => saveHero( attributes ),
+    deprecated: [
+        {
+            attributes: metadata.attributes,
+            save: ( { attributes } ) => saveHero( attributes, true, true, true, false ),
+        },
+        {
+            attributes: metadata.attributes,
+            save: ( { attributes } ) => saveHero( attributes, true, true, false, false ),
+        },
+        {
+            attributes: metadata.attributes,
+            save: ( { attributes } ) => saveHero( attributes, true, false ),
+        },
+        {
+            attributes: metadata.attributes,
+            save: ( { attributes } ) => saveHero( attributes, false, false ),
+        },
+    ],
 } );

@@ -1,0 +1,16 @@
+{
+  "name": "cinderwell-popups",
+  "version": "0.1.2",
+  "private": true,
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "lint:js": "wp-scripts lint-js",
+    "lint:css": "wp-scripts lint-style"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^30.0.0",
+    "copy-webpack-plugin": "^14.0.0",
+    "typescript": "5.9.3"
+  }
+}

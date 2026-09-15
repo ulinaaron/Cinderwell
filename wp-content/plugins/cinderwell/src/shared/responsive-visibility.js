@@ -126,7 +126,7 @@ export const ResponsiveVisibilityPanel = ({ attributes, setAttributes }) => {
     <PanelBody
       title={__("Visibility", "cinderwell")}
       initialOpen={activeScopes.length > 0}
-      className="cw-panel cw-responsive-visibility-panel"
+      className="cw-panel cw-responsive-visibility-panel cw-access-advanced"
     >
       <p className="cw-responsive-visibility-panel__intro">
         {__(

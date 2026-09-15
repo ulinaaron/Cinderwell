@@ -1,13 +1,108 @@
 .cinderwell-form {
-    padding: var(--cw-spacing-md) var(--cw-layout-gutter);
-    background-color: var(--cw-color-bg);
-    color: var(--cw-color-text);
+	--cw-form-info-surface: color-mix(in srgb, var(--cw-color-info) 7%, var(--cw-color-surface));
+	--cw-form-success-surface: color-mix(in srgb, var(--cw-color-success) 7%, var(--cw-color-surface));
+	--cw-form-danger-surface: color-mix(in srgb, var(--cw-color-danger) 7%, var(--cw-color-surface));
+	padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+	background-color: var(--cw-color-bg);
+	color: var(--cw-color-text);
 }
-.cinderwell-form--bg-white { background-color: var(--cw-color-white); color: var(--cw-color-text); }
-.cinderwell-form--bg-light { background-color: var(--cw-color-light); color: var(--cw-color-text); }
-.cinderwell-form--bg-dark { background-color: var(--cw-color-dark); color: var(--cw-color-white); }
-.cinderwell-form--bg-brand { background-color: var(--cw-color-brand); color: var(--cw-color-brand-contrast); }
-.cinderwell-form__inner { margin: 0 auto; }
+
+.cinderwell-form--bg-white {
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-form--bg-light {
+	background-color: var(--cw-color-light);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-form--bg-dark {
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+.cinderwell-form--bg-brand {
+	background-color: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
+
+.cinderwell-form__inner {
+	margin: 0 auto;
+}
+
+/* Gravity Forms' Orbital theme emits per-form custom properties with an ID
+ * selector. The important flag is confined to this adapter so the public
+ * Cinderwell token contract remains authoritative inside this block. */
+.cinderwell-form .gform-theme {
+	--gf-color-primary: var(--cw-color-brand) !important;
+	--gf-color-primary-darker: var(--cw-color-dark) !important;
+	--gf-color-primary-lighter: var(--cw-color-brand) !important;
+	--gf-color-primary-contrast: var(--cw-color-brand-contrast) !important;
+	--gf-color-in-ctrl-primary: var(--cw-color-brand) !important;
+	--gf-color-in-ctrl-primary-darker: var(--cw-color-dark) !important;
+	--gf-color-in-ctrl-primary-lighter: var(--cw-color-brand) !important;
+	--gf-color-in-ctrl-primary-contrast: var(--cw-color-brand-contrast) !important;
+	--gf-color-danger: var(--cw-color-danger) !important;
+	--gf-color-success: var(--cw-color-success) !important;
+	--gf-font-family-base: var(--cw-font-body) !important;
+	--gf-radius: var(--cw-radius-sm) !important;
+	--gf-ctrl-border-color: var(--cw-color-border) !important;
+	--gf-ctrl-border-color-error: var(--cw-color-danger) !important;
+	--gf-ctrl-desc-color-error: var(--cw-color-danger) !important;
+	--gf-ctrl-label-color-req: var(--cw-color-danger) !important;
+	--gf-ctrl-outline-color-focus: var(--cw-color-focus) !important;
+	--gf-ctrl-btn-font-family: var(--cw-font-body) !important;
+	--gf-ctrl-btn-radius: var(--cw-radius-sm) !important;
+	--gf-form-validation-bg-color: var(--cw-form-danger-surface) !important;
+	--gf-form-validation-border-color: var(--cw-color-danger) !important;
+	--gf-form-validation-border-color-focus: var(--cw-color-danger) !important;
+	--gf-form-validation-color: var(--cw-color-danger) !important;
+	--gf-form-validation-heading-icon-bg-color: var(--cw-form-danger-surface) !important;
+	--gf-form-validation-heading-icon-border-color: var(--cw-color-danger) !important;
+	--gf-form-validation-outline-color-focus: var(--cw-color-danger) !important;
+}
+
+.cinderwell-form--bg-dark .gform-theme,
+.cinderwell-form--bg-brand .gform-theme,
+.cinderwell-form:is(
+	[class*="--bg-brand-dark"],
+	[class*="--bg-muted"],
+	[class*="--bg-info"],
+	[class*="--bg-success"],
+	[class*="--bg-danger"],
+	[class*="--bg-accent-"]
+) .gform-theme {
+	--gf-color-primary: var(--cw-color-white) !important;
+	--gf-color-primary-darker: var(--cw-color-light) !important;
+	--gf-color-primary-lighter: var(--cw-color-white) !important;
+	--gf-color-in-ctrl-primary: var(--cw-color-white) !important;
+	--gf-color-in-ctrl-primary-darker: var(--cw-color-light) !important;
+	--gf-color-in-ctrl-primary-lighter: var(--cw-color-white) !important;
+}
+
+.cinderwell-form--bg-dark .gform-theme {
+	--gf-color-primary-contrast: var(--cw-color-dark) !important;
+	--gf-color-in-ctrl-primary-contrast: var(--cw-color-dark) !important;
+}
+
+.cinderwell-form--bg-brand .gform-theme {
+	--gf-color-primary-contrast: var(--cw-color-brand) !important;
+	--gf-color-in-ctrl-primary-contrast: var(--cw-color-brand) !important;
+}
+
+.cinderwell-form:is(
+	[class*="--bg-brand-dark"],
+	[class*="--bg-muted"],
+	[class*="--bg-info"],
+	[class*="--bg-success"],
+	[class*="--bg-danger"],
+	[class*="--bg-accent-"]
+) .gform-theme {
+	--gf-color-primary-contrast: var(--cw-surface-background, var(--cw-color-dark)) !important;
+	--gf-color-in-ctrl-primary-contrast: var(--cw-surface-background, var(--cw-color-dark)) !important;
+}
+
 .cinderwell-form .gfield input[type="text"],
 .cinderwell-form .gfield input[type="email"],
 .cinderwell-form .gfield input[type="tel"],
@@ -15,22 +110,141 @@
 .cinderwell-form .gfield input[type="number"],
 .cinderwell-form .gfield textarea,
 .cinderwell-form .gfield select {
-    border: 1px solid var(--cw-color-border);
-    font-family: var(--cw-font-body);
-    padding: 0.75rem;
-    border-radius: var(--cw-radius-sm);
-    width: 100%;
+	border: 1px solid var(--cw-color-border);
+	font-family: var(--cw-font-body);
+	padding: 0.75rem;
+	border-radius: var(--cw-radius-sm);
+	width: 100%;
 }
+
 .cinderwell-form .gform_button {
-    background: var(--cw-color-brand);
-    color: var(--cw-color-brand-contrast);
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: var(--cw-radius-sm);
-    cursor: pointer;
-    font-family: var(--cw-font-body);
+	background: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+	border: none;
+	padding: 0.75rem 1.5rem;
+	border-radius: var(--cw-radius-sm);
+	cursor: pointer;
+	font-family: var(--cw-font-body);
+	transition: background-color var(--cw-duration-normal) var(--cw-ease-standard), border-color var(--cw-duration-normal) var(--cw-ease-standard), color var(--cw-duration-normal) var(--cw-ease-standard);
 }
+
 .cinderwell-form .gform_button:hover {
-    opacity: 0.9;
+	background: var(--cw-color-dark);
+	color: var(--cw-color-white);
 }
-[dir="rtl"] .cinderwell-form { text-align: right; }
+
+.cinderwell-form .gform_button:focus-visible {
+	outline: 2px solid var(--cw-color-focus) !important;
+	outline-offset: 2px !important;
+}
+
+/* Semantic messages. Gravity Forms' modern theme consumes the variables above,
+ * while these selectors keep legacy and inherited theme markup on the same
+ * Cinderwell status-token contract. */
+.cinderwell-form :is(
+	.gform_validation_errors,
+	.validation_error,
+	.gfield_validation_message,
+	.validation_message
+) {
+	border-color: var(--cw-color-danger) !important;
+	background: var(--cw-form-danger-surface) !important;
+	color: var(--cw-color-danger) !important;
+	border-radius: var(--cw-radius-sm);
+}
+
+.cinderwell-form :is(
+	.gform_validation_errors,
+	.validation_error,
+	.gfield_validation_message,
+	.validation_message
+) :is(a, h2) {
+	color: inherit !important;
+}
+
+.cinderwell-form :is(
+	.gform_validation_errors,
+	.validation_error,
+	.gfield_validation_message,
+	.validation_message
+) a {
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+.cinderwell-form :is(
+	.gform_validation_errors,
+	.validation_error,
+	.gfield_validation_message,
+	.validation_message
+):focus,
+.cinderwell-form :is(
+	.gform_validation_errors,
+	.validation_error,
+	.gfield_validation_message,
+	.validation_message
+) a:focus-visible {
+	outline: 2px solid var(--cw-color-danger) !important;
+	outline-offset: 2px;
+}
+
+.cinderwell-form :is(
+	.gfield_error label,
+	.gfield_error legend,
+	.gfield_error .gfield_description,
+	.gfield_error .gfield_validation_message,
+	.gfield_required,
+	.gform_submission_error
+) {
+	color: var(--cw-color-danger) !important;
+}
+
+.cinderwell-form .gfield_error :is(input, select, textarea)[aria-invalid="true"] {
+	border-color: var(--cw-color-danger) !important;
+}
+
+.cinderwell-form .gfield_error :is(input, select, textarea)[aria-invalid="true"]:focus-visible {
+	outline-color: var(--cw-color-danger) !important;
+}
+
+.cinderwell-form :is(.gform_confirmation_message, .form_saved_message_sent) {
+	padding: var(--cw-spacing-sm);
+	border: 1px solid var(--cw-color-success);
+	border-radius: var(--cw-radius-sm);
+	background: var(--cw-form-success-surface);
+	color: var(--cw-color-success);
+}
+
+.cinderwell-form :is(.gform_confirmation_message, .form_saved_message_sent) a {
+	color: inherit;
+	font-weight: 600;
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}
+
+.cinderwell-form .form_saved_message:not(.form_saved_message_sent) {
+	padding: var(--cw-spacing-sm);
+	border: 1px solid var(--cw-color-info);
+	border-radius: var(--cw-radius-sm);
+	background: var(--cw-form-info-surface);
+	color: var(--cw-color-info);
+}
+
+.cinderwell-form .form_saved_message:not(.form_saved_message_sent) a,
+.cinderwell-form .gform_save_link {
+	color: var(--cw-color-info) !important;
+}
+
+.cinderwell-form :is(
+	.gform_confirmation_message,
+	.form_saved_message,
+	.gform_save_link
+) a:focus-visible,
+.cinderwell-form .gform_save_link:focus-visible {
+	outline: 2px solid currentColor !important;
+	outline-offset: 2px;
+}
+
+[dir="rtl"] .cinderwell-form {
+	text-align: right;
+}

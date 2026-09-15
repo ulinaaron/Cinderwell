@@ -26,7 +26,7 @@ registerBlockType( metadata.name, {
                         title={ __( 'Button', 'cinderwell' ) }
                         description={ __( 'Linked call to action', 'cinderwell' ) }
                     />
-                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-links">
                         <LinkSettingsControl
                             url={ attributes.url }
                             opensInNewTab={ Boolean( attributes.opensInNewTab ) }
@@ -34,7 +34,7 @@ registerBlockType( metadata.name, {
                             onChange={ updateLink }
                         />
                     </PanelBody>
-                    <PanelBody title={ __( 'Style', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Style', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-appearance">
                         <SegmentedControl
                             label={ __( 'Button style', 'cinderwell' ) }
                             value={ attributes.variant }

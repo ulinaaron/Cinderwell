@@ -1,0 +1,99 @@
+.cinderwell-page-header {
+	box-sizing: border-box;
+	width: 100%;
+	padding-inline: var(--cw-layout-gutter);
+	background: var(--cw-color-light);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-page-header__inner {
+	width: 100%;
+	margin-inline: auto;
+}
+
+.cinderwell-page-header--align-left {
+	text-align: left;
+}
+
+.cinderwell-page-header--align-center {
+	text-align: center;
+}
+
+.cinderwell-page-header--align-right {
+	text-align: right;
+}
+
+.cinderwell-page-header__breadcrumbs {
+	margin-block-end: var(--cw-gap-sm);
+	font-size: var(--cw-font-size-sm);
+	color: inherit;
+}
+
+.cinderwell-page-header__breadcrumbs ol {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+	gap: 0;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cinderwell-page-header--align-center .cinderwell-page-header__breadcrumbs ol {
+	justify-content: center;
+}
+
+.cinderwell-page-header--align-right .cinderwell-page-header__breadcrumbs ol {
+	justify-content: flex-end;
+}
+
+.cinderwell-page-header__breadcrumbs li:not(:last-child)::after {
+	display: inline-block;
+	margin-inline: 0.65em;
+	content: "/";
+	opacity: 0.55;
+}
+
+.cinderwell-page-header__breadcrumbs a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+}
+
+.cinderwell-page-header__title {
+	margin: 0;
+	color: inherit;
+	font-family: var(--cw-font-heading);
+	font-size: var(--cw-type-heading);
+	line-height: var(--cw-line-height-tight);
+}
+
+.cinderwell-page-header__description {
+	max-width: var(--cw-width-standard);
+	margin-block-start: var(--cw-gap-md);
+	font-size: var(--cw-font-size-lg);
+}
+
+.cinderwell-page-header--align-center .cinderwell-page-header__description {
+	margin-inline: auto;
+}
+
+.cinderwell-page-header--align-right .cinderwell-page-header__description {
+	margin-inline-start: auto;
+}
+
+.cinderwell-page-header__description > :first-child {
+	margin-block-start: 0;
+}
+
+.cinderwell-page-header__description > :last-child {
+	margin-block-end: 0;
+}
+
+[dir="rtl"] .cinderwell-page-header--align-left {
+	text-align: right;
+}
+
+[dir="rtl"] .cinderwell-page-header--align-right {
+	text-align: left;
+}

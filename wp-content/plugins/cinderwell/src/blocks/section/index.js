@@ -13,7 +13,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="§" title={ __( 'Section', 'cinderwell' ) } description={ __( 'Flexible block container', 'cinderwell' ) } />
-                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel">
+                    <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-appearance">
                         <ChildBlockInheritanceControl
                             value={ attributes.childBackgroundMode || 'inherit' }
                             onChange={ ( childBackgroundMode ) => setAttributes( { childBackgroundMode } ) }

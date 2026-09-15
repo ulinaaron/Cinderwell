@@ -25,6 +25,7 @@ export const getPreviewValue = ( source, field = '', fallback = '', sourceLabel 
     else if ( source === 'site_tagline' ) value = settings.siteTagline;
     else if ( source === 'current_user_name' ) value = settings.previewValues?.current_user_name;
     else if ( source === 'acf_field' ) value = settings.acfValues?.[ field ];
+    else if ( Object.prototype.hasOwnProperty.call( settings.previewValues || {}, source ) ) value = settings.previewValues[ source ];
     const preview = formatPreviewValue( value ) || fallback;
     return preview || sprintf( __( 'Dynamic: %s', 'cinderwell' ), sourceLabel || source );
 };

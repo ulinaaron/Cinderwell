@@ -27,6 +27,11 @@
 /wp-content/plugins/*
 !/wp-content/plugins/cinderwell/
 !/wp-content/plugins/cinderwell-alerts/
+!/wp-content/plugins/cinderwell-cookie-consent/
+!/wp-content/plugins/cinderwell-help/
+!/wp-content/plugins/cinderwell-performance/
+!/wp-content/plugins/cinderwell-popups/
+!/wp-content/plugins/cinderwell-utilities/
 
 /wp-content/themes/*
 !/wp-content/themes/cinderwell-starter/
@@ -34,6 +39,7 @@
 # Dependencies, generated assets, local configuration, and runtime data.
 **/node_modules/
 **/build/
+**/.playwright-cli/
 **/.DS_Store
 **/*.log
 **/.env

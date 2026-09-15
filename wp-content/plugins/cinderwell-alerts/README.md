@@ -1,6 +1,6 @@
 # Cinderwell Alerts
 
-Condition-aware alert bars composed with Cinderwell blocks.
+Condition-aware alerts composed with Cinderwell blocks.
 
 ## Features
 
@@ -15,6 +15,8 @@ Condition-aware alert bars composed with Cinderwell blocks.
 - A focused Cinderwell-only block inserter for alert content
 - Cinderwell admin-bar shortcuts for alerts active on the current page
 - Conditional frontend assets
+- Contextual documentation in Cinderwell Help while the add-on is active
+- Alert management beneath the shared Cinderwell admin menu
 
 Only the highest-priority eligible alert is shown at each placement by default.
 Use `cinderwell_alerts_max_per_placement` to allow stacking.
