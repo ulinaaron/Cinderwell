@@ -1,0 +1,16 @@
+{
+  "name": "cinderwell-seo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Accessible SEO metadata and content analysis for Cinderwell",
+  "scripts": {
+    "build": "wp-scripts build",
+    "start": "wp-scripts start",
+    "lint:js": "wp-scripts lint-js",
+    "lint:css": "wp-scripts lint-style"
+  },
+  "devDependencies": {
+    "@wordpress/scripts": "^30.0.0",
+    "typescript": "5.9.3"
+  }
+}
