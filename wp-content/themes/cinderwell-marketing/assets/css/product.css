@@ -1,0 +1,179 @@
+/*
+ * Product Canvas — restrained motion sketches show relationships between
+ * content, theme, and output without claiming to be literal UI recordings.
+ * The block owns its background, width, media, and responsive spacing.
+ */
+.cinderwell-hero--layout-product-canvas {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    border-bottom: 1px solid var(--cw-color-border);
+}
+
+.cinderwell-hero--layout-product-canvas.cinderwell-hero--split {
+    padding-inline: var(--cw-layout-gutter);
+}
+
+.cinderwell-hero--layout-product-canvas.cinderwell-hero--has-bg {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+    gap: clamp(2rem, 4vw, 4rem);
+    color: var(--cw-color-text);
+}
+
+.cinderwell-hero--layout-product-canvas.cinderwell-hero--has-bg .cinderwell-hero__inner {
+    grid-area: 1 / 1;
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-background-video {
+    position: relative;
+    inset: auto;
+    grid-area: 2 / 1;
+    width: min(100%, var(--cw-width-wide));
+    height: auto;
+    aspect-ratio: 16 / 9;
+    margin-inline: auto;
+    border: 1px solid var(--cw-color-border);
+    border-radius: 0.8rem;
+    background: var(--cw-color-white);
+    box-shadow: 0 1.5rem 3rem rgb(26 26 26 / 12%);
+    object-fit: contain;
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-background-video__toggle {
+    position: relative;
+    inset: auto;
+    grid-area: 2 / 1;
+    align-self: end;
+    justify-self: end;
+    margin: 1rem max(var(--cw-layout-gutter), calc((100% - var(--cw-width-wide)) / 2 + 1rem)) 1rem 1rem;
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-hero__inner {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2.5rem, 5vw, 5rem);
+    align-items: stretch;
+    padding-inline: 0;
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-hero__content {
+    width: 100%;
+    max-width: 66rem;
+    padding-inline: 0;
+}
+
+.cinderwell-hero--layout-product-canvas.cinderwell-hero--split .cinderwell-hero__content::before,
+.cinderwell-hero--layout-product-canvas .cinderwell-hero__inner::before {
+    content: none;
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-eyebrow {
+    display: inline-block;
+    margin-bottom: 1.75rem;
+    padding: 0.45rem 0.7rem;
+    border: 1px solid var(--cw-color-border);
+    border-radius: 0.25rem;
+    font: 700 0.75rem/1.2 ui-monospace, SFMono-Regular, Consolas, monospace;
+    letter-spacing: 0.07em;
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-heading {
+    max-width: 22ch;
+    margin-inline: 0;
+    font-family: inherit;
+    font-size: clamp(3rem, 5vw, 5rem);
+    font-weight: 760;
+    line-height: 1.02;
+    letter-spacing: -0.065em;
+    text-wrap: balance;
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-subheading {
+    max-width: 58ch;
+    margin: 1.75rem 0 0;
+    font-family: inherit;
+    font-size: clamp(1.1rem, 1.3vw, 1.35rem);
+    line-height: 1.55;
+    letter-spacing: 0;
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-buttons {
+    justify-content: flex-start;
+    margin-top: 2rem;
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-hero__figure {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    align-self: stretch;
+    margin: 0;
+    padding: clamp(0.5rem, 1.2vw, 1rem);
+    border: 1px solid var(--cw-color-border);
+    border-radius: 0.8rem;
+    background: var(--cw-color-white);
+    box-shadow: 0 1.5rem 3rem rgb(26 26 26 / 12%);
+}
+
+.cinderwell-hero--layout-product-canvas .cinderwell-hero__image {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-height: 0;
+    border-radius: 0.25rem;
+    object-fit: contain;
+}
+
+/* A reusable explanation + concept-clip treatment, not a fake UI capture. */
+.cinderwell-columns--layout-motion-pair {
+    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.cinderwell-columns--layout-motion-pair .cinderwell-video {
+    padding-inline: 0;
+}
+
+.cinderwell-columns--layout-motion-pair .cinderwell-video__inner {
+    padding-inline: 0;
+}
+
+.cinderwell-columns--layout-motion-pair .cinderwell-video__frame {
+    border: 1px solid var(--cw-color-border);
+    border-radius: 0.65rem;
+    box-shadow: 0 1rem 2rem rgb(26 26 26 / 8%);
+}
+
+.cinderwell-columns--layout-motion-pair .cinderwell-body {
+    font-family: inherit;
+}
+
+.cinderwell-columns--layout-motion-pair .cinderwell-heading {
+    max-width: 18ch;
+    font-family: inherit;
+    line-height: 1.08;
+    text-wrap: balance;
+}
+
+@media (max-width: 768px) {
+    .cinderwell-hero--layout-product-canvas .cinderwell-heading {
+        max-width: 12ch;
+        font-size: clamp(2.6rem, 10vw, 4rem);
+        letter-spacing: -0.055em;
+    }
+
+    .cinderwell-hero--layout-product-canvas .cinderwell-hero__inner {
+        gap: 2rem;
+    }
+
+    .cinderwell-hero--layout-product-canvas .cinderwell-hero__figure {
+        padding: 0.4rem;
+        border-radius: 0.4rem;
+    }
+
+    .cinderwell-hero--layout-product-canvas .cinderwell-background-video__toggle {
+        margin: 0.5rem;
+    }
+}

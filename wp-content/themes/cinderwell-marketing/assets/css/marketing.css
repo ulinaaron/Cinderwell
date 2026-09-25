@@ -1,0 +1,645 @@
+/*
+ * Cinderwell marketing site presentation.
+ *
+ * Site-specific styling belongs downstream from Cinderwell Base. This file
+ * only styles public Cinderwell blocks and the inherited site frame.
+ */
+
+/* === Cinderwell Showcase ===
+   Editorial typography, a strict grid, and a recurring ember line give the
+   foundation its own identity without changing the public block contract. */
+.site-header {
+    border-top: 3px solid var(--cw-color-brand);
+    border-bottom-color: var(--cw-color-border, #d9d6d0);
+}
+
+.site-header__inner,
+.site-footer__inner {
+    max-width: var(--cw-width-wide);
+}
+
+.site-header__inner {
+    min-height: 84px;
+    padding-inline: var(--cw-layout-gutter, 1.5rem);
+}
+
+.site-header .wp-block-navigation-item__content {
+    font-size: var(--cw-font-size-sm, 0.95rem);
+    font-weight: 600;
+}
+
+.demo-header {
+    border-top-color: var(--cw-color-info, #0969a2);
+    background: var(--cw-color-white, #fff);
+}
+
+.demo-header__branding {
+    gap: 0.75rem;
+}
+
+.demo-header__branding .cinderwell-atom-link {
+    padding: 0.3rem 0.65rem;
+    border: 1px solid color-mix(in srgb, var(--cw-color-info, #0969a2) 28%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--cw-color-info, #0969a2) 8%, white);
+    color: var(--cw-color-info, #0969a2);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.demo-header__branding .cinderwell-atom-link:hover,
+.demo-header__branding .cinderwell-atom-link:focus-visible {
+    background: color-mix(in srgb, var(--cw-color-info, #0969a2) 14%, white);
+}
+
+.demo-header .cinderwell-commerce-links {
+    padding-inline-start: 0.25rem;
+    border-inline-start: 1px solid var(--cw-color-border, #d9d6d0);
+}
+
+.cinderwell-eyebrow {
+    letter-spacing: 0.14em;
+}
+
+.cinderwell-hero {
+    display: grid;
+    align-items: center;
+    border-bottom: 1px solid var(--cw-color-border, #d9d6d0);
+}
+
+.cinderwell-hero--bg-dark,
+.cinderwell-hero--bg-brand {
+    background-image:
+        linear-gradient(120deg, transparent 0 63%, rgb(255 255 255 / 4%) 63% 68%, transparent 68%),
+        repeating-linear-gradient(90deg, transparent 0 79px, rgb(255 255 255 / 3%) 79px 80px);
+}
+
+.cinderwell-hero__inner {
+    position: relative;
+}
+
+.cinderwell-hero__inner::before {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 0.25rem;
+    margin: 0 auto 1.5rem;
+    background: currentColor;
+    opacity: 0.95;
+}
+
+.cinderwell-hero--split .cinderwell-hero__inner::before {
+    content: none;
+}
+
+.cinderwell-hero--split .cinderwell-hero__content::before {
+    content: "";
+    display: block;
+    width: 3rem;
+    height: 0.25rem;
+    margin: 0 auto 1.5rem;
+    background: currentColor;
+    opacity: 0.95;
+}
+
+.cinderwell-hero .cinderwell-heading {
+    margin-inline: auto;
+}
+
+.cinderwell-hero .cinderwell-subheading {
+    margin: 1.5rem auto 0;
+}
+
+.cinderwell-hero--align-left :is(.cinderwell-hero__inner, .cinderwell-hero__content)::before,
+.cinderwell-hero--align-left .cinderwell-heading,
+.cinderwell-hero--align-left .cinderwell-subheading {
+    margin-inline: 0 auto;
+}
+
+.cinderwell-hero--align-center :is(.cinderwell-hero__inner, .cinderwell-hero__content)::before,
+.cinderwell-hero--align-center .cinderwell-heading,
+.cinderwell-hero--align-center .cinderwell-subheading {
+    margin-inline: auto;
+}
+
+.cinderwell-hero--align-right :is(.cinderwell-hero__inner, .cinderwell-hero__content)::before,
+.cinderwell-hero--align-right .cinderwell-heading,
+.cinderwell-hero--align-right .cinderwell-subheading {
+    margin-inline: auto 0;
+}
+
+.cinderwell-hero .cinderwell-buttons {
+    margin-top: 2rem;
+}
+
+.cinderwell-card-grid__card {
+    border-top: 3px solid var(--cw-color-brand);
+}
+
+.cinderwell-card-grid__card-label {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+.cinderwell-two-column__grid > div {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--cw-color-border, #d9d6d0);
+}
+
+.cinderwell-quote {
+    position: relative;
+    overflow: hidden;
+}
+
+.cinderwell-quote::after {
+    content: "C";
+    position: absolute;
+    inset: 50% auto auto 85%;
+    translate: -50% -50%;
+    font: 700 clamp(12rem, 30vw, 28rem)/1 var(--cw-font-heading);
+    opacity: 0.035;
+    pointer-events: none;
+}
+
+.cinderwell-quote__text {
+    position: relative;
+    z-index: 1;
+}
+
+.cinderwell-cta {
+    border-top: 4px solid color-mix(in srgb, currentColor 25%, transparent);
+}
+
+/* Product-site variations. Every selector is anchored to a variation emitted
+   by Cinderwell; no page IDs, source-order selectors, or custom HTML hooks. */
+.cinderwell-hero--layout-product-stage {
+    min-height: clamp(42rem, 72vw, 58rem);
+    overflow: hidden;
+}
+
+.cinderwell-hero--layout-product-stage .cinderwell-hero__inner {
+    grid-template-columns: minmax(18rem, 0.82fr) minmax(0, 1.18fr);
+}
+
+.cinderwell-hero--layout-product-stage .cinderwell-hero__content {
+    position: relative;
+    z-index: 2;
+}
+
+.cinderwell-hero--layout-product-stage .cinderwell-heading {
+    margin-inline: 0;
+}
+
+.cinderwell-hero--layout-product-stage .cinderwell-hero__figure {
+    position: relative;
+    z-index: 1;
+    inset: auto;
+    width: auto;
+    align-self: center;
+    margin-right: min(-8vw, -4rem);
+    padding: 0.65rem;
+    border: 1px solid rgb(255 255 255 / 22%);
+    border-radius: 1rem;
+    background: rgb(255 255 255 / 9%);
+    box-shadow: 0 2rem 6rem rgb(0 0 0 / 35%);
+    rotate: 1deg;
+}
+
+.cinderwell-hero--layout-product-stage .cinderwell-hero__image {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: auto;
+    object-fit: contain;
+}
+
+.cinderwell-hero--layout-product-stage .cinderwell-hero__figure::before {
+    content: "";
+    display: block;
+    height: 1.65rem;
+    border-radius: 0.55rem 0.55rem 0 0;
+    background: radial-gradient(circle at 0.8rem 50%, #ff6b5f 0 0.22rem, transparent 0.24rem), radial-gradient(circle at 1.55rem 50%, #f7c948 0 0.22rem, transparent 0.24rem), radial-gradient(circle at 2.3rem 50%, #4ecb71 0 0.22rem, transparent 0.24rem), var(--cw-color-dark);
+}
+
+.cinderwell-hero--layout-product-stage .cinderwell-hero__image {
+    border-radius: 0 0 0.55rem 0.55rem;
+}
+
+.cinderwell-hero--layout-manifesto {
+    position: relative;
+    min-height: clamp(34rem, 42vw, 38rem);
+    overflow: hidden;
+    border-block: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.cinderwell-hero--layout-manifesto::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: clamp(-18rem, -10vw, -6rem);
+    width: clamp(24rem, 48vw, 46rem);
+    aspect-ratio: 1;
+    border: clamp(3rem, 7vw, 7rem) solid color-mix(in srgb, var(--cw-color-brand) 78%, transparent);
+    border-radius: 50%;
+    translate: 0 -50%;
+    opacity: 0.72;
+    pointer-events: none;
+}
+
+.cinderwell-hero--layout-manifesto .cinderwell-hero__inner {
+    z-index: 1;
+}
+
+.cinderwell-hero--layout-manifesto .cinderwell-heading {
+    letter-spacing: -0.045em;
+}
+
+.cinderwell-hero--layout-manifesto.cinderwell-hero--align-left .cinderwell-hero__inner {
+    width: min(100% - (2 * var(--cw-layout-gutter, 1.5rem)), var(--cw-width-wide));
+}
+
+.cinderwell-hero--layout-manifesto.cinderwell-hero--align-center {
+    min-height: clamp(34rem, 54vw, 46rem);
+}
+
+.cinderwell-hero--layout-manifesto.cinderwell-hero--align-center::after {
+    top: auto;
+    right: -8rem;
+    bottom: -22rem;
+    width: clamp(28rem, 58vw, 58rem);
+    translate: 0;
+    opacity: 0.28;
+}
+
+.cinderwell-card-grid--layout-metrics .cinderwell-card-grid__grid {
+    gap: 0;
+    border-block: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+}
+
+.cinderwell-card-grid--layout-metrics .cinderwell-card-grid__card {
+    min-height: 11rem;
+    padding: var(--cw-spacing-md);
+    border: 0;
+    border-right: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.cinderwell-card-grid--layout-metrics .cinderwell-card-grid__card:last-child {
+    border-right: 0;
+}
+
+.cinderwell-card-grid--layout-metrics .cinderwell-card-grid__card-title {
+    line-height: 0.95;
+}
+
+.cinderwell-card-grid--layout-metrics .cinderwell-card-grid__inner > .cinderwell-heading {
+    margin-bottom: clamp(2.5rem, 5vw, 5rem);
+    line-height: 0.98;
+}
+
+.cinderwell-card-grid--layout-ecosystem .cinderwell-card-grid__card {
+    min-height: 18rem;
+    padding: 0;
+    border-top-width: 1px;
+    transition: border-color 180ms ease, translate 180ms ease;
+}
+
+.cinderwell-card-grid--layout-ecosystem .cinderwell-card-grid__card-content {
+    padding: clamp(2rem, 3.5vw, 3.5rem);
+}
+
+.cinderwell-card-grid--layout-ecosystem .cinderwell-card-grid__card:hover {
+    border-color: var(--cw-color-brand);
+    translate: 0 -0.35rem;
+}
+
+.cinderwell-card-grid--layout-ecosystem .cinderwell-card-grid__inner > .cinderwell-heading,
+.cinderwell-card-grid--layout-suite .cinderwell-card-grid__inner > .cinderwell-heading {
+    line-height: 1;
+}
+
+.cinderwell-card-grid--layout-ecosystem .cinderwell-card-grid__card:nth-child(3n + 1) {
+    color: var(--cw-color-white);
+    border-color: var(--cw-color-dark);
+    background: var(--cw-color-dark);
+}
+
+.cinderwell-card-grid--layout-ecosystem .cinderwell-card-grid__card:nth-child(3n + 2) {
+    border-color: color-mix(in srgb, var(--cw-color-brand) 50%, var(--cw-color-border));
+    background: color-mix(in srgb, var(--cw-color-brand) 8%, var(--cw-color-white));
+}
+
+.cinderwell-card-grid--layout-suite {
+    counter-reset: suite;
+}
+
+.cinderwell-card-grid--layout-suite .cinderwell-card-grid__grid {
+    gap: 1px;
+    overflow: hidden;
+    border: 1px solid var(--cw-color-border);
+    border-radius: var(--cw-radius-lg, 0.75rem);
+    background: var(--cw-color-border);
+}
+
+.cinderwell-card-grid--layout-suite .cinderwell-card-grid__card {
+    position: relative;
+    min-height: 19rem;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    counter-increment: suite;
+}
+
+.cinderwell-card-grid--layout-suite .cinderwell-card-grid__card-content {
+    padding: clamp(2rem, 3.25vw, 3.25rem);
+}
+
+.cinderwell-card-grid--layout-suite .cinderwell-card-grid__card::after {
+    content: "0" counter(suite);
+    position: absolute;
+    top: 1.25rem;
+    right: 1.25rem;
+    color: var(--cw-color-muted);
+    font: 600 var(--cw-font-size-xs, 0.75rem)/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.cinderwell-image-text--layout-product-showcase {
+    overflow: hidden;
+}
+
+.cinderwell-image-text--layout-product-showcase .cinderwell-image-text__inner {
+    grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+    gap: clamp(2rem, 6vw, 7rem);
+}
+
+.cinderwell-image-text--layout-product-showcase .cinderwell-heading {
+    line-height: 1.05;
+}
+
+.cinderwell-image-text--layout-product-showcase .cinderwell-image-text__media {
+    padding: 0.6rem;
+    border: 1px solid var(--cw-color-border);
+    border-radius: 1rem;
+    background: var(--cw-color-white);
+    box-shadow: 0 1.5rem 4rem rgb(0 0 0 / 14%);
+}
+
+.cinderwell-image-text--layout-product-showcase .cinderwell-image-text__media img {
+    width: 100%;
+    height: 100%;
+    border-radius: 0.55rem;
+    object-fit: cover;
+    object-position: center 62%;
+}
+
+.cinderwell-image-text--layout-product-showcase .cinderwell-image-text__media figure {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+}
+
+.cinderwell-two-column--layout-handoff .cinderwell-two-column__header .cinderwell-heading {
+    line-height: 1.05;
+}
+
+.cinderwell-two-column--layout-handoff .cinderwell-two-column__grid {
+    gap: 0;
+    border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+}
+
+.cinderwell-two-column--layout-handoff .cinderwell-two-column__grid > div {
+    min-height: 22rem;
+    padding: clamp(2rem, 5vw, 5rem);
+    border: 0;
+}
+
+.cinderwell-two-column--layout-handoff .cinderwell-two-column__right {
+    border-left: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.cinderwell-slot-layout--layout-architecture .cinderwell-slot-layout__slot {
+    min-height: 12rem;
+    padding: var(--cw-spacing-md);
+    border-top: 3px solid var(--cw-color-brand);
+    background: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.cinderwell-cta--layout-closing {
+    position: relative;
+    overflow: hidden;
+    border-top-width: 0;
+}
+
+.cinderwell-cta--layout-closing::after {
+    content: "C";
+    position: absolute;
+    right: -0.08em;
+    bottom: -0.28em;
+    color: currentColor;
+    font: 700 clamp(15rem, 38vw, 42rem)/1 var(--cw-font-heading);
+    opacity: 0.055;
+    pointer-events: none;
+}
+
+.cinderwell-cta--layout-closing .cinderwell-cta__inner {
+    position: relative;
+    z-index: 1;
+}
+
+.cinderwell-cta--layout-closing .cinderwell-heading {
+    line-height: 1;
+}
+
+/* Variation picker thumbnails inside the editor. */
+.cw-variation-picker__preview--hero-product-stage,
+.cw-variation-picker__preview--image-text-showcase,
+.cw-variation-picker__preview--two-column-handoff {
+    grid-template-columns: 0.8fr 1.2fr;
+}
+
+.cw-variation-picker__preview--hero-product-stage span:first-child,
+.cw-variation-picker__preview--image-text-showcase span:nth-child(2),
+.cw-variation-picker__preview--two-column-handoff span {
+    background: linear-gradient(#b7b8bd 0 24%, transparent 24% 38%, #d6d6d8 38% 66%, transparent 66%);
+}
+
+.cw-variation-picker__preview--hero-product-stage span:nth-child(2),
+.cw-variation-picker__preview--image-text-showcase span:first-child {
+    background: #777a80;
+}
+
+.cw-variation-picker__preview--hero-product-stage span:last-child,
+.cw-variation-picker__preview--image-text-showcase span:last-child,
+.cw-variation-picker__preview--two-column-handoff span:last-child {
+    display: none;
+}
+
+.cw-variation-picker__preview--hero-manifesto,
+.cw-variation-picker__preview--cta-closing {
+    grid-template-columns: 1fr;
+    padding-inline: 0.85rem;
+}
+
+.cw-variation-picker__preview--hero-manifesto span:first-child,
+.cw-variation-picker__preview--cta-closing span:first-child {
+    background: linear-gradient(transparent 0 20%, #8c8f94 20% 45%, transparent 45% 55%, #b7b8bd 55% 76%, transparent 76%);
+}
+
+.cw-variation-picker__preview--hero-manifesto span:nth-child(n + 2),
+.cw-variation-picker__preview--cta-closing span:nth-child(n + 2) {
+    display: none;
+}
+
+.cw-variation-picker__preview--metrics {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+}
+
+.cw-variation-picker__preview--metrics span {
+    border-radius: 0;
+    background: linear-gradient(transparent 0 25%, #878a90 25% 56%, transparent 56% 68%, #d6d6d8 68% 78%, transparent 78%);
+}
+
+.cw-variation-picker__preview--ecosystem,
+.cw-variation-picker__preview--suite,
+.cw-variation-picker__preview--slot-architecture {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.cw-variation-picker__preview--ecosystem span,
+.cw-variation-picker__preview--suite span,
+.cw-variation-picker__preview--slot-architecture span {
+    border-top: 2px solid var(--cw-color-brand);
+    border-radius: 0;
+    background: #d6d6d8;
+}
+
+.site-footer {
+    padding-top: 5rem;
+}
+
+.site-footer__lead {
+    max-width: 760px;
+    margin: 0 0 4rem;
+}
+
+.site-footer__lead h2 {
+    color: var(--cw-color-white);
+    font-size: var(--cw-type-display);
+    line-height: 1;
+}
+
+.site-footer__lead p {
+    max-width: 58ch;
+    margin-top: 1.25rem;
+    color: rgb(255 255 255 / 72%);
+    font-size: var(--cw-font-size-lg, 1.2rem);
+}
+
+@media (max-width: 768px) {
+    .site-header__inner {
+        min-height: 72px;
+        gap: 1rem;
+    }
+
+    .site-header .wp-block-site-logo img {
+        max-width: 180px;
+        max-height: 40px;
+    }
+
+    .site-header__actions {
+        gap: 0.5rem;
+    }
+
+    .demo-header__branding .cinderwell-atom-link {
+        padding-inline: 0.5rem;
+    }
+
+    .cinderwell-hero {
+        min-height: 31rem;
+    }
+
+    .cinderwell-hero--layout-product-stage {
+        min-height: auto;
+        padding-block: var(--cw-spacing-md) !important;
+    }
+
+    .cinderwell-hero--layout-manifesto {
+        min-height: auto;
+        padding-block: var(--cw-spacing-lg) !important;
+    }
+
+    .cinderwell-hero--layout-manifesto::after {
+        top: auto;
+        right: -10rem;
+        bottom: -12rem;
+        width: 26rem;
+        translate: 0;
+        opacity: 0.3;
+    }
+
+    .cinderwell-hero--layout-product-stage .cinderwell-heading {
+        width: auto;
+    }
+
+    .cinderwell-hero--layout-product-stage .cinderwell-hero__inner,
+    .cinderwell-image-text--layout-product-showcase .cinderwell-image-text__inner {
+        grid-template-columns: 1fr;
+    }
+
+    .cinderwell-hero--layout-product-stage .cinderwell-hero__figure {
+        width: 100%;
+        margin-right: 0;
+        rotate: 0deg;
+    }
+
+    .cinderwell-two-column--layout-handoff .cinderwell-two-column__grid > div {
+        min-height: auto;
+        padding: var(--cw-spacing-md) 0;
+    }
+
+    .cinderwell-two-column--layout-handoff .cinderwell-two-column__right {
+        border-top: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+        border-left: 0;
+    }
+
+    .cinderwell-card-grid--layout-metrics .cinderwell-card-grid__card {
+        min-height: auto;
+        padding: 0;
+        border-right: 0;
+        border-bottom: 1px solid color-mix(in srgb, currentColor 24%, transparent);
+    }
+
+    .cinderwell-card-grid--layout-metrics .cinderwell-card-grid__card-content,
+    .cinderwell-card-grid--layout-suite .cinderwell-card-grid__card-content {
+        padding: 1.5rem;
+    }
+
+    .cinderwell-card-grid--layout-suite .cinderwell-card-grid__card {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 600px) {
+    .site-header__inner {
+        gap: 0.5rem;
+        padding-inline: 1rem;
+    }
+
+    .site-header .wp-block-site-logo img {
+        max-width: 145px;
+    }
+
+    .site-header__actions {
+        gap: 0.125rem;
+    }
+
+    .site-header .wp-block-navigation__responsive-container-open,
+    .site-header .cinderwell-header-search__toggle,
+    .site-header .cinderwell-commerce-links__link {
+        min-width: 2.5rem;
+        min-height: 2.5rem;
+    }
+}
