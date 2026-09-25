@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/ulinaaron/Cinderwell/tree/main/wp-content/plugins/cinderwell-performance
  * Update URI: https://cinderwell-updates.surge.sh/cinderwell-performance/
  * Description: Block-aware performance optimization. HTML cleanup, image hints, resource hints, and down-the-page hydration.
- * Version: 0.1.1
+ * Version: 0.1.2
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Requires Plugins: cinderwell
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('CINDERWELL_PERFORMANCE_VERSION', '0.1.1');
+define('CINDERWELL_PERFORMANCE_VERSION', '0.1.2');
 define('CINDERWELL_PERFORMANCE_PATH', plugin_dir_path(__FILE__));
 define('CINDERWELL_PERFORMANCE_URL', plugin_dir_url(__FILE__));
 define('CINDERWELL_PERFORMANCE_OPTION', 'cinderwell_performance_settings');

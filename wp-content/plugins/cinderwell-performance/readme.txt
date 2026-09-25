@@ -5,7 +5,7 @@ Requires at least: 6.3
 Tested up to: 6.7
 Requires PHP: 7.4
 Requires Plugins: cinderwell
-Stable tag: 0.1.1
+Stable tag: 0.1.2
 License: GPL-2.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -35,6 +35,9 @@ Almost everything is OFF by default. Zero behavior change unless you enable a fe
 3. Configure in Cinderwell → Performance
 
 == Changelog ==
+= 0.1.2 =
+* Adopt the shared Cinderwell settings interface and save-state controls.
+
 = 0.1.1 =
 * Remove unsafe CSS combining and preserve WordPress block-aware stylesheet loading
 

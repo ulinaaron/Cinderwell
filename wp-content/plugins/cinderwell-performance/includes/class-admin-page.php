@@ -46,7 +46,7 @@ class Admin_Page {
 
     private function render_performance($perf) {
         ?>
-        <form method="post" action="options.php">
+        <form method="post" action="options.php" class="cw-settings-card">
             <?php settings_fields('cinderwell_performance_settings_group'); ?>
 
             <h2>Performance Module</h2>
@@ -130,7 +130,7 @@ class Admin_Page {
 
     private function render_hydration($hydration) {
         ?>
-        <form method="post" action="options.php">
+        <form method="post" action="options.php" class="cw-settings-card">
             <?php settings_fields('cinderwell_performance_settings_group'); ?>
 
             <h2>Hydration Module</h2>
