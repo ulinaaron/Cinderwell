@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/ulinaaron/Cinderwell/tree/main/wp-content/plugins/cinderwell-popups
  * Update URI: https://cinderwell-updates.surge.sh/cinderwell-popups/
  * Description: Accessible modals built with Cinderwell blocks and opened automatically or by a button.
- * Version: 0.1.2
+ * Version: 0.1.4
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Requires Plugins: cinderwell
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CINDERWELL_POPUPS_VERSION', '0.1.2' );
+define( 'CINDERWELL_POPUPS_VERSION', '0.1.4' );
 define( 'CINDERWELL_POPUPS_FILE', __FILE__ );
 define( 'CINDERWELL_POPUPS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'CINDERWELL_POPUPS_URL', plugin_dir_url( __FILE__ ) );

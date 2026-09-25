@@ -113,7 +113,12 @@ class Popup_Meta {
 			return;
 		}
 
-		wp_enqueue_style( 'cinderwell-popups-admin', CINDERWELL_POPUPS_URL . 'assets/css/admin.css', [], CINDERWELL_POPUPS_VERSION );
+		wp_enqueue_style(
+			'cinderwell-popups-admin',
+			CINDERWELL_POPUPS_URL . 'assets/css/admin.css',
+			wp_style_is( 'cinderwell-editor-controls', 'registered' ) ? [ 'cinderwell-editor-controls' ] : [],
+			CINDERWELL_POPUPS_VERSION
+		);
 		wp_enqueue_script( 'cinderwell-popups-admin', CINDERWELL_POPUPS_URL . 'assets/js/admin.js', [], CINDERWELL_POPUPS_VERSION, true );
 	}
 

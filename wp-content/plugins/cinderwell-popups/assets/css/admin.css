@@ -1,23 +1,13 @@
-.cw-popup-field,
-.cw-popup-fieldset {
-	margin: 0 0 16px;
-}
-
-.cw-popup-field > label,
-.cw-popup-fieldset > legend,
 .cw-popup-post-picker > label {
 	display: block;
 	margin-bottom: 6px;
+	color: var(--cw-ui-text);
+	font-size: 12px;
 	font-weight: 600;
 }
 
-.cw-popup-fieldset > label {
-	display: block;
-	margin: 6px 0;
-}
-
 .cw-popup-post-picker {
-	margin: 12px 0;
+	margin: 0;
 }
 
 .cw-popup-post-picker__add {
@@ -34,10 +24,12 @@
 	align-items: center;
 	justify-content: space-between;
 	gap: 8px;
-	margin: 0 0 4px;
-	padding: 8px;
-	border: 1px solid #dcdcde;
-	background: #fff;
+	margin: 0 0 6px;
+	padding: 7px 9px;
+	border: 1px solid var(--cw-ui-border);
+	border-radius: var(--cw-ui-radius);
+	background: var(--cw-ui-surface-soft);
+	font-size: 11px;
 }
 
 .cw-popup-post-list li span {

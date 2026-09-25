@@ -81,9 +81,6 @@ const withPopupAction = createHigherOrderComponent(
 								value === 'popup'
 									? {
 											action: value,
-											url: '',
-											urlDynamic: {},
-											opensInNewTab: false,
 									  }
 									: { action: value, popupId: 0 }
 							),
