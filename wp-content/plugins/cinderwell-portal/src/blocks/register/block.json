@@ -1,0 +1,21 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "cinderwell-portal/register",
+    "title": "Register",
+    "category": "cinderwell-portal",
+    "icon": "groups",
+    "description": "Member registration form.",
+    "supports": {
+        "align": false,
+        "color": false,
+        "typography": false,
+        "spacing": false,
+        "html": false
+    },
+    "attributes": {},
+    "editorScript": "file:./index.js",
+    "editorStyle": "file:./editor.css",
+    "style": "file:./style.css",
+    "render": "file:./render.php"
+}

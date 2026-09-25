@@ -1,0 +1,12 @@
+{
+    "name": "cinderwell-portal",
+    "version": "0.1.0",
+    "description": "Members Portal add-on for Cinderwell",
+    "scripts": {
+        "build": "wp-scripts build",
+        "start": "wp-scripts start"
+    },
+    "devDependencies": {
+        "@wordpress/scripts": "^30.0.0"
+    }
+}

@@ -1,0 +1,14 @@
+/* Member profile uses shared .cinderwell-portal-form styles */
+.cinderwell-portal-profile .cinderwell-portal-form {
+    margin-bottom: 2rem;
+}
+
+.cinderwell-portal-profile h2,
+.cinderwell-portal-profile h3 {
+    margin-top: 0;
+}
+
+.cinderwell-portal-change-password {
+    border-top: 1px solid var(--cw-color-border, #e5e7eb);
+    padding-top: 1.5rem;
+}

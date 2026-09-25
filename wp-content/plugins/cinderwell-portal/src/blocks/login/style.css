@@ -1,0 +1,158 @@
+.cinderwell-portal-form {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: var(--cw-spacing-comfy, 2rem);
+    background: var(--cw-color-white, #ffffff);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cinderwell-portal-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+}
+
+.cinderwell-portal-field label {
+    font-weight: 500;
+    color: var(--cw-color-text, #1a1a1a);
+    font-size: 0.875rem;
+}
+
+.cinderwell-portal-field input[type="email"],
+.cinderwell-portal-field input[type="text"],
+.cinderwell-portal-field input[type="password"] {
+    padding: 0.75rem;
+    border: 1px solid var(--cw-color-border, #d1d5db);
+    border-radius: 4px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fff;
+    transition: border-color 0.15s;
+}
+
+.cinderwell-portal-field input:focus {
+    outline: 2px solid var(--cw-color-brand, #b84c00);
+    outline-offset: 1px;
+    border-color: var(--cw-color-brand, #b84c00);
+}
+
+.cinderwell-portal-field--inline {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cinderwell-portal-field--inline label {
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.cinderwell-portal-btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: 1px solid var(--cw-color-border, #d1d5db);
+    border-radius: 4px;
+    background: #fff;
+    color: var(--cw-color-text, #1a1a1a);
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.15s, color 0.15s;
+    line-height: 1.5;
+}
+
+.cinderwell-portal-btn:hover {
+    background: #f3f4f6;
+}
+
+.cinderwell-portal-btn--primary {
+    background: var(--cw-color-brand, #b84c00);
+    color: #fff;
+    border-color: var(--cw-color-brand, #b84c00);
+}
+
+.cinderwell-portal-btn--primary:hover {
+    background: var(--cw-color-brand-hover, #b34d00);
+    border-color: var(--cw-color-brand-hover, #b34d00);
+}
+
+.cinderwell-portal-btn--ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--cw-color-brand, #b84c00);
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.cinderwell-portal-btn--ghost:hover {
+    background: transparent;
+    color: var(--cw-color-brand-hover, #b34d00);
+}
+
+.cinderwell-portal-message {
+    margin: 0;
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    display: none;
+}
+
+.cinderwell-portal-message.is-success {
+    display: block;
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.cinderwell-portal-message.is-error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.cinderwell-portal-links {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--cw-color-muted, #6b7280);
+}
+
+.cinderwell-portal-links a {
+    color: var(--cw-color-brand, #b84c00);
+    text-decoration: underline;
+}
+
+.cinderwell-portal-gate {
+    padding: var(--cw-spacing-comfy, 2rem);
+    background: var(--cw-color-surface, #f9fafb);
+    border: 1px solid var(--cw-color-border, #e5e7eb);
+    border-radius: 8px;
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.cinderwell-portal-gate p {
+    margin: 0 0 0.5rem;
+}
+
+.cinderwell-portal-pending,
+.cinderwell-approval-pending {
+    text-align: center;
+    padding: var(--cw-spacing-comfy, 2rem);
+}
+
+.cinderwell-portal-card {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 2rem;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid var(--cw-color-border, #e5e7eb);
+}
