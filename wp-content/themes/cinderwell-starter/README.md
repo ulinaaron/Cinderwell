@@ -42,6 +42,33 @@ client palette, typography, widths, and spacing. Add child-theme `parts/`,
 `templates/`, and `patterns/` only when the client intentionally differs from
 the parent.
 
+When a child theme adds a frontend stylesheet, make the parent handle an
+explicit dependency and enqueue the child stylesheet after the parent:
+
+```php
+add_action( 'wp_enqueue_scripts', static function () {
+	wp_enqueue_style(
+		'client-name',
+		get_stylesheet_directory_uri() . '/assets/css/client-name.css',
+		[ 'cinderwell-starter-main', 'cinderwell-base' ],
+		'1.0.0'
+	);
+}, 20 );
+```
+
+This order is part of the client-theme contract: Cinderwell Base supplies the
+fallback tokens first, then the child theme owns brand token overrides and
+presentation recipes without specificity escalation.
+
+Load the same client stylesheet in the block editor so its tokens and block
+variations match the published site:
+
+```php
+add_action( 'after_setup_theme', static function () {
+	add_editor_style( 'assets/css/client-name.css' );
+}, 20 );
+```
+
 ## FSE update rule
 
 Site Editor customizations are stored in the database and take precedence over
