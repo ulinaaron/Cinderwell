@@ -1,50 +1,563 @@
-.cinderwell-utilities-group {
-    margin-bottom: 2rem;
+.cinderwell-utilities-form {
+    --cw-utilities-accent: var(--cw-color-brand, #b84c00);
+    --cw-utilities-border: var(--cw-admin-border, #dcdcde);
+    --cw-utilities-muted: var(--cw-admin-text-muted, #646970);
+    --cw-utilities-soft: #f6f7f7;
+    padding-bottom: 88px;
 }
 
-.cinderwell-utilities-group__title {
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid #c3c4c7;
-}
-
-.cinderwell-utilities-module {
-    margin-bottom: 0.5rem;
-    padding: 1rem 1.25rem !important;
-}
-
-.cinderwell-utilities-module__header {
-    display: flex;
+.cinderwell-utilities-overview {
     align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-}
-
-.cinderwell-utilities-module__toggle {
+    background: linear-gradient(135deg, color-mix(in srgb, var(--cw-utilities-accent) 8%, white), transparent 48%), #fff;
+    border: 1px solid var(--cw-utilities-border);
+    border-top: 3px solid var(--cw-utilities-accent);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
     display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    cursor: pointer;
-    white-space: nowrap;
+    gap: 32px;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding: 24px 28px;
 }
 
-.cinderwell-utilities-module__toggle input {
+.cinderwell-utilities-overview__copy {
+    max-width: 660px;
+}
+
+.cinderwell-utilities-eyebrow {
+    color: var(--cw-utilities-accent);
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.cinderwell-utilities-overview h2 {
+    font-size: 24px;
+    line-height: 1.2;
+    margin: 0 0 8px;
+}
+
+.cinderwell-utilities-overview p,
+.cinderwell-utilities-group__header p {
+    color: var(--cw-utilities-muted);
     margin: 0;
 }
 
+.cinderwell-utilities-overview__stats {
+    display: grid;
+    flex: 0 0 auto;
+    grid-template-columns: repeat(2, minmax(86px, 1fr));
+}
+
+.cinderwell-utilities-overview__stats div {
+    align-items: center;
+    border-left: 1px solid var(--cw-utilities-border);
+    display: flex;
+    flex-direction: column;
+    padding: 4px 20px;
+}
+
+.cinderwell-utilities-overview__stats strong {
+    color: #1d2327;
+    font-size: 26px;
+    line-height: 1;
+}
+
+.cinderwell-utilities-overview__stats span {
+    color: var(--cw-utilities-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    margin-top: 6px;
+    text-transform: uppercase;
+}
+
+.cinderwell-utilities-group {
+    margin-bottom: 36px;
+}
+
+.cinderwell-utilities-group__header {
+    align-items: end;
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 2px;
+}
+
+.cinderwell-utilities-group__title {
+    font-size: 18px;
+    line-height: 1.3;
+    margin: 0 0 3px;
+}
+
+.cinderwell-utilities-group__count {
+    background: #fff;
+    border: 1px solid var(--cw-utilities-border);
+    border-radius: 999px;
+    color: var(--cw-utilities-muted);
+    flex: 0 0 auto;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+}
+
+.cinderwell-utilities-module-list {
+    background: #fff;
+    border: 1px solid var(--cw-utilities-border);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 3%);
+}
+
+.cinderwell-utilities-module + .cinderwell-utilities-module {
+    border-top: 1px solid var(--cw-utilities-border);
+}
+
+.cinderwell-utilities-module {
+    border-left: 3px solid transparent;
+    transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+.cinderwell-utilities-module.is-enabled {
+    border-left-color: var(--cw-utilities-accent);
+}
+
+.cinderwell-utilities-module__header {
+    align-items: center;
+    cursor: pointer;
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    padding: 17px 20px 17px 17px;
+}
+
+.cinderwell-utilities-module__header:hover {
+    background: rgb(246 247 247 / 70%);
+}
+
+.cinderwell-utilities-module__identity {
+    align-items: center;
+    display: flex;
+    gap: 14px;
+    min-width: 0;
+}
+
+.cinderwell-utilities-module__icon {
+    align-items: center;
+    background: var(--cw-utilities-soft);
+    border: 1px solid #e8e8ea;
+    border-radius: 7px;
+    color: #50575e;
+    display: flex;
+    flex: 0 0 38px;
+    height: 38px;
+    justify-content: center;
+    transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+    width: 38px;
+}
+
+.cinderwell-utilities-module.is-enabled .cinderwell-utilities-module__icon {
+    background: color-mix(in srgb, var(--cw-utilities-accent) 8%, white);
+    border-color: color-mix(in srgb, var(--cw-utilities-accent) 24%, white);
+    color: var(--cw-utilities-accent);
+}
+
+.cinderwell-utilities-module__copy {
+    display: grid;
+    gap: 3px;
+}
+
+.cinderwell-utilities-module__copy > strong {
+    color: #1d2327;
+    font-size: 14px;
+}
+
 .cinderwell-utilities-module__desc {
-    color: #646970;
+    color: var(--cw-utilities-muted);
     font-size: 13px;
+    line-height: 1.45;
+}
+
+.cinderwell-utilities-module__control {
+    align-items: center;
+    display: flex;
+    flex: 0 0 auto;
+    gap: 10px;
+}
+
+.cinderwell-utilities-module__status {
+    color: var(--cw-utilities-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.cinderwell-utilities-module.is-enabled .cinderwell-utilities-module__status {
+    color: var(--cw-utilities-accent);
+}
+
+.cinderwell-utilities-module-toggle {
+    height: 1px !important;
+    opacity: 0;
+    position: absolute;
+    width: 1px !important;
+}
+
+.cinderwell-utilities-switch {
+    background: #8c8f94;
+    border-radius: 999px;
+    box-sizing: border-box;
+    display: block;
+    height: 22px;
+    padding: 3px;
+    transition: background-color 160ms ease;
+    width: 40px;
+}
+
+.cinderwell-utilities-switch span {
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 1px 2px rgb(0 0 0 / 28%);
+    display: block;
+    height: 16px;
+    transform: translateX(0);
+    transition: transform 160ms ease;
+    width: 16px;
+}
+
+.cinderwell-utilities-module-toggle:checked + .cinderwell-utilities-switch {
+    background: var(--cw-utilities-accent);
+}
+
+.cinderwell-utilities-module-toggle:checked + .cinderwell-utilities-switch span {
+    transform: translateX(18px);
+}
+
+.cinderwell-utilities-module-toggle:focus-visible + .cinderwell-utilities-switch {
+    outline: 2px solid var(--cw-utilities-accent);
+    outline-offset: 3px;
 }
 
 .cinderwell-utilities-module__body {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #e0e0e0;
+    background: #fbfbfc;
+    border-top: 1px solid #e8e8ea;
+    margin-left: 69px;
+    padding: 18px 20px 20px 0;
+}
+
+.cinderwell-utilities-module__body[hidden] {
+    display: none;
+}
+
+.cinderwell-plugin-update-control {
+    align-items: center;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.cinderwell-plugin-update-control__status {
+    align-items: center;
+    display: flex;
+    gap: 8px;
+    margin: 0;
+}
+
+.cinderwell-plugin-update-control__status > .dashicons {
+    color: var(--cw-utilities-accent);
+    flex: 0 0 auto;
+}
+
+.cinderwell-plugin-update-control__count {
+    border-left: 1px solid var(--cw-utilities-border);
+    color: var(--cw-utilities-muted);
+    margin-left: 8px;
+    padding-left: 8px;
+}
+
+.cinderwell-utilities-module__body .form-table {
+    margin: 0;
+    table-layout: fixed;
 }
 
 .cinderwell-utilities-module__body .form-table th {
-    width: 200px;
+    padding: 12px 16px 12px 0;
+    width: 180px;
+}
+
+.cinderwell-utilities-module__body .form-table td {
+    padding: 12px 0;
+}
+
+.cinderwell-utilities-module__body .notice.inline {
+    margin: 0 0 12px;
+}
+
+.cinderwell-utilities-option-grid {
+    display: grid;
+    gap: 7px 18px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    max-width: 620px;
+}
+
+.cinderwell-utilities-option-grid label {
+    align-items: flex-start;
+    display: flex;
+    gap: 5px;
+    margin: 0;
+}
+
+.cinderwell-utilities-option-grid input {
+    flex: 0 0 auto;
+    margin-top: 1px;
+}
+
+.cinderwell-utilities-login-preview {
+    align-items: center;
+    display: flex;
+    gap: 18px;
+}
+
+.cinderwell-utilities-login-preview img {
+    background: #fff;
+    border: 1px solid var(--cw-utilities-border);
+    box-sizing: border-box;
+    height: 64px;
+    object-fit: contain;
+    padding: 8px;
+    width: 144px;
+}
+
+.cinderwell-mail-key-state {
+    align-items: center;
+    background: #edfaef;
+    border: 1px solid #9ad2a1;
+    border-radius: 4px;
+    color: #166326;
+    display: inline-flex;
+    font-weight: 600;
+    gap: 6px;
+    padding: 6px 9px;
+}
+
+.cinderwell-mail-clear-key {
+    color: #b32d2e;
+    display: block;
+    margin-top: 10px;
+}
+
+.cinderwell-mail-page {
+    --cw-utilities-accent: var(--cw-color-brand, #b84c00);
+    --cw-utilities-border: var(--cw-admin-border, #dcdcde);
+    --cw-utilities-muted: var(--cw-admin-text-muted, #646970);
+    max-width: 1240px;
+}
+
+.cinderwell-mail-hero {
+    align-items: center;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--cw-utilities-accent) 9%, white), transparent 52%), #fff;
+    border: 1px solid var(--cw-utilities-border);
+    border-top: 3px solid var(--cw-utilities-accent);
+    display: flex;
+    gap: 32px;
+    justify-content: space-between;
+    margin: 20px 0 24px;
+    padding: 24px 28px;
+}
+
+.cinderwell-mail-hero h1 {
+    font-size: 26px;
+    margin: 0 0 7px;
+    padding: 0;
+}
+
+.cinderwell-mail-hero p {
+    color: var(--cw-utilities-muted);
+    margin: 0;
+    max-width: 680px;
+}
+
+.cinderwell-mail-sender {
+    background: #fff;
+    border: 1px solid var(--cw-utilities-border);
+    display: grid;
+    flex: 0 0 auto;
+    gap: 3px;
+    min-width: 240px;
+    padding: 14px 16px;
+}
+
+.cinderwell-mail-sender span {
+    color: var(--cw-utilities-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+}
+
+.cinderwell-mail-test-grid {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+    margin-bottom: 24px;
+}
+
+.cinderwell-mail-card,
+.cinderwell-mail-log {
+    background: #fff;
+    border: 1px solid var(--cw-utilities-border);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 4%);
+    padding: 22px 24px;
+}
+
+.cinderwell-mail-card h2,
+.cinderwell-mail-log h2 {
+    margin: 0 0 6px;
+}
+
+.cinderwell-mail-card > p,
+.cinderwell-mail-log__header p {
+    color: var(--cw-utilities-muted);
+    margin: 0 0 18px;
+}
+
+.cinderwell-mail-card > label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.cinderwell-mail-card input[type="email"] {
+    max-width: 520px;
+    width: 100%;
+}
+
+.cinderwell-mail-test-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.cinderwell-mail-result {
+    border-left: 3px solid transparent;
+    margin-top: 14px;
+    min-height: 20px;
+    padding: 7px 10px;
+}
+
+.cinderwell-mail-result:empty {
+    display: none;
+}
+
+.cinderwell-mail-result.is-pending {
+    background: #f0f0f1;
+    border-color: #787c82;
+}
+
+.cinderwell-mail-result.is-success {
+    background: #edfaef;
+    border-color: #00a32a;
+}
+
+.cinderwell-mail-result.is-error {
+    background: #fcf0f1;
+    border-color: #d63638;
+}
+
+.cinderwell-mail-card dl {
+    margin: 0 0 18px;
+}
+
+.cinderwell-mail-card dl div {
+    border-bottom: 1px solid #f0f0f1;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+}
+
+.cinderwell-mail-card dt {
+    color: var(--cw-utilities-muted);
+}
+
+.cinderwell-mail-card dd {
+    font-weight: 600;
+    margin: 0;
+}
+
+.cinderwell-mail-log__header {
+    align-items: start;
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+.cinderwell-mail-filters {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.cinderwell-mail-filters input[type="search"] {
+    min-width: min(380px, 100%);
+}
+
+.cinderwell-mail-table-wrap {
+    overflow-x: auto;
+}
+
+.cinderwell-mail-table {
+    min-width: 900px;
+}
+
+.cinderwell-mail-table code {
+    display: block;
+    font-size: 11px;
+    margin-top: 4px;
+    max-width: 260px;
+    overflow-wrap: anywhere;
+    white-space: normal;
+}
+
+.cinderwell-mail-table details {
+    margin-top: 6px;
+}
+
+.cinderwell-mail-table details p {
+    margin: 6px 0 0;
+    max-width: 340px;
+}
+
+.cinderwell-mail-status {
+    border-radius: 999px;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    text-transform: uppercase;
+}
+
+.cinderwell-mail-status--accepted,
+.cinderwell-mail-status--validated {
+    background: #edfaef;
+    color: #166326;
+}
+
+.cinderwell-mail-status--failed {
+    background: #fcf0f1;
+    color: #8a2424;
+}
+
+.cinderwell-mail-pagination {
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 16px;
 }
 
 .cinderwell-utilities-module__actions {
@@ -54,25 +567,74 @@
     margin-top: 12px;
 }
 
+.cinderwell-utilities-save-bar {
+    align-items: center;
+    background: rgb(255 255 255 / 96%);
+    border: 1px solid var(--cw-utilities-border);
+    bottom: 18px;
+    box-shadow: 0 6px 24px rgb(0 0 0 / 12%);
+    display: flex;
+    gap: 24px;
+    justify-content: space-between;
+    padding: 12px 14px 12px 18px;
+    position: sticky;
+    z-index: 20;
+}
+
+.cinderwell-utilities-save-bar p {
+    display: grid;
+    gap: 1px;
+    margin: 0;
+}
+
+.cinderwell-utilities-save-bar p span {
+    color: var(--cw-utilities-muted);
+    font-size: 12px;
+}
+
+.cinderwell-utilities-form.has-unsaved-changes .cinderwell-utilities-save-bar {
+    border-color: color-mix(in srgb, var(--cw-utilities-accent) 48%, white);
+}
+
+.cinderwell-utilities-form.has-unsaved-changes .cinderwell-utilities-save-bar p span {
+    color: var(--cw-utilities-accent);
+    font-weight: 600;
+}
+
+.cinderwell-utilities-save-bar .button-primary {
+    background: var(--cw-utilities-accent);
+    border-color: var(--cw-utilities-accent);
+}
+
+.cinderwell-utilities-save-bar .button-primary:hover,
+.cinderwell-utilities-save-bar .button-primary:focus {
+    background: color-mix(in srgb, var(--cw-utilities-accent) 86%, black);
+    border-color: color-mix(in srgb, var(--cw-utilities-accent) 78%, black);
+}
+
+.cinderwell-utilities-save-bar .button-primary:focus {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--cw-utilities-accent);
+}
+
 .cinderwell-sortable-list {
     list-style: none;
     margin: 0;
-    padding: 0;
     max-width: 600px;
+    padding: 0;
 }
 
 .cinderwell-sortable-item {
-    padding: 8px 12px;
-    margin: 2px 0;
+    align-items: center;
     background: #fff;
-    border: 1px solid #c3c4c7;
+    border: 1px solid var(--cw-utilities-border);
     border-radius: 4px;
     cursor: move;
     display: flex;
-    align-items: center;
-    gap: 8px;
     font-size: 14px;
-    transition: background 0.15s;
+    gap: 8px;
+    margin: 2px 0;
+    padding: 8px 12px;
+    transition: background 150ms ease;
 }
 
 .cinderwell-sortable-item:hover {
@@ -80,18 +642,126 @@
 }
 
 .cinderwell-sortable-item.dragging {
-    opacity: 0.5;
     background: #e0e0e0;
+    opacity: 0.5;
+}
+
+.cinderwell-sortable-handle,
+.cinderwell-sortable-item small {
+    color: #787c82;
 }
 
 .cinderwell-sortable-handle {
-    color: #787c82;
     cursor: move;
+    flex-shrink: 0;
     font-size: 16px;
     line-height: 1;
-    flex-shrink: 0;
 }
 
-.cinderwell-sortable-item small {
-    color: #787c82;
+@media (max-width: 782px) {
+    .cinderwell-utilities-overview {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .cinderwell-utilities-overview__stats {
+        border-top: 1px solid var(--cw-utilities-border);
+        padding-top: 16px;
+    }
+
+    .cinderwell-utilities-overview__stats div:first-child {
+        border-left: 0;
+    }
+
+    .cinderwell-utilities-group__header {
+        align-items: start;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .cinderwell-utilities-module__header {
+        align-items: flex-start;
+        gap: 12px;
+        padding: 15px 14px 15px 12px;
+    }
+
+    .cinderwell-utilities-module__identity {
+        align-items: flex-start;
+    }
+
+    .cinderwell-utilities-module__control {
+        gap: 0;
+    }
+
+    .cinderwell-utilities-module__status {
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        width: 1px;
+    }
+
+    .cinderwell-utilities-module__body {
+        margin-left: 0;
+        padding: 16px;
+    }
+
+    .cinderwell-plugin-update-control {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .cinderwell-plugin-update-control .button {
+        align-self: flex-start;
+    }
+
+    .cinderwell-utilities-module__body .form-table,
+    .cinderwell-utilities-module__body .form-table tbody,
+    .cinderwell-utilities-module__body .form-table tr,
+    .cinderwell-utilities-module__body .form-table th,
+    .cinderwell-utilities-module__body .form-table td {
+        display: block;
+        width: auto;
+    }
+
+    .cinderwell-utilities-module__body .form-table th {
+        padding: 10px 0 2px;
+    }
+
+    .cinderwell-utilities-module__body .form-table td {
+        padding: 2px 0 10px;
+    }
+
+    .cinderwell-utilities-save-bar {
+        bottom: 8px;
+    }
+
+    .cinderwell-mail-hero,
+    .cinderwell-mail-log__header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .cinderwell-mail-sender {
+        min-width: 0;
+    }
+
+    .cinderwell-mail-test-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cinderwell-mail-card,
+    .cinderwell-mail-log {
+        padding: 18px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cinderwell-utilities-module,
+    .cinderwell-utilities-module__icon,
+    .cinderwell-utilities-switch,
+    .cinderwell-utilities-switch span {
+        transition: none;
+    }
 }

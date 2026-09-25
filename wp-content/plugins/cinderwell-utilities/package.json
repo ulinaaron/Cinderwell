@@ -1,6 +1,6 @@
 {
     "name": "cinderwell-utilities",
-    "version": "0.1.1",
+    "version": "0.4.0",
     "description": "Site Utilities add-on for Cinderwell",
     "private": true,
     "scripts": {

@@ -87,7 +87,7 @@ class Content_Duplication {
             wp_die('Post not found.');
         }
 
-        $suffix = $this->settings['title_suffix'] ?? 'Copy of ';
+        $prefix = trim((string) ($this->settings['title_suffix'] ?? 'Copy of'));
         $new_status = $this->settings['new_status'] ?? 'draft';
         $status = ($new_status === 'same') ? $original->post_status : $new_status;
         $post_type_object = get_post_type_object($original->post_type);
@@ -96,7 +96,7 @@ class Content_Duplication {
         }
 
         $new_id = wp_insert_post([
-            'post_title'   => $suffix . $original->post_title,
+            'post_title'   => $prefix ? $prefix . ' ' . $original->post_title : $original->post_title,
             'post_content' => $original->post_content,
             'post_excerpt' => $original->post_excerpt,
             'post_status'  => $status,

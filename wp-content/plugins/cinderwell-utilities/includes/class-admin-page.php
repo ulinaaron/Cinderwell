@@ -31,87 +31,193 @@ class Admin_Page {
 
     public function render() {
         $settings = Utilities::get_settings();
-        $labels = Utilities::get_module_labels();
-        $groups = [
-            'content' => 'Content',
-            'media'   => 'Media',
-            'disable' => 'Disable',
-        ];
+        $labels = Module_Registry::get_modules();
+        $groups = apply_filters('cinderwell_utilities_groups', [
+            'content' => [
+                'label'       => 'Content',
+                'description' => 'Tools for managing, duplicating, and organizing site content.',
+            ],
+            'media'   => [
+                'label'       => 'Media',
+                'description' => 'Safer workflows for the files that power the site.',
+            ],
+            'admin'   => [
+                'label'       => 'Admin Experience',
+                'description' => 'Small improvements for administrators and client handoff.',
+            ],
+            'communication' => [
+                'label'       => 'Communication',
+                'description' => 'Reliable delivery and diagnostics for messages sent by the site.',
+            ],
+            'disable' => [
+                'label'       => 'Cleanup & Performance',
+                'description' => 'Turn off WordPress features the site does not need.',
+            ],
+        ]);
+        foreach ($labels as &$module_meta) {
+            if (!isset($groups[$module_meta['group']])) {
+                $module_meta['group'] = 'admin';
+            }
+        }
+        unset($module_meta);
+        $enabled_count = count(array_filter($settings, static function ($module) {
+            return !empty($module['enabled']);
+        }));
+        $module_count = count($labels);
 
         if (isset($_GET['saved'])) {
             echo '<div class="notice notice-success inline"><p>Settings saved.</p></div>';
         }
         ?>
-        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+        <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="cinderwell-utilities-form">
             <input type="hidden" name="action" value="cinderwell_utilities_save">
             <?php wp_nonce_field('cinderwell_utilities_save'); ?>
 
-            <?php foreach ($groups as $group_key => $group_label): ?>
+            <section class="cinderwell-utilities-overview" aria-labelledby="cinderwell-utilities-title">
+                <div class="cinderwell-utilities-overview__copy">
+                    <span class="cinderwell-utilities-eyebrow">Site Utilities</span>
+                    <h2 id="cinderwell-utilities-title">Use only what this site needs.</h2>
+                    <p>Each utility is independent and disabled by default. Enable a tool to reveal its options, then save once when you are finished.</p>
+                </div>
+                <div class="cinderwell-utilities-overview__stats" aria-label="Utility status">
+                    <div><strong data-cinderwell-enabled-count><?php echo esc_html($enabled_count); ?></strong><span>Enabled</span></div>
+                    <div><strong><?php echo esc_html($module_count); ?></strong><span>Available</span></div>
+                </div>
+            </section>
+
+            <?php foreach ($groups as $group_key => $group): ?>
+                <?php
+                $group_modules = array_filter($labels, static function ($meta) use ($group_key) {
+                    return $meta['group'] === $group_key;
+                });
+                $group_enabled = count(array_filter(array_keys($group_modules), static function ($module_key) use ($settings) {
+                    return !empty($settings[$module_key]['enabled']);
+                }));
+                ?>
                 <div class="cinderwell-utilities-group">
-                    <h2 class="cinderwell-utilities-group__title"><?php echo esc_html($group_label); ?></h2>
-                    <?php foreach ($labels as $module_key => $meta): ?>
-                        <?php if ($meta['group'] !== $group_key) continue; ?>
+                    <div class="cinderwell-utilities-group__header">
+                        <div>
+                            <h2 class="cinderwell-utilities-group__title"><?php echo esc_html($group['label']); ?></h2>
+                            <p><?php echo esc_html($group['description']); ?></p>
+                        </div>
+                        <span class="cinderwell-utilities-group__count" data-cinderwell-group-count data-group="<?php echo esc_attr($group_key); ?>">
+                            <?php echo esc_html(sprintf('%d of %d enabled', $group_enabled, count($group_modules))); ?>
+                        </span>
+                    </div>
+                    <div class="cinderwell-utilities-module-list">
+                    <?php foreach ($group_modules as $module_key => $meta): ?>
                         <?php $mod = $settings[$module_key] ?? []; ?>
-                        <div class="cinderwell-utilities-module card" data-module="<?php echo esc_attr($module_key); ?>">
-                            <div class="cinderwell-utilities-module__header">
-                                <label class="cinderwell-utilities-module__toggle">
+                        <?php $enabled = !empty($mod['enabled']); ?>
+                        <section class="cinderwell-utilities-module<?php echo $enabled ? ' is-enabled' : ''; ?>" data-module="<?php echo esc_attr($module_key); ?>" data-group="<?php echo esc_attr($group_key); ?>">
+                            <label class="cinderwell-utilities-module__header">
+                                <span class="cinderwell-utilities-module__identity">
+                                    <span class="cinderwell-utilities-module__icon dashicons <?php echo esc_attr($this->get_module_icon($module_key)); ?>" aria-hidden="true"></span>
+                                    <span class="cinderwell-utilities-module__copy">
+                                        <strong><?php echo esc_html($meta['label']); ?></strong>
+                                        <span class="cinderwell-utilities-module__desc"><?php echo esc_html($meta['description']); ?></span>
+                                    </span>
+                                </span>
+                                <span class="cinderwell-utilities-module__control">
+                                    <span class="cinderwell-utilities-module__status" data-cinderwell-module-status><?php echo $enabled ? 'Enabled' : 'Disabled'; ?></span>
                                     <input type="checkbox"
                                            name="cinderwell_utilities[<?php echo esc_attr($module_key); ?>][enabled]"
                                            value="1"
-                                           <?php checked(!empty($mod['enabled'])); ?>
-                                           class="cinderwell-utilities-module-toggle" />
-                                    <strong><?php echo esc_html($meta['label']); ?></strong>
-                                </label>
-                                <span class="cinderwell-utilities-module__desc"><?php echo esc_html($meta['description']); ?></span>
-                            </div>
-                            <div class="cinderwell-utilities-module__body" style="<?php echo empty($mod['enabled']) ? 'display:none;' : ''; ?>">
+                                           <?php checked($enabled); ?>
+                                           class="cinderwell-utilities-module-toggle"
+                                           aria-controls="cinderwell-utilities-<?php echo esc_attr($module_key); ?>"
+                                           aria-expanded="<?php echo $enabled ? 'true' : 'false'; ?>" />
+                                    <span class="cinderwell-utilities-switch" aria-hidden="true"><span></span></span>
+                                </span>
+                            </label>
+                            <div class="cinderwell-utilities-module__body" id="cinderwell-utilities-<?php echo esc_attr($module_key); ?>"<?php echo $enabled ? '' : ' hidden'; ?>>
+                                <?php if (!empty($meta['warning'])): ?>
+                                    <p class="notice notice-warning inline"><strong><?php echo esc_html($meta['warning']); ?></strong></p>
+                                <?php endif; ?>
                                 <?php $this->render_module_settings($module_key, $mod); ?>
                             </div>
-                        </div>
+                        </section>
                     <?php endforeach; ?>
+                    </div>
                 </div>
             <?php endforeach; ?>
 
-            <?php submit_button('Save Settings'); ?>
+            <div class="cinderwell-utilities-save-bar">
+                <p><strong>Site Utilities</strong><span data-cinderwell-save-status>No unsaved changes</span></p>
+                <?php submit_button('Save Utilities', 'primary', 'submit', false); ?>
+            </div>
         </form>
         <?php
     }
 
+    private function get_module_icon($key) {
+        $module = Module_Registry::get_module($key);
+        return $module['icon'] ?? 'dashicons-admin-generic';
+    }
+
     private function render_module_settings($key, $mod) {
-        switch ($key) {
-            case 'content_duplication':
-                $this->render_duplication($mod);
-                break;
-            case 'content_order':
-                $this->render_content_order($mod);
-                break;
-            case 'terms_order':
-                $this->render_terms_order($mod);
-                break;
-            case 'media_replacement':
-                $this->render_media_replacement($mod);
-                break;
-            case 'allow_svgs':
-                $this->render_allow_svgs($mod);
-                break;
-            case 'disable_comments':
-                $this->render_disable_comments($mod);
-                break;
-            case 'disable_feeds':
-                $this->render_disable_feeds($mod);
-                break;
-            case 'disable_smaller':
-                $this->render_disable_smaller($mod);
-                break;
+        $module = Module_Registry::get_module($key);
+        if ($module && !empty($module['render_callback']) && is_callable($module['render_callback'])) {
+            call_user_func($module['render_callback'], $mod, $module);
+        } else {
+            switch ($key) {
+                case 'content_duplication':
+                    $this->render_duplication($mod);
+                    break;
+                case 'content_order':
+                    $this->render_content_order($mod);
+                    break;
+                case 'terms_order':
+                    $this->render_terms_order($mod);
+                    break;
+                case 'media_replacement':
+                    $this->render_media_replacement($mod);
+                    break;
+                case 'allow_svgs':
+                    $this->render_allow_svgs($mod);
+                    break;
+                case 'disable_comments':
+                    $this->render_disable_comments($mod);
+                    break;
+                case 'disable_feeds':
+                    $this->render_disable_feeds($mod);
+                    break;
+                case 'disable_smaller':
+                    $this->render_disable_smaller($mod);
+                    break;
+                case 'login_branding':
+                    $this->render_login_branding();
+                    break;
+                case 'search_visibility_status':
+                    $this->render_search_visibility_status();
+                    break;
+                case 'plugin_update_control':
+                    $this->render_plugin_update_control($mod);
+                    break;
+                case 'mail_delivery':
+                    $this->render_mail_delivery($mod);
+                    break;
+                default:
+                    do_action('cinderwell_utilities_render_module_settings', $key, $mod, $module);
+                    break;
+            }
+        }
+
+        if ($module && !empty($module['settings_url'])) {
+            $settings_url = is_callable($module['settings_url']) ? call_user_func($module['settings_url'], $mod, $module) : $module['settings_url'];
+            if ($settings_url) {
+                echo '<div class="cinderwell-utilities-module__actions"><a class="button" href="' . esc_url($settings_url) . '">' . esc_html__('Configure', 'cinderwell-utilities') . '</a></div>';
+            }
         }
     }
 
     private function render_checkbox_list($name, $options, $selected) {
+        echo '<div class="cinderwell-utilities-option-grid">';
         foreach ($options as $value => $label) {
-            echo '<label style="display:block;margin:2px 0;">';
+            echo '<label>';
             echo '<input type="checkbox" name="' . esc_attr($name) . '[]" value="' . esc_attr($value) . '" ' . checked(in_array($value, (array) $selected, true), true, false) . ' /> ';
             echo esc_html($label) . '</label>';
         }
+        echo '</div>';
     }
 
     private function get_public_post_types() {
@@ -172,9 +278,9 @@ class Admin_Page {
         foreach (['draft' => 'Draft', 'same' => 'Same as source', 'publish' => 'Publish'] as $v => $l) {
             echo '<option value="' . $v . '"' . selected($mod['new_status'] ?? '', $v, false) . '>' . $l . '</option>';
         }
-        echo '</select></td></tr><tr><th>Title Suffix</th><td>';
-        echo '<input type="text" name="cinderwell_utilities[content_duplication][title_suffix]" value="' . esc_attr($mod['title_suffix'] ?? 'Copy of ') . '" class="regular-text" />';
-        echo '<p class="description">Appended to the duplicated post title. Leave empty for no suffix.</p>';
+        echo '</select></td></tr><tr><th>Title Prefix</th><td>';
+        echo '<input type="text" name="cinderwell_utilities[content_duplication][title_suffix]" value="' . esc_attr($mod['title_suffix'] ?? 'Copy of') . '" class="regular-text" />';
+        echo '<p class="description">Added before the duplicated post title. Leave empty for no prefix.</p>';
         echo '</td></tr></table>';
     }
 
@@ -291,5 +397,116 @@ class Admin_Page {
             echo '</td></tr>';
         }
         echo '</table>';
+    }
+
+    private function render_login_branding() {
+        $company_enabled = class_exists('Cinderwell\\Addons') && \Cinderwell\Addons::is_enabled('company-details');
+        $company = $company_enabled && class_exists('Cinderwell\\Company_Details')
+            ? \Cinderwell\Company_Details::get_settings()
+            : [];
+        $logo_id = absint($company['logo_id'] ?? 0);
+        $logo_mime = $logo_id ? (string) get_post_mime_type($logo_id) : '';
+
+        if ($logo_id && 0 === strpos($logo_mime, 'image/')) {
+            $logo_url = wp_get_attachment_image_url($logo_id, 'medium');
+            if (!$logo_url) {
+                $logo_url = wp_get_attachment_url($logo_id);
+            }
+            echo '<div class="cinderwell-utilities-login-preview">';
+            echo '<img src="' . esc_url($logo_url) . '" alt="" />';
+            echo '<p class="description">The login screen will use this Company Details logo and link it to the site homepage.</p>';
+            echo '</div>';
+            return;
+        }
+
+        $company_url = admin_url('admin.php?page=cinderwell&tab=company-details');
+        $addons_url = admin_url('admin.php?page=cinderwell&tab=addons');
+        if (!$company_enabled) {
+            echo '<p class="description">Enable Company Details first, then add a logo. Until then, WordPress keeps its standard login logo.</p>';
+            echo '<p><a class="button" href="' . esc_url($addons_url) . '">Open Add-Ons</a></p>';
+            return;
+        }
+
+        echo '<p class="description">No Company Details logo is set. WordPress will keep its standard login logo.</p>';
+        echo '<p><a class="button" href="' . esc_url($company_url) . '">Add Company Logo</a></p>';
+    }
+
+    private function render_search_visibility_status() {
+        $discouraged = 0 === (int) get_option('blog_public', 1);
+        $class = $discouraged ? 'notice-warning' : 'notice-success';
+        $message = $discouraged
+            ? 'Search engines are currently discouraged from indexing this site.'
+            : 'Search engines are currently allowed to index this site.';
+
+        echo '<div class="notice inline ' . esc_attr($class) . '"><p><strong>' . esc_html($message) . '</strong></p></div>';
+        echo '<p><a class="button" href="' . esc_url(admin_url('options-reading.php')) . '">Open Reading Settings</a></p>';
+        echo '<p class="description">This utility reports the WordPress setting only. It never changes search visibility automatically.</p>';
+    }
+
+    private function render_plugin_update_control($mod) {
+        $locked = Utilities::sanitize_plugin_basenames($mod['locked_plugins'] ?? ($mod['frozen_plugins'] ?? []));
+
+        foreach ($locked as $plugin) {
+            echo '<input type="hidden" name="cinderwell_utilities[plugin_update_control][locked_plugins][]" value="' . esc_attr($plugin) . '" />';
+        }
+
+        $locked_count = count($locked);
+        $locked_label = sprintf(
+            _n('%d plugin locked', '%d plugins locked', $locked_count, 'cinderwell-utilities'),
+            $locked_count
+        );
+
+        echo '<div class="cinderwell-plugin-update-control">';
+        echo '<p class="cinderwell-plugin-update-control__status">';
+        echo '<span class="dashicons dashicons-lock" aria-hidden="true"></span>';
+        echo '<span><strong>Automatic plugin updates are off.</strong><span class="cinderwell-plugin-update-control__count">' . esc_html($locked_label) . '</span></span>';
+        echo '</p>';
+        echo '<button class="button button-primary" type="submit" name="cinderwell_utilities_redirect" value="plugins">Manage plugin locks</button>';
+        echo '</div>';
+    }
+
+    private function render_mail_delivery($mod) {
+        $defaults = Mail_Manager::get_sender_defaults();
+        $from_name = !empty($mod['from_name']) ? $mod['from_name'] : $defaults['name'];
+        $from_email = !empty($mod['from_email']) ? $mod['from_email'] : $defaults['email'];
+        $sending_domain = !empty($mod['sending_domain']) ? Mail_Manager::sanitize_sending_domain($mod['sending_domain']) : Mail_Manager::get_email_domain($from_email);
+        $key_constant = Mail_Manager::api_key_is_constant();
+        $key_configured = Mail_Manager::api_key_is_configured();
+
+        echo '<table class="form-table cinderwell-mail-settings">';
+        echo '<tr><th><label for="cinderwell-mail-provider">Provider</label></th><td>';
+        echo '<select id="cinderwell-mail-provider" name="cinderwell_utilities[mail_delivery][provider]"><option value="sendgrid" selected>SendGrid</option></select>';
+        echo '<p class="description">Provider-ready internally; SendGrid is the first available adapter.</p></td></tr>';
+        echo '<tr><th><label for="cinderwell-mail-api-key">SendGrid API Key</label></th><td>';
+        if ($key_constant) {
+            echo '<span class="cinderwell-mail-key-state is-configured">Configured with <code>' . esc_html(Mail_Manager::API_KEY_CONSTANT) . '</code></span>';
+            echo '<p class="description">The wp-config constant takes priority. Credential editing is disabled here.</p>';
+        } else {
+            echo '<input type="password" id="cinderwell-mail-api-key" name="cinderwell_mail_api_key" value="" class="regular-text" autocomplete="new-password" placeholder="' . ($key_configured ? esc_attr__('API key configured — enter a new key to replace it', 'cinderwell-utilities') : esc_attr__('SG.…', 'cinderwell-utilities')) . '" />';
+            echo '<p class="description">Write-only and stored separately with autoload disabled. Use a key limited to Mail Send permission.</p>';
+            if ($key_configured) {
+                echo '<label class="cinderwell-mail-clear-key"><input type="checkbox" name="cinderwell_mail_clear_api_key" value="1" /> Clear the stored API key when saving</label>';
+            }
+        }
+        echo '</td></tr>';
+        echo '<tr><th><label for="cinderwell-mail-sending-domain">Sending Domain</label></th><td><input type="text" id="cinderwell-mail-sending-domain" name="cinderwell_utilities[mail_delivery][sending_domain]" value="' . esc_attr($sending_domain) . '" class="regular-text" placeholder="example.com" autocapitalize="none" spellcheck="false" />';
+        echo '<p class="description">Enter the domain authenticated in SendGrid, without <code>https://</code> or an email address. The From address must use this domain or one of its subdomains.</p></td></tr>';
+        echo '<tr><th><label for="cinderwell-mail-from-name">From Name</label></th><td><input type="text" id="cinderwell-mail-from-name" name="cinderwell_utilities[mail_delivery][from_name]" value="' . esc_attr($from_name) . '" class="regular-text" /></td></tr>';
+        echo '<tr><th><label for="cinderwell-mail-from-email">From Email</label></th><td><input type="email" id="cinderwell-mail-from-email" name="cinderwell_utilities[mail_delivery][from_email]" value="' . esc_attr($from_email) . '" class="regular-text" />';
+        echo '<p class="description">This address must be a verified sender or belong to an authenticated SendGrid domain.</p></td></tr>';
+        echo '<tr><th>Sender Policy</th><td><input type="hidden" name="cinderwell_utilities[mail_delivery][force_from]" value="1" /><strong>Force the verified sender for every WordPress email</strong>';
+        echo '<p class="description">An original From address is preserved as Reply-To when the message does not already provide one.</p></td></tr>';
+        echo '<tr><th><label for="cinderwell-mail-retention">Log Retention</label></th><td><select id="cinderwell-mail-retention" name="cinderwell_utilities[mail_delivery][retention_days]">';
+        foreach ([7 => '7 days', 30 => '30 days', 90 => '90 days'] as $days => $label) {
+            echo '<option value="' . esc_attr($days) . '"' . selected(absint($mod['retention_days'] ?? 30), $days, false) . '>' . esc_html($label) . '</option>';
+        }
+        echo '</select><p class="description">Logs contain recipients and subjects, but never message bodies or attachment contents.</p></td></tr>';
+        echo '</table>';
+
+        if (Utilities::module_enabled('mail_delivery')) {
+            echo '<div class="cinderwell-utilities-module__actions"><a class="button button-primary" href="' . esc_url(admin_url('admin.php?page=cinderwell-mail')) . '">Open Mail Tests &amp; Log</a></div>';
+        } else {
+            echo '<p class="description">Enable and save Mail Delivery to open its test and log screen.</p>';
+        }
     }
 }

@@ -53,10 +53,9 @@ class Rest_Api {
 
     public function get_modules() {
         $settings = Utilities::get_settings();
-        $labels = Utilities::get_module_labels();
         $data = [];
-        foreach ($labels as $key => $meta) {
-            $data[$key] = array_merge($meta, [
+        foreach (Module_Registry::get_modules() as $key => $module) {
+            $data[$key] = array_merge($this->public_module_meta($module), [
                 'key' => $key,
                 'enabled' => !empty($settings[$key]['enabled']),
                 'settings' => $settings[$key] ?? [],
@@ -68,11 +67,11 @@ class Rest_Api {
     public function get_module($request) {
         $key = $request['module'];
         $settings = Utilities::get_settings();
-        $labels = Utilities::get_module_labels();
-        if (!isset($labels[$key])) {
+        $module = Module_Registry::get_module($key);
+        if (!$module) {
             return new \WP_Error('not_found', 'Module not found', ['status' => 404]);
         }
-        return rest_ensure_response(array_merge($labels[$key], [
+        return rest_ensure_response(array_merge($this->public_module_meta($module), [
             'key' => $key,
             'enabled' => !empty($settings[$key]['enabled']),
             'settings' => $settings[$key] ?? [],
@@ -86,26 +85,22 @@ class Rest_Api {
             return new \WP_Error('not_found', 'Module not found', ['status' => 404]);
         }
         $body = $request->get_json_params();
+        $next = $all[$key];
         if (isset($body['enabled'])) {
-            $all[$key]['enabled'] = (bool) $body['enabled'];
+            $next['enabled'] = $body['enabled'];
         }
         if (isset($body['settings']) && is_array($body['settings'])) {
-            $defaults = Utilities::get_defaults()[$key];
             foreach ($body['settings'] as $setting => $value) {
-                if (!array_key_exists($setting, $defaults) || 'enabled' === $setting) {
-                    continue;
-                }
-
-                if (is_bool($defaults[$setting])) {
-                    $all[$key][$setting] = (bool) $value;
-                } elseif (is_array($defaults[$setting])) {
-                    $all[$key][$setting] = array_values(array_filter(array_map('sanitize_key', (array) $value)));
-                } else {
-                    $all[$key][$setting] = sanitize_text_field($value);
+                if ('enabled' !== $setting) {
+                    $next[$setting] = $value;
                 }
             }
         }
+        $all[$key] = Module_Registry::sanitize_module($key, $next);
         Utilities::update_settings($all);
+        if ('mail_delivery' === $key) {
+            Mail_Log::sync_schedule(!empty($all[$key]['enabled']));
+        }
         return rest_ensure_response(['success' => true, 'settings' => $all[$key]]);
     }
 
@@ -199,30 +194,50 @@ class Rest_Api {
         }
         check_admin_referer('cinderwell_utilities_save');
 
-        $defaults = Utilities::get_defaults();
         $incoming = isset($_POST['cinderwell_utilities']) ? wp_unslash($_POST['cinderwell_utilities']) : [];
         $settings = Utilities::get_settings();
 
-        foreach ($defaults as $module => $module_defaults) {
-            $settings[$module]['enabled'] = !empty($incoming[$module]['enabled']);
-
-            // Merge module-specific fields
-            foreach ($module_defaults as $key => $default) {
-                if ($key === 'enabled') continue;
-
-                if (is_array($default)) {
-                    // Checkbox list
-                    $settings[$module][$key] = isset($incoming[$module][$key]) ? array_map('sanitize_text_field', (array) $incoming[$module][$key]) : [];
-                } elseif (is_bool($default) || $default === true || $default === false) {
-                    $settings[$module][$key] = !empty($incoming[$module][$key]);
-                } else {
-                    $settings[$module][$key] = sanitize_text_field($incoming[$module][$key] ?? $default);
-                }
+        if (!Mail_Manager::api_key_is_constant()) {
+            if (!empty($_POST['cinderwell_mail_clear_api_key'])) {
+                Mail_Manager::clear_api_key();
+            } elseif (isset($_POST['cinderwell_mail_api_key']) && '' !== trim((string) wp_unslash($_POST['cinderwell_mail_api_key']))) {
+                Mail_Manager::update_api_key(sanitize_text_field(wp_unslash($_POST['cinderwell_mail_api_key'])));
             }
         }
 
+        foreach (Module_Registry::get_modules() as $module_id => $module) {
+            $posted = isset($incoming[$module_id]) && is_array($incoming[$module_id]) ? $incoming[$module_id] : [];
+            $next = $settings[$module_id] ?? [];
+
+            foreach ($module['settings'] as $key => $field) {
+                $type = $field['type'] ?? 'text';
+                if ('boolean' === $type) {
+                    $next[$key] = !empty($posted[$key]);
+                } elseif (in_array($type, ['key_list', 'plugin_list', 'post_type_list', 'hierarchical_post_type_list', 'hierarchical_taxonomy_list', 'role_list'], true)) {
+                    $next[$key] = isset($posted[$key]) ? (array) $posted[$key] : [];
+                } elseif (array_key_exists($key, $posted)) {
+                    $next[$key] = $posted[$key];
+                }
+            }
+            $settings[$module_id] = Module_Registry::sanitize_module($module_id, $next);
+        }
+
         Utilities::update_settings($settings);
+        Mail_Log::sync_schedule(!empty($settings['mail_delivery']['enabled']));
+
+        $redirect_target = isset($_POST['cinderwell_utilities_redirect'])
+            ? sanitize_key(wp_unslash($_POST['cinderwell_utilities_redirect']))
+            : '';
+        if ('plugins' === $redirect_target && !empty($settings['plugin_update_control']['enabled'])) {
+            wp_safe_redirect(add_query_arg('cinderwell_plugin_control_saved', '1', admin_url('plugins.php')));
+            exit;
+        }
+
         wp_safe_redirect(add_query_arg(['page' => 'cinderwell', 'tab' => 'utilities', 'saved' => '1'], admin_url('admin.php')));
         exit;
+    }
+
+    private function public_module_meta($module) {
+        return array_intersect_key($module, array_flip(['id', 'label', 'description', 'group', 'icon', 'settings_url', 'warning']));
     }
 }

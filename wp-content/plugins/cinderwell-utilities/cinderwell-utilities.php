@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/ulinaaron/Cinderwell/tree/main/wp-content/plugins/cinderwell-utilities
  * Update URI: https://cinderwell-updates.surge.sh/cinderwell-utilities/
  * Description: Admin and site quality-of-life modules for Cinderwell. Each module is independently toggleable.
- * Version: 0.1.1
+ * Version: 0.4.0
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Requires Plugins: cinderwell
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('CINDERWELL_UTILITIES_VERSION', '0.1.1');
+define('CINDERWELL_UTILITIES_VERSION', '0.4.0');
 define('CINDERWELL_UTILITIES_PATH', plugin_dir_path(__FILE__));
 define('CINDERWELL_UTILITIES_URL', plugin_dir_url(__FILE__));
 define('CINDERWELL_UTILITIES_OPTION', 'cinderwell_utilities_settings');
@@ -41,9 +41,13 @@ spl_autoload_register(function ($class) {
 });
 
 register_activation_hook(__FILE__, function () {
-    if (!get_option(CINDERWELL_UTILITIES_OPTION)) {
-        update_option(CINDERWELL_UTILITIES_OPTION, \Cinderwell_Utilities\Utilities::get_defaults());
-    }
+    \Cinderwell_Utilities\Schema_Migrator::maybe_migrate();
+    \Cinderwell_Utilities\Mail_Log::install();
+    \Cinderwell_Utilities\Mail_Log::sync_schedule(\Cinderwell_Utilities\Utilities::module_enabled('mail_delivery'));
+});
+
+register_deactivation_hook(__FILE__, function () {
+    wp_clear_scheduled_hook(\Cinderwell_Utilities\Mail_Log::CLEANUP_HOOK);
 });
 
 // Enrich the add-on catalog entry.

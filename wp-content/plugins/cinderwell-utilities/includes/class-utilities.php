@@ -7,7 +7,11 @@ class Utilities {
     const OPTION = 'cinderwell_utilities_settings';
 
     public function __construct() {
+        Schema_Migrator::maybe_migrate();
+        Mail_Log::maybe_install();
         $this->load_modules();
+        add_filter('cinderwell_settings_export_options', [$this, 'register_export_option']);
+        add_filter('cinderwell_import_setting', [$this, 'sanitize_imported_settings'], 10, 3);
         if (is_admin()) {
             new Admin_Page();
         }
@@ -16,112 +20,90 @@ class Utilities {
 
     private function load_modules() {
         $settings = self::get_settings();
-        $modules = self::get_module_classes();
-
-        foreach ($modules as $key => $class) {
-            if (!empty($settings[$key]['enabled'])) {
+        foreach (Module_Registry::get_modules() as $key => $module) {
+            $class = $module['class'];
+            if (empty($settings[$key]['enabled'])) {
+                continue;
+            }
+            if (!empty($module['boot_callback']) && is_callable($module['boot_callback'])) {
+                call_user_func($module['boot_callback'], $settings[$key], $module);
+            } elseif (class_exists($class)) {
                 new $class($settings[$key]);
             }
         }
     }
 
+    /**
+     * Compatibility view derived from the module registry.
+     */
     public static function get_module_classes() {
-        return [
-            'content_duplication' => 'Cinderwell_Utilities\\Modules\\Content_Duplication',
-            'content_order'       => 'Cinderwell_Utilities\\Modules\\Content_Order',
-            'terms_order'         => 'Cinderwell_Utilities\\Modules\\Terms_Order',
-            'media_replacement'   => 'Cinderwell_Utilities\\Modules\\Media_Replacement',
-            'allow_svgs'          => 'Cinderwell_Utilities\\Modules\\Allow_SVGs',
-            'disable_comments'    => 'Cinderwell_Utilities\\Modules\\Disable_Comments',
-            'disable_feeds'       => 'Cinderwell_Utilities\\Modules\\Disable_Feeds',
-            'disable_smaller'     => 'Cinderwell_Utilities\\Modules\\Disable_Smaller',
-        ];
+        return wp_list_pluck(Module_Registry::get_modules(), 'class');
     }
 
+    /**
+     * Compatibility view derived from the module registry.
+     */
     public static function get_module_labels() {
-        return [
-            'content_duplication' => ['label' => 'Content Duplication', 'group' => 'content', 'description' => 'One-click duplicate posts and pages from the admin.'],
-            'content_order'       => ['label' => 'Content Order', 'group' => 'content', 'description' => 'Drag-and-drop ordering for hierarchical post types.'],
-            'terms_order'         => ['label' => 'Taxonomy Terms Order', 'group' => 'content', 'description' => 'Drag-and-drop ordering for taxonomy terms.'],
-            'media_replacement'   => ['label' => 'Media Replacement', 'group' => 'media', 'description' => 'Replace media files while keeping the same URL and ID.'],
-            'allow_svgs'          => ['label' => 'Allow SVGs', 'group' => 'media', 'description' => 'Enable SVG uploads with automatic sanitization.'],
-            'disable_comments'    => ['label' => 'Disable Comments', 'group' => 'disable', 'description' => 'Site-wide comment disabling. Hides forms, admin menus, and closes pings.'],
-            'disable_feeds'       => ['label' => 'Disable Feeds', 'group' => 'disable', 'description' => 'Disable all RSS/Atom/RDF feeds and remove feed links from the head.'],
-            'disable_smaller'     => ['label' => 'Disable Smaller Components', 'group' => 'disable', 'description' => 'Bundle of micro-disablers: emoji, embed, jQuery Migrate, generator tags, and more.'],
-        ];
+        $labels = [];
+        foreach (Module_Registry::get_modules() as $key => $module) {
+            $labels[$key] = array_intersect_key($module, array_flip(['label', 'group', 'description', 'icon']));
+        }
+        return $labels;
     }
 
     public static function get_defaults() {
-        return [
-            'content_duplication' => [
-                'enabled' => false,
-                'post_types' => ['page', 'post'],
-                'roles' => ['administrator', 'editor'],
-                'show_in' => ['list', 'edit', 'admin_bar'],
-                'new_status' => 'draft',
-                'title_suffix' => 'Copy of ',
-            ],
-            'content_order' => [
-                'enabled' => false,
-                'post_types' => ['page'],
-                'apply_frontend' => true,
-            ],
-            'terms_order' => [
-                'enabled' => false,
-                'taxonomies' => ['category'],
-                'apply_frontend' => true,
-            ],
-            'media_replacement' => [
-                'enabled' => false,
-                'roles' => ['administrator', 'editor'],
-                'replace_from_grid' => true,
-                'replace_from_edit' => true,
-            ],
-            'allow_svgs' => [
-                'enabled' => false,
-                'roles' => ['administrator'],
-            ],
-            'disable_comments' => [
-                'enabled' => false,
-                'hide_existing' => false,
-                'closed_existing' => false,
-            ],
-            'disable_feeds' => [
-                'enabled' => false,
-                'redirect_to_home' => true,
-            ],
-            'disable_smaller' => [
-                'enabled' => false,
-                'remove_generator' => true,
-                'remove_wp_version' => true,
-                'remove_wlw' => true,
-                'remove_rsd' => true,
-                'remove_shortlink' => true,
-                'remove_adjacent' => true,
-                'disable_emoji' => true,
-                'disable_wp_embed' => true,
-                'disable_block_css' => false,
-                'disable_jquery_migrate' => true,
-                'disable_wc_assets' => false,
-            ],
-        ];
+        return Module_Registry::get_defaults();
     }
 
     public static function get_settings() {
         $saved = get_option(self::OPTION, []);
-        $saved = is_array($saved) ? $saved : [];
-        $settings = [];
-
-        foreach (self::get_defaults() as $module => $defaults) {
-            $module_settings = isset($saved[$module]) && is_array($saved[$module]) ? $saved[$module] : [];
-            $settings[$module] = wp_parse_args($module_settings, $defaults);
-        }
-
-        return $settings;
+        return Module_Registry::sanitize_all(is_array($saved) ? $saved : []);
     }
 
     public static function update_settings($settings) {
-        update_option(self::OPTION, $settings);
+        update_option(self::OPTION, Module_Registry::sanitize_all($settings), false);
+    }
+
+    public function register_export_option($options) {
+        $options[] = self::OPTION;
+        return array_values(array_unique($options));
+    }
+
+    public function sanitize_imported_settings($value, $option_name, $raw_value) {
+        if (self::OPTION !== $option_name) {
+            return $value;
+        }
+        return Module_Registry::sanitize_all(is_array($raw_value) ? $raw_value : []);
+    }
+
+    /**
+     * Normalize and validate plugin basenames before storing them.
+     */
+    public static function sanitize_plugin_basenames($plugins, $installed_only = true) {
+        $sanitized = [];
+        $installed = null;
+
+        if ($installed_only) {
+            if (!function_exists('get_plugins')) {
+                require_once ABSPATH . 'wp-admin/includes/plugin.php';
+            }
+            $installed = array_keys(get_plugins());
+        }
+
+        foreach ((array) $plugins as $plugin) {
+            $plugin = plugin_basename(wp_normalize_path(sanitize_text_field((string) $plugin)));
+            if (
+                '' === $plugin ||
+                0 !== validate_file($plugin) ||
+                '.php' !== strtolower(substr($plugin, -4)) ||
+                (is_array($installed) && !in_array($plugin, $installed, true))
+            ) {
+                continue;
+            }
+            $sanitized[] = $plugin;
+        }
+
+        return array_values(array_unique($sanitized));
     }
 
     public static function get_health() {
@@ -134,7 +116,7 @@ class Utilities {
         }
         return [
             'status' => 'good',
-            'message' => sprintf('%d of %d modules active', $enabled, count(self::get_module_classes())),
+            'message' => sprintf('%d of %d modules active', $enabled, count(Module_Registry::get_modules())),
         ];
     }
 
@@ -150,7 +132,6 @@ class Utilities {
      * Get settings for a specific module.
      */
     public static function module_settings($module) {
-        $settings = self::get_settings();
-        return $settings[$module] ?? self::get_defaults()[$module] ?? [];
+        return Module_Registry::sanitize_module($module, self::get_settings()[$module] ?? []);
     }
 }
