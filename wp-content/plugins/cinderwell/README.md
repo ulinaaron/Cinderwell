@@ -52,6 +52,7 @@ npm run lint:css # Lint CSS
 | Tabs | Accessible responsive tabs with block-based content panels |
 | Content Slider | Synchronized story copy, action, and media with accessible previous/next controls and a complete non-JavaScript baseline |
 | Columns | Native nested layout with draggable Cinderwell blocks, 1–4 columns, relative proportions, and responsive stacking |
+| Two Column, Slot Layout (legacy) | Hidden from the inserter but still registered so existing content keeps rendering. Two Column converts to Columns via the block transform; replace Slot Layout with Columns manually. |
 | Section | Generic InnerBlocks container with tokenized image or video backgrounds |
 | Loop | Dynamic listing with filtering, pagination, and four switchable presentation layouts |
 | Page Header | Dynamic Page title with optional description, breadcrumbs, and per-Page overrides |

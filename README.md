@@ -15,7 +15,7 @@ This project is in active development.
 | Cinderwell Performance | [`wp-content/plugins/cinderwell-performance`](wp-content/plugins/cinderwell-performance) | Block-aware HTML, image, resource-hint, and optional hydration optimizations |
 | Cinderwell Base | [`wp-content/themes/cinderwell-starter`](wp-content/themes/cinderwell-starter) | Updateable FSE parent theme with the template hierarchy and default site frame |
 
-The block kit includes Hero, Body, CTA, Card Grid, Image + Text, Icon List, Gallery, Image Carousel, Content Slider, FAQ, Accordion, Tabs, Loop, Two Column, Section, Slot Layout, Mega Menu, and Gravity Forms integration, plus standalone atoms and nested content blocks.
+The block kit includes Hero, Body, CTA, Card Grid, Image + Text, Icon List, Gallery, Image Carousel, Content Slider, FAQ, Accordion, Tabs, Loop, Columns, Section, Mega Menu, and Gravity Forms integration, plus standalone atoms and nested content blocks.
 
 Shared controls cover colors, typography and line height, spacing, widths, surfaces, images, and responsive visibility. The **Visibility** panel can target an entire Cinderwell block or supported content pieces at desktop, tablet, and mobile sizes. Mega menus work inside the native Navigation block.
 
