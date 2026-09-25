@@ -1,63 +1,95 @@
 # Cinderwell Help
 
-An independently installable Cinderwell add-on that provides a client-facing
-Help screen at **Cinderwell → Help**. Editors can read documentation without
-receiving access to Cinderwell settings.
+Cinderwell Help is an admin presentation for Cinderwell's shared documentation
+registry. It does not own the documentation library. Core, active add-ons, and
+client themes register package-owned source directories, and Help presents the
+topics available to the current user.
 
-The WordPress dashboard includes a **Website help** widget with shortcuts to
-common topics and the complete Help screen. It is registered at high priority
-so it appears ahead of standard dashboard widgets, while remaining movable by
-the user. Linked topics open automatically.
+The Help screen is available at **Cinderwell → Help**. User and Development
+audiences retain their categories, search, capability checks, accessible topic
+controls, and syntax-highlighted code examples. The dashboard widget reads only
+topic metadata; full Markdown bodies are loaded when the Help screen renders.
 
-Active Cinderwell add-ons contribute their own sections and topics through the
-same registry. Because each add-on registers its own filters, its documentation
-disappears automatically when that plugin or bundled module is deactivated.
-Sections with no topics visible to the current user are also omitted.
+## Package documentation contract
 
-## Extending documentation from a client theme
+Each owning package stores a `help/manifest.php` and Markdown topic files:
 
-Sections and topics are code-defined so documentation can be versioned with a
-client theme. Both registries are associative: use a stable key to add or
-replace an item, and `unset()` a key to remove it.
-
-```php
-add_filter( 'cinderwell_help_sections', function ( $sections ) {
-    $sections['client-workflows'] = [
-        'title'       => __( 'Client workflows', 'client-theme' ),
-        'description' => __( 'Documentation specific to this website.', 'client-theme' ),
-        'order'       => 15,
-    ];
-
-    // Removing a section also removes every topic assigned to it.
-    unset( $sections['site-management'] );
-    return $sections;
-} );
-
-add_filter( 'cinderwell_help_topics', function ( $topics, $sections ) {
-    $topics['request-a-review'] = [
-        'section' => 'client-workflows',
-        'title'   => __( 'Request a content review', 'client-theme' ),
-        'summary' => __( 'Send a draft to the communications team.', 'client-theme' ),
-        'content' => __( '<p>Save the page as a draft, then share its preview link with the communications team.</p>', 'client-theme' ),
-        'icon'    => 'dashicons-email-alt',
-        'order'   => 10,
-    ];
-
-    unset( $topics['responsive-visibility'] );
-    return $topics;
-}, 10, 2 );
+```text
+help/
+├── manifest.php
+└── topics/
+    ├── editing.md
+    └── development.md
 ```
 
-A topic may set `capability` to a WordPress capability and `condition` to a
-callable. Topics are hidden when either check fails. For final visibility
-decisions, use `cinderwell_help_topic_is_visible`.
+Register the directory from an active plugin or client theme:
 
-Additional integration points:
+```php
+add_action( 'cinderwell_register_documentation', function ( $registry ) {
+    $registry->register_directory(
+        'client-theme',
+        get_stylesheet_directory() . '/help'
+    );
+} );
+```
 
-- `cinderwell_help_capability` changes access from the default `edit_posts`.
-- `cinderwell_help_dashboard_widget` changes the dashboard widget title,
-  message, button label, and topic shortcuts.
-- `cinderwell_help_show_dashboard_widget` hides the dashboard widget when it
-  does not suit a client site.
-- `cinderwell_help_screen_before` renders above the documentation layout.
-- `cinderwell_help_screen_after` renders below the documentation layout.
+A minimal manifest looks like:
+
+```php
+return [
+    'version'  => wp_get_theme()->get( 'Version' ),
+    'sections' => [
+        'client-workflows' => [
+            'title'       => __( 'Client workflows', 'client-theme' ),
+            'description' => __( 'Instructions specific to this website.', 'client-theme' ),
+            'audience'    => 'user',
+            'order'       => 50,
+        ],
+    ],
+    'topics' => [
+        'request-review' => [
+            'section'    => 'client-workflows',
+            'title'      => __( 'Request a review', 'client-theme' ),
+            'summary'    => __( 'Share a draft with the communications team.', 'client-theme' ),
+            'file'       => 'topics/request-review.md',
+            'icon'       => 'dashicons-email-alt',
+            'order'      => 10,
+            'visibility' => 'internal',
+            'tags'       => [ 'drafts', 'review' ],
+        ],
+    ],
+];
+```
+
+The manifest returns a package version, section definitions, and topic metadata.
+Topic bodies remain in Markdown so other consumers and release tooling can use
+the same authored source. Stable topic IDs, package ownership, tags, visibility,
+capability, and package version are retained in the normalized registry.
+
+Localized bodies may sit beside the source file using the WordPress locale,
+such as `editing.es_ES.md`. Cinderwell prefers that file for the matching locale
+and falls back to `editing.md`; manifest labels remain normal translatable PHP
+strings.
+
+Use `visibility => public` for material that may be included in a future public
+documentation bundle. Use `visibility => internal` for site-specific or private
+guidance. The Help interface additionally enforces each topic's WordPress
+`capability`.
+
+## Extension points
+
+- `cinderwell_register_documentation` registers package directories lazily.
+- `cinderwell_documentation_sections` filters normalized sections.
+- `cinderwell_documentation_topics` filters normalized topic metadata.
+- `cinderwell_documentation_topic_html` filters rendered, sanitized topic HTML.
+- `cinderwell_documentation_topic_is_visible` controls topic visibility for a
+  named consumer such as `help`.
+- `cinderwell_help_capability` controls access to the Help screen.
+- `cinderwell_help_dashboard_widget` configures dashboard shortcuts.
+- `cinderwell_help_show_dashboard_widget` disables the dashboard widget.
+- `cinderwell_help_screen_before` and `cinderwell_help_screen_after` surround the
+  Help layout.
+
+`Cinderwell\Documentation::instance()->get_export_data()` exposes a
+transport-neutral bundle for release tooling without introducing a public
+documentation-site plugin.

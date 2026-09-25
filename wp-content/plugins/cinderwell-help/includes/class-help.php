@@ -1,6 +1,6 @@
 <?php
 /**
- * Help screen and documentation registry.
+ * Help screen for the shared Cinderwell documentation registry.
  *
  * @package Cinderwell_Help
  */
@@ -178,7 +178,7 @@ class Help {
         /**
          * Filters the Help dashboard widget content and quick links.
          *
-         * Topic values are stable topic keys from `cinderwell_help_topics`.
+         * Topic values are stable IDs from the Cinderwell documentation registry.
          *
          * @param array $settings Widget title, message, link label, and topics.
          */
@@ -230,16 +230,21 @@ class Help {
             wp_die( esc_html__( 'You do not have permission to view Cinderwell Help.', 'cinderwell-help' ) );
         }
 
-        $sections = self::get_sections();
-        $topics   = self::get_topics( $sections );
-        $sections = array_intersect_key( $sections, array_flip( array_unique( array_column( $topics, 'section' ) ) ) );
+        $sections  = self::get_sections();
+        $topics    = self::get_topics( $sections, true );
+        $sections  = array_intersect_key( $sections, array_flip( array_unique( array_column( $topics, 'section' ) ) ) );
+        $audiences = [
+            'user'        => __( 'User', 'cinderwell-help' ),
+            'development' => __( 'Development', 'cinderwell-help' ),
+        ];
+        $audiences = array_intersect_key( $audiences, array_flip( array_unique( array_column( $sections, 'audience' ) ) ) );
         ?>
         <div class="wrap cw-help">
             <header class="cw-help__header">
                 <div>
                     <span class="cw-help__eyebrow"><?php esc_html_e( 'Cinderwell', 'cinderwell-help' ); ?></span>
                     <h1><?php esc_html_e( 'Help', 'cinderwell-help' ); ?></h1>
-                    <p><?php esc_html_e( 'Practical guidance for editing and maintaining this website.', 'cinderwell-help' ); ?></p>
+                    <p><?php esc_html_e( 'Practical guidance for using, maintaining, and extending this website.', 'cinderwell-help' ); ?></p>
                 </div>
                 <label class="cw-help__search">
                     <span><?php esc_html_e( 'Search help', 'cinderwell-help' ); ?></span>
@@ -251,13 +256,23 @@ class Help {
 
             <div class="cw-help__layout" data-cw-help-root>
                 <nav class="cw-help__nav" aria-label="<?php esc_attr_e( 'Help sections', 'cinderwell-help' ); ?>">
-                    <button type="button" class="is-active" data-cw-help-section="all" aria-pressed="true">
-                        <?php esc_html_e( 'All topics', 'cinderwell-help' ); ?>
-                    </button>
-                    <?php foreach ( $sections as $section_key => $section ) : ?>
-                        <button type="button" data-cw-help-section="<?php echo esc_attr( $section_key ); ?>" aria-pressed="false">
-                            <?php echo esc_html( $section['title'] ); ?>
-                        </button>
+                    <?php foreach ( $audiences as $audience_key => $audience_label ) : ?>
+                        <div class="cw-help__nav-group" data-cw-help-nav-group="<?php echo esc_attr( $audience_key ); ?>">
+                            <button type="button" class="cw-help__audience<?php echo 'user' === $audience_key ? ' is-active' : ''; ?>" data-cw-help-audience="<?php echo esc_attr( $audience_key ); ?>" aria-pressed="<?php echo 'user' === $audience_key ? 'true' : 'false'; ?>" aria-expanded="<?php echo 'user' === $audience_key ? 'true' : 'false'; ?>">
+                                <?php echo esc_html( $audience_label ); ?>
+                            </button>
+                            <div class="cw-help__categories" data-cw-help-categories="<?php echo esc_attr( $audience_key ); ?>"<?php echo 'user' === $audience_key ? '' : ' hidden'; ?>>
+                                <button type="button" class="is-active" data-cw-help-section="all" data-cw-help-section-audience="<?php echo esc_attr( $audience_key ); ?>" aria-pressed="true">
+                                    <?php echo esc_html( sprintf( __( 'All %s topics', 'cinderwell-help' ), strtolower( $audience_label ) ) ); ?>
+                                </button>
+                                <?php foreach ( $sections as $section_key => $section ) : ?>
+                                    <?php if ( $audience_key !== $section['audience'] ) { continue; } ?>
+                                    <button type="button" data-cw-help-section="<?php echo esc_attr( $section_key ); ?>" data-cw-help-section-audience="<?php echo esc_attr( $audience_key ); ?>" aria-pressed="false">
+                                        <?php echo esc_html( $section['title'] ); ?>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
                     <?php endforeach; ?>
                 </nav>
 
@@ -265,7 +280,7 @@ class Help {
                     <p class="cw-help__count" aria-live="polite" data-cw-help-count></p>
                     <div class="cw-help__topics">
                         <?php foreach ( $topics as $topic_key => $topic ) : ?>
-                            <article class="cw-help-topic" data-cw-help-topic data-section="<?php echo esc_attr( $topic['section'] ); ?>" data-search="<?php echo esc_attr( strtolower( wp_strip_all_tags( $topic['title'] . ' ' . $topic['summary'] . ' ' . $topic['content'] ) ) ); ?>">
+                            <article class="cw-help-topic" data-cw-help-topic data-audience="<?php echo esc_attr( $sections[ $topic['section'] ]['audience'] ); ?>" data-section="<?php echo esc_attr( $topic['section'] ); ?>" data-search="<?php echo esc_attr( strtolower( wp_strip_all_tags( $topic['title'] . ' ' . $topic['summary'] . ' ' . implode( ' ', (array) ( $topic['tags'] ?? [] ) ) . ' ' . $topic['content'] ) ) ); ?>">
                                 <details id="cw-help-<?php echo esc_attr( $topic_key ); ?>">
                                     <summary>
                                         <span class="dashicons <?php echo esc_attr( $topic['icon'] ); ?>" aria-hidden="true"></span>
@@ -295,59 +310,12 @@ class Help {
     }
 
     public static function get_sections() {
-        $sections = [
-            'getting-started' => [
-                'title'       => __( 'Getting started', 'cinderwell-help' ),
-                'description' => __( 'Find your way around WordPress and the editor.', 'cinderwell-help' ),
-                'order'       => 10,
-            ],
-            'editing-content' => [
-                'title'       => __( 'Editing content', 'cinderwell-help' ),
-                'description' => __( 'Update words, links, images, and page content.', 'cinderwell-help' ),
-                'order'       => 20,
-            ],
-            'cinderwell-blocks' => [
-                'title'       => __( 'Cinderwell blocks', 'cinderwell-help' ),
-                'description' => __( 'Use the site’s purpose-built content blocks.', 'cinderwell-help' ),
-                'order'       => 30,
-            ],
-            'site-management' => [
-                'title'       => __( 'Site management', 'cinderwell-help' ),
-                'description' => __( 'Maintain navigation, reusable content, and publishing quality.', 'cinderwell-help' ),
-                'order'       => 40,
-            ],
-        ];
-
-        $sections = (array) apply_filters( 'cinderwell_help_sections', $sections );
-        foreach ( $sections as $key => &$section ) {
-            if ( ! is_array( $section ) || empty( $section['title'] ) ) {
-                unset( $sections[ $key ] );
-                continue;
-            }
-            $section['order'] = isset( $section['order'] ) ? (int) $section['order'] : 100;
-        }
-        unset( $section );
-
-        uasort( $sections, static function ( $a, $b ) {
-            return $a['order'] <=> $b['order'];
-        } );
-        return $sections;
+        return \Cinderwell\Documentation::instance()->get_sections();
     }
 
-    public static function get_topics( $sections = null ) {
+    public static function get_topics( $sections = null, $with_content = false ) {
         $sections = null === $sections ? self::get_sections() : $sections;
-        $topics   = self::default_topics();
-
-        /**
-         * Filters the complete Help topic registry.
-         *
-         * Themes may add, replace, or unset topics. Each topic accepts section,
-         * title, summary, content, icon, order, capability, and condition.
-         *
-         * @param array $topics   Topic definitions keyed by stable slug.
-         * @param array $sections Filtered section definitions.
-         */
-        $topics = (array) apply_filters( 'cinderwell_help_topics', $topics, $sections );
+        $topics   = \Cinderwell\Documentation::instance()->get_topics( (bool) $with_content );
 
         foreach ( $topics as $key => &$topic ) {
             if ( ! is_array( $topic ) || empty( $topic['title'] ) || empty( $topic['section'] ) || ! isset( $sections[ $topic['section'] ] ) ) {
@@ -358,11 +326,7 @@ class Help {
                 unset( $topics[ $key ] );
                 continue;
             }
-            if ( isset( $topic['condition'] ) && is_callable( $topic['condition'] ) && ! call_user_func( $topic['condition'] ) ) {
-                unset( $topics[ $key ] );
-                continue;
-            }
-            if ( ! apply_filters( 'cinderwell_help_topic_is_visible', true, $key, $topic ) ) {
+            if ( ! apply_filters( 'cinderwell_documentation_topic_is_visible', true, $key, $topic, 'help' ) ) {
                 unset( $topics[ $key ] );
                 continue;
             }
@@ -377,91 +341,5 @@ class Help {
             return $a['order'] <=> $b['order'];
         } );
         return $topics;
-    }
-
-    private static function default_topics() {
-        return [
-            'editor-overview' => [
-                'section' => 'getting-started',
-                'title'   => __( 'Find your way around the editor', 'cinderwell-help' ),
-                'summary' => __( 'Understand pages, blocks, the toolbar, and saving.', 'cinderwell-help' ),
-                'icon'    => 'dashicons-welcome-learn-more',
-                'order'   => 10,
-                'content' => __( '<p>Pages are assembled from blocks. Select a block to edit it; use List View when you need to select a nested block or understand the page structure.</p><ol><li>Open <strong>Pages</strong> and choose a page.</li><li>Select the content you want to update.</li><li>Use the block toolbar and sidebar for the controls available to your role.</li><li>Use <strong>Preview</strong>, then <strong>Save</strong> when the change is ready.</li></ol>', 'cinderwell-help' ),
-            ],
-            'safe-publishing' => [
-                'section' => 'getting-started',
-                'title'   => __( 'Preview and publish safely', 'cinderwell-help' ),
-                'summary' => __( 'Check desktop and mobile layouts before saving.', 'cinderwell-help' ),
-                'icon'    => 'dashicons-visibility',
-                'order'   => 20,
-                'content' => __( '<p>Preview significant edits before publishing. Check narrow and wide previews, links, spelling, image crops, and headings. WordPress revisions can restore earlier page content when needed.</p>', 'cinderwell-help' ),
-            ],
-            'edit-text' => [
-                'section' => 'editing-content',
-                'title'   => __( 'Edit text and headings', 'cinderwell-help' ),
-                'summary' => __( 'Make content changes without changing the page structure.', 'cinderwell-help' ),
-                'icon'    => 'dashicons-editor-textcolor',
-                'order'   => 30,
-                'content' => __( '<p>Click directly into editable text and type. Keep headings short and descriptive, and do not choose a heading level for its visual size. Cinderwell applies the site typography automatically.</p>', 'cinderwell-help' ),
-            ],
-            'edit-links' => [
-                'section' => 'editing-content',
-                'title'   => __( 'Edit links and buttons', 'cinderwell-help' ),
-                'summary' => __( 'Update destinations and write meaningful link text.', 'cinderwell-help' ),
-                'icon'    => 'dashicons-admin-links',
-                'order'   => 40,
-                'content' => __( '<p>Select the linked text or button and use the link control in its toolbar. Confirm the destination in the link editor. Link labels should describe where the link goes; avoid labels such as “click here.”</p>', 'cinderwell-help' ),
-            ],
-            'images' => [
-                'section' => 'editing-content',
-                'title'   => __( 'Replace images and write alt text', 'cinderwell-help' ),
-                'summary' => __( 'Choose appropriate images while preserving accessibility.', 'cinderwell-help' ),
-                'icon'    => 'dashicons-format-image',
-                'order'   => 50,
-                'content' => __( '<p>Select an image and choose <strong>Replace</strong>. Use a suitably sized image rather than uploading an unnecessarily large original. Describe meaningful images in the alt-text field; leave alt text empty for images that are purely decorative.</p>', 'cinderwell-help' ),
-            ],
-            'add-blocks' => [
-                'section' => 'cinderwell-blocks',
-                'title'   => __( 'Add a Cinderwell block', 'cinderwell-help' ),
-                'summary' => __( 'Insert components that already match the site system.', 'cinderwell-help' ),
-                'icon'    => 'dashicons-screenoptions',
-                'order'   => 60,
-                'content' => __( '<p>Use the block inserter and browse the Cinderwell category. Start with the block closest to the content’s purpose, then replace its sample content. Available blocks and controls may be intentionally limited for your role.</p>', 'cinderwell-help' ),
-            ],
-            'move-blocks' => [
-                'section' => 'cinderwell-blocks',
-                'title'   => __( 'Move, duplicate, or remove content', 'cinderwell-help' ),
-                'summary' => __( 'Use List View for predictable structural edits.', 'cinderwell-help' ),
-                'icon'    => 'dashicons-move',
-                'order'   => 70,
-                'content' => __( '<p>Open List View, select the block, and use its options menu to duplicate or remove it. Dragging in List View is usually the clearest way to reorder content. Some structures are locked to protect the design.</p>', 'cinderwell-help' ),
-            ],
-            'responsive-visibility' => [
-                'section' => 'cinderwell-blocks',
-                'title'   => __( 'Control responsive visibility', 'cinderwell-help' ),
-                'summary' => __( 'Hide supported content at selected screen sizes.', 'cinderwell-help' ),
-                'icon'    => 'dashicons-smartphone',
-                'order'   => 80,
-                'content' => __( '<p>Supported blocks include a <strong>Visibility</strong> panel. Use it only when content truly should not appear at a device size. Important information should remain available to every visitor.</p>', 'cinderwell-help' ),
-            ],
-            'navigation' => [
-                'section'    => 'site-management',
-                'title'      => __( 'Edit site navigation', 'cinderwell-help' ),
-                'summary'    => __( 'Maintain header links and menus in the Site Editor.', 'cinderwell-help' ),
-                'icon'       => 'dashicons-menu-alt3',
-                'order'      => 90,
-                'capability' => 'edit_theme_options',
-                'content'    => __( '<p>Open <strong>Appearance → Editor</strong> and select the header or navigation. Keep labels concise, verify submenu relationships, and preview both desktop and mobile navigation before saving.</p>', 'cinderwell-help' ),
-            ],
-            'content-quality' => [
-                'section' => 'site-management',
-                'title'   => __( 'Keep content accessible and useful', 'cinderwell-help' ),
-                'summary' => __( 'A short checklist for every update.', 'cinderwell-help' ),
-                'icon'    => 'dashicons-universal-access-alt',
-                'order'   => 100,
-                'content' => __( '<ul><li>Use descriptive headings in a logical order.</li><li>Write link text that makes sense out of context.</li><li>Add alt text when an image communicates information.</li><li>Do not communicate meaning with color alone.</li><li>Preview the page and test every changed link.</li></ul>', 'cinderwell-help' ),
-            ],
-        ];
     }
 }

@@ -24,7 +24,8 @@
 .cw-help__header p {
 	margin: 0;
 	color: #d7d7d7;
-	font-size: 15px;
+	font-size: 16px;
+	line-height: 1.55;
 }
 
 .cw-help__eyebrow {
@@ -65,6 +66,12 @@
 	top: 46px;
 }
 
+.cw-help__nav-group + .cw-help__nav-group {
+	margin-top: 6px;
+	padding-top: 6px;
+	border-top: 1px solid #dcdcde;
+}
+
 .cw-help__nav button {
 	padding: 11px 12px;
 	background: transparent;
@@ -88,9 +95,45 @@
 	font-weight: 600;
 }
 
+.cw-help__nav .cw-help__audience {
+	width: 100%;
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.cw-help__audience::after {
+	content: "+";
+	float: right;
+	font-size: 18px;
+	font-weight: 400;
+	line-height: 1;
+}
+
+.cw-help__audience[aria-expanded="true"]::after {
+	content: "−";
+}
+
+.cw-help__categories[hidden] {
+	display: none;
+}
+
+.cw-help__categories {
+	display: grid;
+	margin: 2px 0 4px 12px;
+	padding-left: 8px;
+	border-left: 1px solid #dcdcde;
+}
+
+.cw-help__categories button {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	font-size: 14px;
+}
+
 .cw-help__count {
 	margin: 0 0 10px;
 	color: #646970;
+	font-size: 14px;
 }
 
 .cw-help__topics {
@@ -152,20 +195,28 @@
 
 .cw-help-topic summary strong {
 	margin-bottom: 5px;
-	font-size: 16px;
+	font-size: 18px;
+	line-height: 1.35;
 }
 
 .cw-help-topic summary small {
 	color: #646970;
-	font-size: 13px;
+	font-size: 16px;
 	font-weight: 400;
+	line-height: 1.5;
 }
 
 .cw-help-topic__body {
 	max-width: 760px;
 	padding: 0 60px 22px;
-	font-size: 14px;
-	line-height: 1.65;
+	font-size: 16px;
+	line-height: 1.7;
+}
+
+.cw-help-topic__body p,
+.cw-help-topic__body li {
+	font-size: 16px;
+	line-height: 1.7;
 }
 
 .cw-help-topic__body > :first-child {
@@ -174,6 +225,72 @@
 
 .cw-help-topic__body > :last-child {
 	margin-bottom: 0;
+}
+
+.cw-help-topic__body pre {
+	position: relative;
+	max-width: 100%;
+	padding: 36px 18px 18px;
+	overflow-x: auto;
+	background: #1d2327;
+	color: #e6edf3;
+	border-radius: 4px;
+	box-sizing: border-box;
+	font-size: 13px;
+	line-height: 1.55;
+	white-space: pre;
+	tab-size: 4;
+}
+
+.cw-help-topic__body pre::before {
+	content: attr(data-language);
+	position: absolute;
+	top: 9px;
+	left: 18px;
+	color: #a8b3c2;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	line-height: 1;
+	text-transform: uppercase;
+}
+
+.cw-help-topic__body pre code {
+	padding: 0;
+	background: transparent;
+	color: inherit;
+}
+
+.cw-syntax-token--comment {
+	color: #a8b3c2;
+	font-style: italic;
+}
+
+.cw-syntax-token--string {
+	color: #b8e0a5;
+}
+
+.cw-syntax-token--keyword {
+	color: #ff9bd5;
+	font-weight: 700;
+}
+
+.cw-syntax-token--constant,
+.cw-syntax-token--number {
+	color: #d0b8ff;
+}
+
+.cw-syntax-token--variable {
+	color: #f4c27a;
+}
+
+.cw-syntax-token--name {
+	color: #8ecbff;
+}
+
+.cw-syntax-token--operator {
+	color: #d8dee9;
 }
 
 .cw-help__empty {
