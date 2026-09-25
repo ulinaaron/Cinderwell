@@ -1,0 +1,9 @@
+{
+    "name": "cinderwell-media-folders",
+    "version": "0.2.6",
+    "description": "Media folder system for Cinderwell",
+    "private": true,
+    "scripts": {
+        "build": "echo 'No build step — plain JS/CSS assets.'"
+    }
+}
