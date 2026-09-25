@@ -1,0 +1,41 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cinderwell-events/upcoming-sessions",
+  "title": "Upcoming Sessions",
+  "category": "cinderwell-content",
+  "icon": "calendar-alt",
+  "description": "Display upcoming Event Sessions in chronological order.",
+  "textdomain": "cinderwell-events",
+  "usesContext": ["postId", "postType"],
+  "supports": {
+    "align": ["wide", "full"],
+    "anchor": false,
+    "color": false,
+    "spacing": false,
+    "typography": false,
+    "customClassName": false,
+    "html": false
+  },
+  "attributes": {
+    "scope": { "type": "string", "default": "current" },
+    "heading": { "type": "string", "default": "Upcoming Sessions" },
+    "showHeading": { "type": "boolean", "default": true },
+    "categoryId": { "type": "integer", "default": 0 },
+    "perPage": { "type": "integer", "default": 10 },
+    "showPagination": { "type": "boolean", "default": false },
+    "filtersEnabled": { "type": "boolean", "default": false },
+    "facetId": { "type": "string", "default": "" },
+    "liveFiltering": { "type": "boolean", "default": true },
+    "facets": { "type": "object", "default": {} },
+    "emptyMessage": { "type": "string", "default": "No upcoming sessions are scheduled." },
+    "width": { "type": "string", "default": "wide" },
+    "background": { "type": "string", "default": "white" },
+    "spacing": { "type": "string", "default": "md" },
+    "align": { "type": "string", "default": "full" }
+  },
+  "editorScript": "file:./index.js",
+  "style": "file:./style.css",
+  "editorStyle": "file:./editor.css",
+  "render": "file:./render.php"
+}
