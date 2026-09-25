@@ -11,11 +11,20 @@ This project is in active development.
 | Cinderwell | [`wp-content/plugins/cinderwell`](wp-content/plugins/cinderwell) | Blocks, atoms, design tokens, editor controls, dynamic data, and extension hooks |
 | Cinderwell Alerts | [`wp-content/plugins/cinderwell-alerts`](wp-content/plugins/cinderwell-alerts) | Block-built alerts with scheduling, targeting, priority, and dismissal |
 | Cinderwell Cookie Consent | [`wp-content/plugins/cinderwell-cookie-consent`](wp-content/plugins/cinderwell-cookie-consent) | Category consent, prior blocking, withdrawal controls, and policy guidance |
+| Cinderwell Events | [`wp-content/plugins/cinderwell-events`](wp-content/plugins/cinderwell-events) | Event content, listings, and templates |
+| Cinderwell Forms | [`wp-content/plugins/cinderwell-forms`](wp-content/plugins/cinderwell-forms) | Standalone form builder and submissions |
 | Cinderwell Help | [`wp-content/plugins/cinderwell-help`](wp-content/plugins/cinderwell-help) | Searchable client documentation with child-theme extension hooks |
+| Cinderwell Media Folders | [`wp-content/plugins/cinderwell-media-folders`](wp-content/plugins/cinderwell-media-folders) | Media Library organization |
 | Cinderwell Performance | [`wp-content/plugins/cinderwell-performance`](wp-content/plugins/cinderwell-performance) | Block-aware HTML, image, resource-hint, and optional hydration optimizations |
+| Cinderwell Popups | [`wp-content/plugins/cinderwell-popups`](wp-content/plugins/cinderwell-popups) | Popup campaigns and display rules |
+| Cinderwell Portal | [`wp-content/plugins/cinderwell-portal`](wp-content/plugins/cinderwell-portal) | Member portal features |
+| Cinderwell SEO | [`wp-content/plugins/cinderwell-seo`](wp-content/plugins/cinderwell-seo) | Search metadata and SEO tools |
+| Cinderwell Snippets | [`wp-content/plugins/cinderwell-snippets`](wp-content/plugins/cinderwell-snippets) | Managed site snippets |
+| Cinderwell Utilities | [`wp-content/plugins/cinderwell-utilities`](wp-content/plugins/cinderwell-utilities) | Site utilities and admin tools |
 | Cinderwell Base | [`wp-content/themes/cinderwell-starter`](wp-content/themes/cinderwell-starter) | Updateable FSE parent theme with the template hierarchy and default site frame |
+| Cinderwell Marketing | [`wp-content/themes/cinderwell-marketing`](wp-content/themes/cinderwell-marketing) | Product-site child theme using the plugin's default token manifest |
 
-The block kit includes Hero, Body, CTA, Card Grid, Image + Text, Icon List, Gallery, Image Carousel, Content Slider, FAQ, Accordion, Tabs, Loop, Columns, Section, Mega Menu, and Gravity Forms integration, plus standalone atoms and nested content blocks.
+The block kit includes Hero, Page Header, Body, CTA, Card Grid, Image + Text, Quote, Testimonials, Icon List, Gallery, Image Carousel, Video, Map, Content Slider, FAQ, Accordion, Tabs, Loop, Columns, Section, Mega Menu, Utility Bar, Company Details, and Gravity Forms integration, plus standalone atoms and nested content blocks. The older Two Column and Slot Layout blocks remain registered for existing content but are hidden from the inserter.
 
 Shared controls cover colors, typography and line height, spacing, widths, surfaces, images, and responsive visibility. The **Visibility** panel can target an entire Cinderwell block or supported content pieces at desktop, tablet, and mobile sizes. Mega menus work inside the native Navigation block.
 
@@ -41,8 +50,9 @@ or fork the parent into the client theme. This keeps parent fixes updateable
 while the child owns brand tokens, patterns, parts, and intentional template
 overrides. See the [parent-theme guide](wp-content/themes/cinderwell-starter/README.md).
 
-To use alerts, cookie consent, Help, or Performance, copy the corresponding add-on directory into
-`wp-content/plugins/` and activate it after Cinderwell.
+To use an add-on, copy its directory into `wp-content/plugins/` and activate it
+according to that component's README. Cinderwell Forms is standalone; Gravity
+Forms is only needed for the separate core integration block.
 
 This is a multi-component source repository. GitHub's source ZIP is not a single installable WordPress plugin ZIP; build and install the component directories described above.
 
