@@ -357,7 +357,7 @@ rules safe by default; user-aware rules must be intentionally exposed.
 ## Extension API Reference
 
 ### Filters
-- `cinderwell_render_{block_name}` — Override block markup. Params: `$html`, `$attributes`
+- `cinderwell_render_{block_name}` — Filter block markup on every render (override or not). Params: `$html`, `$attributes`
 - `cinderwell_design_tokens` — Customize tokens. Params: `$tokens`, `$locale`
 - `cinderwell_gravity_form_args` — GF shortcode args. Params: `$args`, `$form_id`, `$attributes`
 - `cinderwell_loop_post_type_allowed` — Allow an intentional non-public Loop source. Params: `$allowed`, `$post_type_object`, `$attributes`
