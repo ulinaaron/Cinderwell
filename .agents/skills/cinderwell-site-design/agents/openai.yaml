@@ -1,0 +1,4 @@
+interface:
+  display_name: "Cinderwell Site Design"
+  short_description: "Design accessible, expressive Cinderwell websites"
+  default_prompt: "Use $cinderwell-site-design to design and build a polished Cinderwell website."
