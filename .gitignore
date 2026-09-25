@@ -3,9 +3,16 @@
 !/.gitignore
 !/README.md
 !/.github/
+!/.agents/
 !/scripts/
 !/updates/
 !/wp-content/
+
+/.agents/*
+!/.agents/skills/
+/.agents/skills/*
+!/.agents/skills/cinderwell-site-design/
+!/.agents/skills/cinderwell-site-design/**
 
 /.github/*
 !/.github/workflows/
@@ -28,13 +35,20 @@
 !/wp-content/plugins/cinderwell/
 !/wp-content/plugins/cinderwell-alerts/
 !/wp-content/plugins/cinderwell-cookie-consent/
+!/wp-content/plugins/cinderwell-events/
+!/wp-content/plugins/cinderwell-forms/
 !/wp-content/plugins/cinderwell-help/
+!/wp-content/plugins/cinderwell-media-folders/
 !/wp-content/plugins/cinderwell-performance/
 !/wp-content/plugins/cinderwell-popups/
+!/wp-content/plugins/cinderwell-portal/
+!/wp-content/plugins/cinderwell-seo/
+!/wp-content/plugins/cinderwell-snippets/
 !/wp-content/plugins/cinderwell-utilities/
 
 /wp-content/themes/*
 !/wp-content/themes/cinderwell-starter/
+!/wp-content/themes/cinderwell-marketing/
 
 # Dependencies, generated assets, local configuration, and runtime data.
 **/node_modules/

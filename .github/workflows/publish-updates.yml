@@ -30,6 +30,9 @@ jobs:
           cache-dependency-path: |
             wp-content/plugins/cinderwell/package-lock.json
             wp-content/plugins/cinderwell-popups/package-lock.json
+            wp-content/plugins/cinderwell-portal/package-lock.json
+            wp-content/plugins/cinderwell-events/package-lock.json
+            wp-content/plugins/cinderwell-seo/package-lock.json
 
       - name: Install build dependencies
         working-directory: wp-content/plugins/cinderwell
@@ -45,6 +48,30 @@ jobs:
 
       - name: Build Cinderwell Popups
         working-directory: wp-content/plugins/cinderwell-popups
+        run: npm run build
+
+      - name: Install Members Portal build dependencies
+        working-directory: wp-content/plugins/cinderwell-portal
+        run: npm ci
+
+      - name: Build Cinderwell Members Portal
+        working-directory: wp-content/plugins/cinderwell-portal
+        run: npm run build
+
+      - name: Install Events build dependencies
+        working-directory: wp-content/plugins/cinderwell-events
+        run: npm ci
+
+      - name: Build Cinderwell Events
+        working-directory: wp-content/plugins/cinderwell-events
+        run: npm run build
+
+      - name: Install SEO build dependencies
+        working-directory: wp-content/plugins/cinderwell-seo
+        run: npm ci
+
+      - name: Build Cinderwell SEO
+        working-directory: wp-content/plugins/cinderwell-seo
         run: npm run build
 
       - name: Package release

@@ -2,10 +2,10 @@
   "plugin": {
     "name": "Cinderwell",
     "slug": "cinderwell",
-    "version": "0.1.34",
+    "version": "0.1.68",
     "homepage": "https://github.com/ulinaaron/Cinderwell",
     "plugin_file": "cinderwell/cinderwell.php",
-    "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-0.1.34.zip",
+    "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-0.1.68.zip",
     "requires": "6.3",
     "tested": "7.1",
     "sections": {
@@ -32,11 +32,11 @@
     "cinderwell-cookie-consent": {
       "name": "Cinderwell Cookie Consent",
       "slug": "cinderwell-cookie-consent",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "homepage": "https://github.com/ulinaaron/Cinderwell",
       "plugin_file": "cinderwell-cookie-consent/cinderwell-cookie-consent.php",
       "distribution": "plugin",
-      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-cookie-consent-0.1.1.zip",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-cookie-consent-0.1.2.zip",
       "requires": "6.5",
       "requires_php": "7.4",
       "sections": {
@@ -47,11 +47,11 @@
     "cinderwell-help": {
       "name": "Cinderwell Help",
       "slug": "cinderwell-help",
-      "version": "0.1.3",
+      "version": "0.1.7",
       "homepage": "https://github.com/ulinaaron/Cinderwell",
       "plugin_file": "cinderwell-help/cinderwell-help.php",
       "distribution": "plugin",
-      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-help-0.1.3.zip",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-help-0.1.7.zip",
       "requires": "6.5",
       "requires_php": "7.4",
       "sections": {
@@ -62,11 +62,11 @@
     "cinderwell-performance": {
       "name": "Cinderwell Performance",
       "slug": "cinderwell-performance",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "homepage": "https://github.com/ulinaaron/Cinderwell",
       "plugin_file": "cinderwell-performance/cinderwell-performance.php",
       "distribution": "plugin",
-      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-performance-0.1.1.zip",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-performance-0.1.2.zip",
       "requires": "6.3",
       "requires_php": "7.4",
       "sections": {
@@ -89,14 +89,74 @@
       },
       "sha256": "example"
     },
+    "cinderwell-events": {
+      "name": "Cinderwell Events",
+      "slug": "cinderwell-events",
+      "version": "0.1.1",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-events/cinderwell-events.php",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-events-0.1.0.zip",
+      "requires": "6.5",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Session-first Event publishing with chronological listings and independently editable occurrences."
+      },
+      "sha256": "example"
+    },
+    "cinderwell-seo": {
+      "name": "Cinderwell SEO",
+      "slug": "cinderwell-seo",
+      "version": "0.1.0",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-seo/cinderwell-seo.php",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-seo-0.1.0.zip",
+      "requires": "6.5",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Accessible search metadata, explainable content analysis, social previews, schema, and native sitemap controls."
+      },
+      "sha256": "example"
+    },
+    "cinderwell-forms": {
+      "name": "Cinderwell Forms",
+      "slug": "cinderwell-forms",
+      "version": "0.1.1",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-forms/cinderwell-forms.php",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-forms-0.1.1.zip",
+      "requires": "6.5",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Accessible form building, stored submissions, notifications, privacy tools, and spam protection."
+      },
+      "sha256": "example"
+    },
+    "cinderwell-portal": {
+      "name": "Cinderwell Members Portal",
+      "slug": "cinderwell-portal",
+      "version": "0.1.0",
+      "homepage": "https://github.com/ulinaaron/Cinderwell",
+      "plugin_file": "cinderwell-portal/cinderwell-portal.php",
+      "distribution": "plugin",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-portal-0.1.0.zip",
+      "requires": "6.3",
+      "requires_php": "7.4",
+      "sections": {
+        "description": "Private member content, moderated registration, member profiles, and administrator-issued accounts."
+      },
+      "sha256": "example"
+    },
     "cinderwell-utilities": {
       "name": "Cinderwell Site Utilities",
       "slug": "cinderwell-utilities",
-      "version": "0.1.1",
+      "version": "0.1.3",
       "homepage": "https://github.com/ulinaaron/Cinderwell",
       "plugin_file": "cinderwell-utilities/cinderwell-utilities.php",
       "distribution": "plugin",
-      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-utilities-0.1.1.zip",
+      "download_url": "https://cinderwell-updates.surge.sh/packages/cinderwell-utilities-0.1.3.zip",
       "requires": "6.3",
       "requires_php": "7.4",
       "sections": {
@@ -109,7 +169,7 @@
       "slug": "teams",
       "module": "teams",
       "distribution": "bundled",
-      "version": "0.1.34",
+      "version": "0.1.68",
       "requires": "6.3",
       "requires_php": "7.4",
       "sections": {
@@ -121,7 +181,7 @@
       "slug": "portfolio",
       "module": "portfolio",
       "distribution": "bundled",
-      "version": "0.1.34",
+      "version": "0.1.68",
       "requires": "6.3",
       "requires_php": "7.4",
       "sections": {
@@ -133,7 +193,7 @@
       "slug": "company-details",
       "module": "company-details",
       "distribution": "bundled",
-      "version": "0.1.34",
+      "version": "0.1.68",
       "requires": "6.3",
       "requires_php": "7.4",
       "sections": {
@@ -145,7 +205,7 @@
       "slug": "locations",
       "module": "locations",
       "distribution": "bundled",
-      "version": "0.1.34",
+      "version": "0.1.68",
       "requires": "6.3",
       "requires_php": "7.4",
       "dependencies": ["company-details"],
@@ -158,7 +218,7 @@
       "slug": "animations",
       "module": "animations",
       "distribution": "bundled",
-      "version": "0.1.34",
+      "version": "0.1.68",
       "requires": "6.3",
       "requires_php": "7.4",
       "sections": {
