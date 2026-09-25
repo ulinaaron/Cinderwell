@@ -177,7 +177,8 @@ The default is `edit_posts`.
 
 ### `cinderwell_render_{block_name}`
 
-Override block markup.
+Filter the rendered markup of a Cinderwell block. Fires on every render, with
+or without a theme override file.
 
 ```php
 add_filter('cinderwell_render_hero', function($html, $attributes) {
@@ -894,4 +895,8 @@ Place custom templates in your theme at:
 theme/cinderwell/{block-name}/index.html
 ```
 
-The plugin checks the theme directory first, falling back to plugin defaults.
+The plugin checks the active theme (so client child themes work) first, then the
+parent theme, falling back to plugin defaults. `index.html` may use
+`{{content}}` (the block's inner content) and `{{attribute_name}}` (an escaped
+scalar attribute value) so each instance renders its own data. Use the
+`cinderwell_render_{block}` filter for programmatic changes.
