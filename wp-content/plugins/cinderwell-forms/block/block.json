@@ -1,0 +1,39 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cinderwell/form",
+  "title": "Form",
+  "category": "cinderwell-content",
+  "icon": "feedback",
+  "description": "Display a published Cinderwell form.",
+  "textdomain": "cinderwell-forms",
+  "supports": {
+    "align": ["wide", "full"],
+    "anchor": false,
+    "color": false,
+    "spacing": false,
+    "typography": false,
+    "customClassName": false,
+    "html": false
+  },
+  "attributes": {
+    "formId": { "type": "integer", "default": 0 },
+    "presentation": { "type": "string", "default": "auto" },
+    "width": { "type": "string", "default": "standard" },
+    "spacingResponsive": { "type": "object", "default": {} },
+    "background": { "type": "string", "default": "white" },
+    "backgroundImage": { "type": "integer", "default": 0 },
+    "backgroundImageUrl": { "type": "string", "default": "" },
+    "backgroundImageFit": { "type": "string", "default": "cover" },
+    "backgroundImagePosition": { "type": "string", "default": "center" },
+    "backgroundOverlay": { "type": "string", "default": "none" },
+    "textSize": { "type": "string", "default": "auto" },
+    "textColor": { "type": "string", "default": "auto" },
+    "textStyles": { "type": "object", "default": {} },
+    "editorPreview": { "type": "boolean", "default": false },
+    "conditions": { "type": "object", "default": {} },
+    "visibility": { "type": "string", "default": "always" },
+    "visibilityConfig": { "type": "object", "default": {} },
+    "align": { "type": "string", "default": "full" }
+  }
+}

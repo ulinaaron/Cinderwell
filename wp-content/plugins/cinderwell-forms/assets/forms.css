@@ -1,0 +1,201 @@
+.cinderwell-form-section {
+	padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+	background-color: var(--cw-color-bg);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-form-section--bg-white {
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-form-section--bg-light {
+	background-color: var(--cw-color-light);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-form-section--bg-dark {
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+.cinderwell-form-section--bg-brand {
+	background-color: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
+
+.cinderwell-form-builder {
+	max-width: var(--cw-form-width, var(--cw-width-standard));
+	margin-inline: auto;
+}
+
+.cinderwell-form-builder.cw-width-narrow {
+	--cw-form-width: var(--cw-width-narrow);
+}
+
+.cinderwell-form-builder.cw-width-standard {
+	--cw-form-width: var(--cw-width-standard);
+}
+
+.cinderwell-form-builder.cw-width-wide {
+	--cw-form-width: var(--cw-width-wide);
+}
+
+.cinderwell-form-builder.cw-width-full {
+	--cw-form-width: var(--cw-width-full);
+}
+
+.cinderwell-form__grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--cw-form-row-gap, var(--cw-gap-md));
+}
+
+.cinderwell-form__field--full,
+.cinderwell-form__content,
+.cinderwell-form__divider {
+	grid-column: 1 / -1;
+}
+
+.cinderwell-form__field {
+	align-content: start;
+}
+
+.cinderwell-form__field[hidden] {
+	display: none !important;
+}
+
+.cinderwell-form__choice {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.625rem;
+	font-weight: 400;
+}
+
+.cinderwell-form__field fieldset {
+	display: grid;
+	gap: 0.625rem;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.cinderwell-form__required {
+	color: var(--cw-color-muted);
+	font-size: var(--cw-font-size-sm);
+	font-weight: 500;
+}
+
+.cinderwell-form__error {
+	color: var(--cw-color-danger);
+	font-size: var(--cw-font-size-sm);
+	font-weight: 600;
+}
+
+.cinderwell-form__condition-note {
+	display: block;
+}
+
+.cinderwell-form.is-enhanced .cinderwell-form__condition-note {
+	display: none;
+}
+
+.cinderwell-form__error-summary {
+	margin-bottom: var(--cw-gap-md);
+}
+
+.cinderwell-form__error-summary h2 {
+	margin: 0 0 0.5rem;
+	color: inherit;
+	font-size: var(--cw-font-size-lg);
+}
+
+.cinderwell-form__error-summary ul {
+	margin: 0.5rem 0 0;
+	padding-left: 1.25rem;
+}
+
+.cinderwell-form__submit {
+	margin-top: var(--cw-gap-md);
+	min-height: 44px;
+}
+
+.cinderwell-form--newsletter :is(form,.cinderwell-form__editor-fieldset) {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-end;
+	gap: var(--cw-gap-sm);
+}
+
+.cinderwell-form--newsletter :is(form,.cinderwell-form__editor-fieldset) > .cinderwell-form__grid {
+	flex: 1 1 18rem;
+	grid-template-columns: 1fr;
+}
+
+.cinderwell-form--newsletter .cinderwell-form__field--half {
+	grid-column: 1;
+}
+
+.cinderwell-form--newsletter .cinderwell-form__submit {
+	flex: 0 0 auto;
+	margin-top: 0;
+}
+
+.cinderwell-form--newsletter :is(.cf-turnstile,.cinderwell-form__status) {
+	flex-basis: 100%;
+}
+
+.cinderwell-form__trap {
+	position: absolute !important;
+	left: -10000px !important;
+	width: 1px !important;
+	height: 1px !important;
+	overflow: hidden !important;
+}
+
+.cinderwell-form__divider {
+	width: 100%;
+	border: 0;
+	border-top: 1px solid var(--cw-color-border);
+}
+
+.cinderwell-form-editor-actions {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 8px;
+	margin: -4px 0 20px;
+}
+
+.cinderwell-form__editor-fieldset {
+	min-inline-size: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.cinderwell-form.is-editor-preview :is(input,select,textarea,button):disabled {
+	opacity: 1;
+	color: inherit;
+	cursor: default;
+}
+
+.cinderwell-form.is-editor-preview .cinderwell-form__submit:disabled {
+	color: var(--cw-color-on-primary, #fff);
+}
+
+@media (max-width: 640px) {
+
+	.cinderwell-form__grid {
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-form__field--half {
+		grid-column: 1;
+	}
+
+	.cinderwell-form--newsletter :is(form,.cinderwell-form__editor-fieldset),
+	.cinderwell-form--newsletter .cinderwell-form__submit {
+		width: 100%;
+	}
+}
