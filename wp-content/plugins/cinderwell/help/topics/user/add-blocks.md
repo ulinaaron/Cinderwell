@@ -1,0 +1,1 @@
+Use the block inserter and browse the Cinderwell category. Start with the block closest to the content’s purpose, then replace its sample content. Available blocks and controls may be intentionally limited for your role.

@@ -28,19 +28,11 @@
 		"visibilityConfig": {
 			"type": "object",
 			"default": {}
-		},
+        },
         "formId": { "type": "number", "default": 0 },
-        "title": { "type": "boolean", "default": true },
         "description": { "type": "boolean", "default": true },
         "ajax": { "type": "boolean", "default": true },
-        "spacingResponsive": { "type": "object", "default": {} },
-        "width": { "type": "string", "default": "standard" },
-        "background": { "type": "string", "default": "white" },
-        "backgroundImage": { "type": "integer", "default": 0 },
-        "backgroundImageUrl": { "type": "string", "default": "" },
-        "backgroundImageFit": { "type": "string", "default": "cover" },
-        "backgroundImagePosition": { "type": "string", "default": "center" },
-        "backgroundOverlay": { "type": "string", "default": "none" }
+        "width": { "type": "string", "default": "standard" }
     },
     "editorScript": "file:./index.js",
     "style": "file:./style.css",

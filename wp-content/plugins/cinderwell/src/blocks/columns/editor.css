@@ -1,0 +1,28 @@
+.cinderwell-columns__inner {
+	padding-inline: var(--cw-layout-gutter);
+}
+
+.cinderwell-columns__grid.block-editor-block-list__layout {
+	min-height: 8rem;
+}
+
+.cinderwell-columns__grid > .block-list-appender {
+	align-self: stretch;
+	min-width: 3rem;
+}
+
+.cw-columns-count {
+	margin: 0 0 0.75rem;
+	color: #646970;
+}
+
+.cw-columns-count + .components-button {
+	margin-bottom: 1rem;
+}
+
+@media (max-width: 699px) {
+
+	.cinderwell-columns__grid.block-editor-block-list__layout {
+		flex-direction: column;
+	}
+}

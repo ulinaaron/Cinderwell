@@ -232,3 +232,34 @@ body[data-cw-editor-access-preset="text"] .cw-access-content {
 .cw-editor-access-notice {
 	margin: 12px;
 }
+
+.cw-content-fields-panel > p {
+	margin: 0 0 16px;
+	color: #646970;
+	font-size: 12px;
+	line-height: 1.5;
+}
+
+.cw-content-field__choices {
+	min-width: 0;
+	margin: 0 0 16px;
+	padding: 0;
+	border: 0;
+}
+
+.cw-content-field__choices legend {
+	margin-bottom: 8px;
+	font-weight: 600;
+}
+
+.cw-content-field__choices > p {
+	margin: -4px 0 10px;
+	color: #646970;
+	font-size: 12px;
+}
+
+.cw-content-field__media-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}

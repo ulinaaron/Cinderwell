@@ -17,9 +17,9 @@ class Portfolio {
     const META_PREFIX = '_cw_project_';
 
     public function __construct() {
-        add_filter( 'cinderwell_help_sections', [ $this, 'add_help_section' ] );
-        add_filter( 'cinderwell_help_topics', [ $this, 'add_help_topics' ] );
+        add_action( 'cinderwell_register_documentation', [ $this, 'register_documentation' ] );
         add_action( 'init', [ $this, 'register_content_types' ] );
+		add_action( 'cinderwell_register_fields', [ $this, 'register_content_fields' ] );
         add_filter( 'cinderwell_settings_tabs', [ $this, 'add_settings_tab' ], 7 );
         add_action( 'admin_post_cinderwell_save_portfolio', [ $this, 'save_settings' ] );
         add_action( 'add_meta_boxes_' . self::POST_TYPE, [ $this, 'add_meta_box' ] );
@@ -52,37 +52,8 @@ class Portfolio {
         ] );
     }
 
-    public function add_help_section( $sections ) {
-        $sections['portfolio'] = [
-            'title'       => __( 'Portfolio', 'cinderwell' ),
-            'description' => __( 'Maintain projects, categories, and portfolio listings.', 'cinderwell' ),
-            'order'       => 80,
-        ];
-        return $sections;
-    }
-
-    public function add_help_topics( $topics ) {
-        $topics['portfolio-manage'] = [
-            'section' => 'portfolio',
-            'title'   => __( 'Add and update portfolio items', 'cinderwell' ),
-            'summary' => __( 'Maintain project content, imagery, details, and categories.', 'cinderwell' ),
-            'icon'    => 'dashicons-portfolio',
-            'order'   => 10,
-            'content' => sprintf(
-                wp_kses_post( __( '<p>Open <a href="%1$s"><strong>Portfolio</strong></a> and add or edit a project. Use the title and editor for the main story, the featured image for its primary visual, and the project fields for structured details.</p><p>Assign <a href="%2$s">portfolio categories</a> when visitors need to browse related types of work.</p>', 'cinderwell' ) ),
-                esc_url( admin_url( 'edit.php?post_type=' . self::POST_TYPE ) ),
-                esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=' . self::POST_TYPE ) )
-            ),
-        ];
-        $topics['portfolio-display'] = [
-            'section' => 'portfolio',
-            'title'   => __( 'Display portfolio work', 'cinderwell' ),
-            'summary' => __( 'Create project listings with the Cinderwell Loop.', 'cinderwell' ),
-            'icon'    => 'dashicons-grid-view',
-            'order'   => 20,
-            'content' => __( '<p>Add a Cinderwell Loop block and choose Portfolio as its content type. Filter by category when needed. Project titles, images, and configured summary fields are drawn from the portfolio entries, so update the source item rather than duplicating that information on each page.</p>', 'cinderwell' ),
-        ];
-        return $topics;
+    public function register_documentation( $registry ) {
+        $registry->register_directory( 'cinderwell-portfolio', CINDERWELL_DIR . 'help/modules/portfolio' );
     }
 
     public static function get_defaults() {
@@ -165,6 +136,23 @@ class Portfolio {
             ? [ 'status' => 'good', 'message' => sprintf( _n( '%d published project.', '%d published projects.', $count, 'cinderwell' ), $count ) ]
             : [ 'status' => 'warning', 'message' => __( 'No published projects yet.', 'cinderwell' ) ];
     }
+
+	/** Expose existing project meta through the shared field registry. */
+	public function register_content_fields( $registry ) {
+		$settings = self::get_settings();
+		$fields   = array_intersect_key( self::get_field_definitions(), array_flip( $settings['fields'] ) );
+		foreach ( $fields as $key => &$field ) {
+			$field['storage_key'] = self::META_PREFIX . $key;
+		}
+		unset( $field );
+		$registry->register_group( 'cinderwell/project_details', [
+			'label'           => __( 'Project Details', 'cinderwell' ),
+			'object_type'     => 'post',
+			'object_subtypes' => [ self::POST_TYPE ],
+			'fields'          => $fields,
+			'ui'              => false,
+		] );
+	}
 
     public function register_content_types() {
         $settings = self::get_settings();
@@ -287,7 +275,7 @@ class Portfolio {
         if ( isset( $_GET['updated'] ) ) {
             echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Portfolio settings saved.', 'cinderwell' ) . '</p></div>';
         }
-        echo '<div class="card" style="max-width:760px;"><h2>' . esc_html__( 'Portfolio', 'cinderwell' ) . '</h2>';
+        echo '<div class="card cw-settings-card"><h2>' . esc_html__( 'Portfolio', 'cinderwell' ) . '</h2>';
         echo '<p>' . esc_html__( 'Manage case studies or project work, then place a focused Portfolio loop anywhere.', 'cinderwell' ) . '</p>';
         echo '<form method="post" action="' . esc_url( admin_url( 'admin-post.php' ) ) . '"><input type="hidden" name="action" value="cinderwell_save_portfolio">';
         wp_nonce_field( 'cinderwell_save_portfolio' );

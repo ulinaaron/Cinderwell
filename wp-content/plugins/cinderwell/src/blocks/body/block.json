@@ -24,6 +24,10 @@
         "reusable": true
     },
     "attributes": {
+		"layout": {
+			"type": "string",
+			"default": "standard"
+		},
 		"dynamicData": {
 			"type": "object",
 			"default": {}
@@ -62,6 +66,10 @@
             "default": ""
         },
         "showBody": {
+            "type": "boolean",
+            "default": true
+        },
+        "constrainCopyWidth": {
             "type": "boolean",
             "default": true
         },

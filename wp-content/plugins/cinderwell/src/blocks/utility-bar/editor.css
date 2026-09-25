@@ -1,2 +1,7 @@
-.editor-styles-wrapper .cinderwell-utility-bar { margin-block: 0; }
-.editor-styles-wrapper .cinderwell-utility-bar__socials { opacity: 0.72; }
+.editor-styles-wrapper .cinderwell-utility-bar {
+	margin-block: 0;
+}
+
+.editor-styles-wrapper .cinderwell-utility-bar__socials {
+	opacity: 0.72;
+}

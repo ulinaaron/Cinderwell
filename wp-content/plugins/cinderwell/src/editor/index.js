@@ -32,6 +32,16 @@ import {
 	responsiveVisibilityLabels,
 } from '../shared/responsive-visibility';
 import {
+	BackgroundControls,
+	BlockIdentity,
+	getSpacingClassName,
+	getTypographyClassName,
+	LayoutControls,
+	SegmentedControl,
+	TypographyControls,
+} from '../shared/inspector-controls';
+import { ConditionsPanel } from '../shared/conditions-panel';
+import {
 	applyEditorAccessClasses,
 	canEditControl,
 	editorAccessPolicy,
@@ -42,8 +52,23 @@ import { BlockSettingsClipboardMenu } from '../shared/block-settings-clipboard';
 import './style.css';
 import '../modules/animations/editor';
 import '../shared/page-header-panel';
+import './content-fields';
 
 applyEditorAccessClasses();
+
+// Stable editor-control contract for Cinderwell add-ons.
+window.cinderwellEditorComponents = {
+	...( window.cinderwellEditorComponents || {} ),
+	BackgroundControls,
+	BlockIdentity,
+	ConditionsPanel,
+	getSpacingClassName,
+	getTypographyClassName,
+	LayoutControls,
+	ResponsiveVisibilityPanel,
+	SegmentedControl,
+	TypographyControls,
+};
 
 const teamsSettings = window.cinderwellEditorSettings?.addons?.teams;
 if ( teamsSettings?.enabled ) {
@@ -69,7 +94,7 @@ if ( teamsSettings?.enabled ) {
 			showReadMore: false,
 			showTeamPosition: true,
 			imageAspect: 'portrait',
-			linkBehavior: teamsSettings.profilesPublic ? 'page' : 'none',
+			linkBehavior: 'modal',
 		},
 		isActive: ( blockAttributes ) => blockAttributes.variation === 'people',
 	} );
@@ -174,13 +199,6 @@ const dynamicSlots = {
 		'heading',
 		'caption',
 		'bodyContent',
-		'footnote',
-	],
-	'cinderwell/two-column': [
-		'eyebrow',
-		'heading',
-		'leftContent',
-		'rightContent',
 		'footnote',
 	],
 	'cinderwell/quote': [ 'quote', 'attribution', 'byline', 'context' ],

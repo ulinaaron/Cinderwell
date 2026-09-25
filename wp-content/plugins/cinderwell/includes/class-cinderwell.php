@@ -37,6 +37,7 @@ class Cinderwell {
                 'actions'    => [ 'cinderwell-base' ],
                 'responsive' => [ 'cinderwell-base' ],
                 'media'      => [ 'cinderwell-base' ],
+                'forms'      => [ 'cinderwell-base', 'cinderwell-actions' ],
             ];
 
             foreach ( $styles as $capability => $dependencies ) {
@@ -47,6 +48,13 @@ class Cinderwell {
                     CINDERWELL_VERSION
                 );
             }
+
+			wp_register_style(
+				'cinderwell-leaflet',
+				CINDERWELL_BUILD_URL . 'vendor/leaflet.css',
+				[],
+				'1.9.4'
+			);
         }, 5 );
 
         add_filter( 'block_type_metadata_settings', function ( $settings, $metadata ) {
@@ -59,6 +67,9 @@ class Cinderwell {
                 'cinderwell/accordion',
                 'cinderwell/body',
                 'cinderwell/card-grid',
+                'cinderwell/company-details',
+				'cinderwell/content-slider',
+                'cinderwell/columns',
                 'cinderwell/cta',
                 'cinderwell/faq',
                 'cinderwell/gallery',
@@ -67,24 +78,37 @@ class Cinderwell {
                 'cinderwell/image-text',
                 'cinderwell/image-carousel',
                 'cinderwell/loop',
+				'cinderwell/map',
 				'cinderwell/page-header',
                 'cinderwell/quote',
                 'cinderwell/section',
-                'cinderwell/slot-layout',
                 'cinderwell/tabs',
-                'cinderwell/two-column',
                 'cinderwell/utility-bar',
+                'cinderwell/video',
             ];
             $action_blocks = [
                 'cinderwell/button',
                 'cinderwell/body',
                 'cinderwell/card-grid',
+                'cinderwell/company-details',
                 'cinderwell/cta',
                 'cinderwell/hero',
                 'cinderwell/image-text',
-                'cinderwell/slot-layout',
-                'cinderwell/two-column',
+				'cinderwell/map',
             ];
+            /**
+             * Filter blocks that consume Cinderwell's shared form-control recipe.
+             *
+             * Integrations should render their controls inside a
+             * `.cinderwell-form` wrapper and keep plugin-specific mappings in a
+             * block stylesheet that depends on `cinderwell-forms`.
+             *
+             * @param string[] $form_blocks Block names that need form styles.
+             */
+            $form_blocks = (array) apply_filters(
+                'cinderwell_form_style_blocks',
+                [ 'cinderwell/gravity-form' ]
+            );
             $media_blocks = array_merge( $responsive_blocks, [ 'cinderwell/image' ] );
 
             $handles = [ 'cinderwell-base' ];
@@ -97,6 +121,9 @@ class Cinderwell {
             if ( in_array( $block_name, $media_blocks, true ) ) {
                 $handles[] = 'cinderwell-media';
             }
+            if ( in_array( $block_name, $form_blocks, true ) ) {
+                $handles[] = 'cinderwell-forms';
+            }
 
             $settings['style_handles'] = array_values(
                 array_unique( array_merge( $handles, $settings['style_handles'] ?? [] ) )
@@ -107,20 +134,26 @@ class Cinderwell {
 
             return $settings;
         }, 10, 2 );
+
     }
 
     /**
      * Enqueue editor-only CSS for full-width block layout.
      */
     private function enqueue_editor_assets() {
-        // Enqueue editor controls CSS in the admin.
-        add_action( 'admin_enqueue_scripts', function () {
-            wp_enqueue_style(
+        // Register a stable editor-control contract that add-ons can depend on.
+        add_action( 'init', function () {
+            wp_register_style(
                 'cinderwell-editor-controls',
                 CINDERWELL_BUILD_URL . 'shared/editor-controls.css',
                 [],
                 CINDERWELL_VERSION
             );
+        }, 5 );
+
+        // Enqueue editor controls CSS in the admin.
+        add_action( 'admin_enqueue_scripts', function () {
+            wp_enqueue_style( 'cinderwell-editor-controls' );
         } );
 
         // Also inject into the editor iframe via block_editor_settings_all.
@@ -130,6 +163,13 @@ class Cinderwell {
             if ( $css ) {
                 $settings['styles'][] = [
                     'css' => $css,
+                    'isGlobalStyles' => false,
+                ];
+            }
+            $tokens_css = Design_Tokens::get_custom_properties_css();
+            if ( $tokens_css ) {
+                $settings['styles'][] = [
+                    'css' => $tokens_css,
                     'isGlobalStyles' => false,
                 ];
             }
@@ -144,7 +184,7 @@ class Cinderwell {
         } );
 
         // Add the token management sidebar to Gutenberg's editor header.
-        add_action( 'enqueue_block_editor_assets', function () {
+		add_action( 'enqueue_block_editor_assets', function () {
             $asset_path = CINDERWELL_BUILD_DIR . 'editor/index.asset.php';
             $script_path = CINDERWELL_BUILD_DIR . 'editor/index.js';
 
@@ -173,6 +213,7 @@ class Cinderwell {
 
 			global $post;
 			$post_id = $post instanceof \WP_Post ? $post->ID : get_the_ID();
+			$post_type = $post instanceof \WP_Post ? $post->post_type : get_post_type( $post_id );
 			$user = wp_get_current_user();
 
             wp_localize_script(
@@ -183,14 +224,19 @@ class Cinderwell {
                     'colorRegistry' => Design_Tokens::get_color_registry(),
                     'canManage'    => current_user_can( 'manage_options' ),
                     'dataSources'  => Data_Sources::get_groups(),
-                    'acfFields'    => Data_Sources::get_acf_fields( $post_id ),
+					'acfFields'    => Data_Sources::get_acf_fields( $post_id ),
+					'contentFields' => [
+						'groups' => Content_Fields::registry()->get_editor_config( $post_type ?: '', $post_id ),
+						'fields' => Content_Fields::registry()->get_dynamic_fields( 'post', $post_type ?: '' ),
+					],
 					'conditions'   => Conditions::get_client_visible(),
 					'editorAccess' => Editor_Access::get_current_policy(),
 					'features'     => [
 						'blockSettingsClipboard' => Editor_Utilities::block_settings_clipboard_enabled(),
 					],
-					'pageHeader'   => Page_Header::get_settings(),
+					'pageHeader'   => Page_Header::get_editor_settings(),
 					'variations'   => Block_Variations::get_editor_catalog(),
+					'map'          => Map::get_editor_settings(),
 					'addons'       => [
 						'teams' => Addons::is_enabled( 'teams' ) ? Teams::get_editor_settings() : [ 'enabled' => false ],
 						'portfolio' => Addons::is_enabled( 'portfolio' ) ? Portfolio::get_editor_settings() : [ 'enabled' => false ],
@@ -218,8 +264,13 @@ class Cinderwell {
     }
 
     private function register_components() {
+		Documentation::instance();
         new Design_Tokens();
+		new Content_Fields();
         new Block_Variations();
+        new Facets();
+        new Map_Service();
+        new Block_Library();
         new Block_Loader();
         new Pattern_Loader();
         new Extension_API();

@@ -2,14 +2,19 @@ import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-editor';
 import { PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { BlockIdentity, SectionToggles, LayoutControls, BackgroundControls, getBackgroundImageProps, TypographyControls, getTypographyClassName, getTextStyleClassName, getHeadingTagName, ButtonRepeater, ButtonSave } from '../../shared/inspector-controls';
+import { BlockIdentity, SectionToggles, LayoutControls, BackgroundControls, getBackgroundImageProps, TypographyControls, getTypographyClassName, getTextStyleClassName, getHeadingTagName, getCopyMeasureClassName, ButtonRepeater, ButtonSave } from '../../shared/inspector-controls';
 import { ALLOWED_INLINE_FORMATS, ALLOWED_BODY_FORMATS } from '../../shared/rich-text';
+import { filterEditorAccessChanges } from '../../shared/editor-access';
+import { VariationPicker, resolveBlockVariation } from '../../shared/variation-picker';
 import metadata from './block.json';
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => {
+        const resolvedLayout = resolveBlockVariation( metadata.name, attributes.layout, 'standard' );
+        const activeLayout = resolvedLayout.slug || 'standard';
+        const layoutClassName = activeLayout === 'standard' ? '' : ` cinderwell-body--layout-${ activeLayout }`;
         const blockProps = useBlockProps( getBackgroundImageProps( {
-            className: `cinderwell-body cinderwell-body--bg-${ attributes.background }${ getTypographyClassName( attributes ) }`,
+            className: `cinderwell-body${ layoutClassName } cinderwell-body--bg-${ attributes.background }${ getCopyMeasureClassName( attributes ) }${ getTypographyClassName( attributes ) }`,
         }, attributes ) );
         const secs = { eyebrow: attributes.showEyebrow, heading: attributes.showHeading, body: attributes.showBody, byline: attributes.showByline, pullquote: attributes.showPullquote, footnote: attributes.showFootnote };
         const onSecs = ( v ) => setAttributes( { showEyebrow: v.eyebrow, showHeading: v.heading, showBody: v.body, showByline: v.byline, showPullquote: v.pullquote, showFootnote: v.footnote } );
@@ -17,6 +22,7 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="&#9776;" title={ __( 'Body', 'cinderwell' ) } description={ __( 'Rich text body content', 'cinderwell' ) } />
+                    <VariationPicker blockName={ metadata.name } value={ attributes.layout } fallback="standard" title={ __( 'Variation', 'cinderwell' ) } onChange={ ( variation ) => setAttributes( filterEditorAccessChanges( variation.attributes || {}, attributes ) ) } />
                     <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cinderwell-content-panel">
                         <SectionToggles sections={ [
                             { key: 'eyebrow', label: __( 'Eyebrow', 'cinderwell' ) },
@@ -30,9 +36,9 @@ registerBlockType( metadata.name, {
                     <PanelBody title={ __( 'Buttons', 'cinderwell' ) } initialOpen={ false } className="cinderwell-buttons-panel">
                         <ButtonRepeater buttons={ attributes.buttons } onChange={ ( b ) => setAttributes( { buttons: b } ) } />
                     </PanelBody>
-                    <LayoutControls attributes={ attributes } setAttributes={ setAttributes } />
-                    <BackgroundControls value={ attributes.background } onChange={ ( v ) => setAttributes( { background: v } ) } attributes={ attributes } setAttributes={ setAttributes } />
-                    <TypographyControls attributes={ attributes } setAttributes={ setAttributes } sections={ [
+                    <LayoutControls controlled={ resolvedLayout?.controlled || {} } attributes={ attributes } setAttributes={ setAttributes } />
+                    <BackgroundControls controlled={ resolvedLayout?.controlled || {} } value={ attributes.background } onChange={ ( v ) => setAttributes( { background: v } ) } attributes={ attributes } setAttributes={ setAttributes } />
+                    <TypographyControls controlled={ resolvedLayout?.controlled || {} } attributes={ attributes } setAttributes={ setAttributes } sections={ [
                         { key: 'eyebrow', label: __( 'Eyebrow', 'cinderwell' ), enabled: attributes.showEyebrow },
                         { key: 'heading', label: __( 'Heading', 'cinderwell' ), enabled: attributes.showHeading },
                         { key: 'byline', label: __( 'Byline', 'cinderwell' ), enabled: attributes.showByline },
@@ -56,7 +62,7 @@ registerBlockType( metadata.name, {
         );
     },
     save: ( { attributes } ) => {
-        const blockProps = useBlockProps.save( getBackgroundImageProps( { className: `cinderwell-body cinderwell-body--bg-${ attributes.background }${ getTypographyClassName( attributes ) }` }, attributes ) );
+        const blockProps = useBlockProps.save( getBackgroundImageProps( { className: `cinderwell-body cinderwell-body--bg-${ attributes.background }${ getCopyMeasureClassName( attributes ) }${ getTypographyClassName( attributes ) }` }, attributes ) );
         return (
             <div { ...blockProps }>
                 <div className="cinderwell-body__inner" style={ { maxWidth: `var(--cw-width-${ attributes.width })` } }>

@@ -4,6 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { DynamicDataPicker, getPreviewValue } from './dynamic-data-picker';
 import { DynamicDataIcon } from './dynamic-data-icon';
+import { getButtonHref, getButtonIconProps } from './button-utils';
 
 const LinkIcon = () => <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M10 13a5 5 0 007.5.5l2-2a5 5 0 00-7-7l-1.15 1.15M14 11a5 5 0 00-7.5-.5l-2 2a5 5 0 007 7l1.15-1.15" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"/></svg>;
 
@@ -79,6 +80,12 @@ export const EditableLink = ( {
     url = '',
     opensInNewTab = false,
     dynamicData = {},
+    destinationType = 'link',
+    phoneNumber = '',
+    emailAddress = '',
+    icon = '',
+    iconPosition = 'before',
+    settingsControl = null,
     onTextChange,
     onLinkChange,
     contextLabel = __( 'Link destination', 'cinderwell' ),
@@ -89,14 +96,20 @@ export const EditableLink = ( {
     const openContext = ( event ) => setContextAnchor( event.currentTarget );
     const suppliedOnClick = richTextProps.onClick;
     const suppliedOnFocus = richTextProps.onFocus;
+    const resolvedUrl = getDynamicLinkValue( url, dynamicData );
+    const href = getButtonHref( { destinationType, url: resolvedUrl, phoneNumber, emailAddress } ) || '#';
+    const iconProps = getButtonIconProps( icon, iconPosition );
+    const className = [ richTextProps.className, iconProps.className ].filter( Boolean ).join( ' ' );
 
     return <>
         <RichText
             { ...richTextProps }
             tagName={ tagName }
-            href={ getDynamicLinkValue( url, dynamicData ) || '#' }
-            target={ opensInNewTab ? '_blank' : undefined }
-            rel={ opensInNewTab ? 'noopener noreferrer' : undefined }
+            className={ className || undefined }
+            style={ { ...( richTextProps.style || {} ), ...( iconProps.style || {} ) } }
+            href={ href }
+            target={ destinationType === 'link' && opensInNewTab ? '_blank' : undefined }
+            rel={ destinationType === 'link' && opensInNewTab ? 'noopener noreferrer' : undefined }
             value={ value }
             onChange={ onTextChange }
             onFocus={ ( event ) => {
@@ -122,12 +135,12 @@ export const EditableLink = ( {
                     <span className="cw-popover__title">{ contextLabel }</span>
                     <button type="button" className="cw-popover__close" onClick={ closeContext } aria-label={ __( 'Close', 'cinderwell' ) }>&times;</button>
                 </div>
-                <LinkSettingsControl
+                { settingsControl || <LinkSettingsControl
                     url={ url }
                     opensInNewTab={ opensInNewTab }
                     dynamicData={ dynamicData }
                     onChange={ onLinkChange }
-                />
+                /> }
             </div>
         </Popover> }
     </>;

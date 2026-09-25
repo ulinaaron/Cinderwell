@@ -5,7 +5,7 @@
     "title": "Page Header",
     "category": "cinderwell",
     "icon": "heading",
-    "description": "Dynamic page title, optional description, and breadcrumbs.",
+    "description": "Dynamic page title, optional description, post meta, and breadcrumbs.",
     "usesContext": [ "postId", "postType" ],
     "supports": {
         "align": [ "full" ],
@@ -23,6 +23,8 @@
         "dynamicData": { "type": "object", "default": {} },
         "background": { "type": "string", "default": "inherit" },
         "breadcrumbs": { "type": "string", "default": "inherit" },
+        "postDate": { "type": "string", "default": "inherit" },
+        "postTerms": { "type": "string", "default": "inherit" },
         "alignment": { "type": "string", "default": "inherit" },
         "width": { "type": "string", "default": "inherit" },
         "spacing": { "type": "string", "default": "inherit" },

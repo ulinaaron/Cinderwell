@@ -33,6 +33,9 @@ class Renderer {
 			case 'acf_field':
 				$value = function_exists( 'get_field' ) && ! empty( $context['field'] ) ? get_field( sanitize_key( $context['field'] ), $post_id ) : '';
 				break;
+			case 'content_field':
+				$value = apply_filters( 'cinderwell_resolve_data_source', $fallback, $source, array_merge( $context, [ 'post_id' => $post_id ] ) );
+				break;
 			default:
 				$value = apply_filters( 'cinderwell_resolve_data_source', $fallback, $source, $context );
 		}
@@ -79,12 +82,54 @@ class Renderer {
 		}
 		if ( 'cinderwell/card-grid' === $block['blockName'] ) {
 			$content = $this->enhance_block_variation( $content, $block['blockName'], $attributes, 'raised' );
+			$content = $this->enhance_card_grid_presentation( $content, $attributes );
+		}
+		$variation_fallbacks = [
+			'cinderwell/image-text'  => 'standard',
+			'cinderwell/cta'         => 'standard',
+			'cinderwell/body'        => 'standard',
+			'cinderwell/columns'     => 'standard',
+			'cinderwell/section'     => 'standard',
+			'cinderwell/icon-list'   => 'standard',
+		];
+		if ( isset( $variation_fallbacks[ $block['blockName'] ] ) ) {
+			$content = $this->enhance_block_variation( $content, $block['blockName'], $attributes, $variation_fallbacks[ $block['blockName'] ] );
 		}
 		$content = $this->add_responsive_visibility( $content, $attributes );
 		if ( 'cinderwell/card-grid' === $block['blockName'] && false !== strpos( $content, 'data-cw-custom-icon' ) ) {
 			$content = $this->sanitize_custom_svgs( $content );
 		}
 		return $this->replace_dynamic_data( $content, $attributes );
+	}
+
+	/** Add runtime-only Card Grid presentation classes without changing saved markup. */
+	private function enhance_card_grid_presentation( $content, $attributes ) {
+		if ( ! class_exists( '\\WP_HTML_Tag_Processor' ) || 'image-box' !== sanitize_key( $attributes['layout'] ?? '' ) ) {
+			return $content;
+		}
+
+		$options = [
+			'image-box-aspect-'   => [ 'attribute' => 'imageBoxAspect', 'default' => 'landscape', 'allowed' => [ 'square', 'landscape', 'portrait', 'tall' ] ],
+			'image-box-overlay-'  => [ 'attribute' => 'imageBoxOverlay', 'default' => 'medium', 'allowed' => [ 'soft', 'medium', 'strong' ] ],
+			'image-box-position-' => [ 'attribute' => 'imageBoxContentPosition', 'default' => 'bottom', 'allowed' => [ 'top', 'center', 'bottom' ] ],
+			'image-box-content-'  => [ 'attribute' => 'imageBoxContentVisibility', 'default' => 'always', 'allowed' => [ 'always', 'reveal' ] ],
+			'image-box-links-'    => [ 'attribute' => 'imageBoxLinkStyle', 'default' => 'button', 'allowed' => [ 'button', 'card' ] ],
+		];
+
+		$processor = new \WP_HTML_Tag_Processor( $content );
+		if ( ! $processor->next_tag() ) {
+			return $content;
+		}
+
+		foreach ( $options as $prefix => $option ) {
+			$value = sanitize_key( $attributes[ $option['attribute'] ] ?? $option['default'] );
+			if ( ! in_array( $value, $option['allowed'], true ) ) {
+				$value = $option['default'];
+			}
+			$processor->add_class( 'cinderwell-card-grid--' . $prefix . $value );
+		}
+
+		return $processor->get_updated_html();
 	}
 
 	/**
@@ -194,7 +239,7 @@ class Renderer {
 			'caption' => 'cinderwell-caption|cinderwell-atom-image__caption', 'footnote' => 'cinderwell-footnote', 'byline' => 'cinderwell-byline|cinderwell-quote__byline',
 			'pullquote' => 'cinderwell-pullquote', 'quote' => 'cinderwell-quote__text', 'attribution' => 'cinderwell-quote__attribution',
 			'context' => 'cinderwell-quote__context', 'bodyContent' => 'cinderwell-body__content|cinderwell-cta__body|cinderwell-image-text__body',
-			'leftContent' => 'cinderwell-two-column__content', 'rightContent' => 'cinderwell-two-column__content', 'content' => 'wp-block-cinderwell-note|wp-block-cinderwell-heading',
+			'content' => 'wp-block-cinderwell-note|wp-block-cinderwell-heading',
 			'text' => 'wp-block-cinderwell-button|wp-block-cinderwell-link|cinderwell-icon-list__content',
 			'image' => 'cinderwell-hero__media|cinderwell-image-text__media|cinderwell-atom-image',
 			'buttons' => 'cinderwell-buttons', 'icon' => 'cinderwell-icon-list__icon|cinderwell-atom-icon', 'label' => 'cinderwell-mega-menu__label',
@@ -308,7 +353,7 @@ class Renderer {
 			'caption' => 'cinderwell-caption|cinderwell-atom-image__caption', 'footnote' => 'cinderwell-footnote', 'byline' => 'cinderwell-byline|cinderwell-quote__byline',
 			'pullquote' => 'cinderwell-pullquote', 'quote' => 'cinderwell-quote__text', 'attribution' => 'cinderwell-quote__attribution',
 			'context' => 'cinderwell-quote__context', 'bodyContent' => 'cinderwell-body__content|cinderwell-cta__body|cinderwell-image-text__body',
-			'leftContent' => 'cinderwell-two-column__content', 'rightContent' => 'cinderwell-two-column__content', 'content' => 'wp-block-cinderwell-note|wp-block-cinderwell-heading',
+			'content' => 'wp-block-cinderwell-note|wp-block-cinderwell-heading',
 			'text' => 'wp-block-cinderwell-button|wp-block-cinderwell-link',
 		];
 		$dom = new \DOMDocument( '1.0', 'UTF-8' );
@@ -357,10 +402,6 @@ class Renderer {
 		};
 		$classes = explode( '|', $class_list );
 		$query = implode( ' or ', array_map( $class_condition, $classes ) );
-		if ( 'leftContent' === $slot || 'rightContent' === $slot ) {
-			$side = 'leftContent' === $slot ? 'cinderwell-two-column__left' : 'cinderwell-two-column__right';
-			return '//*[' . $class_condition( $side ) . ']//*[' . $class_condition( 'cinderwell-two-column__content' ) . ']';
-		}
 		return '//*[@class and (' . $query . ')]';
 	}
 }

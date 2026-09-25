@@ -1,40 +1,27 @@
 .cinderwell-form {
-	--cw-form-info-surface: color-mix(in srgb, var(--cw-color-info) 7%, var(--cw-color-surface));
-	--cw-form-success-surface: color-mix(in srgb, var(--cw-color-success) 7%, var(--cw-color-surface));
-	--cw-form-danger-surface: color-mix(in srgb, var(--cw-color-danger) 7%, var(--cw-color-surface));
-	padding: var(--cw-spacing-md) var(--cw-layout-gutter);
-	background-color: var(--cw-color-bg);
-	color: var(--cw-color-text);
-}
-
-.cinderwell-form--bg-white {
-	background-color: var(--cw-color-white);
-	color: var(--cw-color-text);
-}
-
-.cinderwell-form--bg-light {
-	background-color: var(--cw-color-light);
-	color: var(--cw-color-text);
-}
-
-.cinderwell-form--bg-dark {
-	background-color: var(--cw-color-dark);
-	color: var(--cw-color-white);
-}
-
-.cinderwell-form--bg-brand {
-	background-color: var(--cw-color-brand);
-	color: var(--cw-color-brand-contrast);
+	padding-inline: var(--cw-layout-gutter);
+	background: transparent;
+	color: inherit;
 }
 
 .cinderwell-form__inner {
 	margin: 0 auto;
 }
 
+.cinderwell-form .gform_wrapper,
+.cinderwell-form .gform_heading {
+	margin-block-start: 0;
+}
+
+.cinderwell-form .gform_title {
+	display: none;
+}
+
 /* Gravity Forms' Orbital theme emits per-form custom properties with an ID
  * selector. The important flag is confined to this adapter so the public
  * Cinderwell token contract remains authoritative inside this block. */
 .cinderwell-form .gform-theme {
+	--gf-form-gap-y: var(--cw-form-row-gap) !important;
 	--gf-color-primary: var(--cw-color-brand) !important;
 	--gf-color-primary-darker: var(--cw-color-dark) !important;
 	--gf-color-primary-lighter: var(--cw-color-brand) !important;
@@ -46,14 +33,46 @@
 	--gf-color-danger: var(--cw-color-danger) !important;
 	--gf-color-success: var(--cw-color-success) !important;
 	--gf-font-family-base: var(--cw-font-body) !important;
-	--gf-radius: var(--cw-radius-sm) !important;
-	--gf-ctrl-border-color: var(--cw-color-border) !important;
+	--gf-ctrl-font-family: var(--cw-font-body) !important;
+	--gf-ctrl-font-size: var(--cw-form-control-font-size) !important;
+	--gf-radius: var(--cw-form-control-radius) !important;
+	--gf-ctrl-bg-color: var(--cw-form-control-background) !important;
+	--gf-ctrl-color: var(--cw-form-control-foreground) !important;
+	--gf-ctrl-border-color: var(--cw-form-control-border) !important;
+	--gf-ctrl-border-color-hover: var(--cw-form-control-border-hover) !important;
+	--gf-ctrl-border-color-focus: var(--cw-form-control-border-focus) !important;
 	--gf-ctrl-border-color-error: var(--cw-color-danger) !important;
+	--gf-ctrl-size: var(--cw-form-control-height) !important;
+	--gf-ctrl-padding-x: var(--cw-form-control-padding-inline) !important;
+	--gf-ctrl-padding-y: var(--cw-form-control-padding-block) !important;
+	--gf-ctrl-placeholder-color: var(--cw-form-control-placeholder) !important;
+	--gf-ctrl-placeholder-font-size: var(--cw-form-control-font-size) !important;
 	--gf-ctrl-desc-color-error: var(--cw-color-danger) !important;
+	--gf-ctrl-label-color-primary: currentcolor !important;
+	--gf-ctrl-label-font-size-primary: var(--cw-font-size-md) !important;
+	--gf-ctrl-label-font-weight-primary: 600 !important;
+	--gf-ctrl-label-color-secondary: currentcolor !important;
+	--gf-ctrl-label-font-size-secondary: var(--cw-font-size-sm) !important;
+	--gf-ctrl-label-font-weight-secondary: 400 !important;
+	--gf-ctrl-label-color-tertiary: var(--cw-form-help-color) !important;
+	--gf-ctrl-label-font-size-tertiary: var(--cw-font-size-sm) !important;
+	--gf-ctrl-label-font-weight-tertiary: 500 !important;
 	--gf-ctrl-label-color-req: var(--cw-color-danger) !important;
 	--gf-ctrl-outline-color-focus: var(--cw-color-focus) !important;
 	--gf-ctrl-btn-font-family: var(--cw-font-body) !important;
-	--gf-ctrl-btn-radius: var(--cw-radius-sm) !important;
+	--gf-ctrl-btn-font-size: var(--cw-font-size-md) !important;
+	--gf-ctrl-btn-radius: var(--cw-form-control-radius) !important;
+	--gf-ctrl-btn-size: var(--cw-form-control-height) !important;
+	--gf-ctrl-btn-size-md: var(--cw-form-control-height) !important;
+	--gf-ctrl-btn-bg-color-primary: var(--cw-button-primary-background) !important;
+	--gf-ctrl-btn-border-color-primary: var(--cw-button-primary-background) !important;
+	--gf-ctrl-btn-color-primary: var(--cw-button-primary-foreground) !important;
+	--gf-ctrl-btn-bg-color-hover-primary: var(--cw-button-primary-hover-background) !important;
+	--gf-ctrl-btn-border-color-hover-primary: var(--cw-button-primary-hover-background) !important;
+	--gf-ctrl-btn-color-hover-primary: var(--cw-button-primary-hover-foreground) !important;
+	--gf-ctrl-btn-bg-color-focus-primary: var(--cw-button-primary-hover-background) !important;
+	--gf-ctrl-btn-border-color-focus-primary: var(--cw-button-primary-hover-background) !important;
+	--gf-ctrl-btn-color-focus-primary: var(--cw-button-primary-hover-foreground) !important;
 	--gf-form-validation-bg-color: var(--cw-form-danger-surface) !important;
 	--gf-form-validation-border-color: var(--cw-color-danger) !important;
 	--gf-form-validation-border-color-focus: var(--cw-color-danger) !important;
@@ -63,74 +82,47 @@
 	--gf-form-validation-outline-color-focus: var(--cw-color-danger) !important;
 }
 
-.cinderwell-form--bg-dark .gform-theme,
-.cinderwell-form--bg-brand .gform-theme,
-.cinderwell-form:is(
-	[class*="--bg-brand-dark"],
-	[class*="--bg-muted"],
-	[class*="--bg-info"],
-	[class*="--bg-success"],
-	[class*="--bg-danger"],
-	[class*="--bg-accent-"]
-) .gform-theme {
-	--gf-color-primary: var(--cw-color-white) !important;
-	--gf-color-primary-darker: var(--cw-color-light) !important;
-	--gf-color-primary-lighter: var(--cw-color-white) !important;
-	--gf-color-in-ctrl-primary: var(--cw-color-white) !important;
-	--gf-color-in-ctrl-primary-darker: var(--cw-color-light) !important;
-	--gf-color-in-ctrl-primary-lighter: var(--cw-color-white) !important;
+.cinderwell-form :is(.gfield_label, .gform-field-label):not(.gform-field-label--type-sub):not(.gform-field-label--type-inline) {
+	color: inherit;
+	font-size: var(--cw-font-size-md);
+	font-weight: 600;
 }
 
-.cinderwell-form--bg-dark .gform-theme {
-	--gf-color-primary-contrast: var(--cw-color-dark) !important;
-	--gf-color-in-ctrl-primary-contrast: var(--cw-color-dark) !important;
+.cinderwell-form .gform-field-label--type-sub {
+	color: var(--cw-form-help-color);
+	font-size: var(--cw-font-size-sm);
+	font-weight: 500;
 }
 
-.cinderwell-form--bg-brand .gform-theme {
-	--gf-color-primary-contrast: var(--cw-color-brand) !important;
-	--gf-color-in-ctrl-primary-contrast: var(--cw-color-brand) !important;
+.cinderwell-form .gform-field-label--type-inline {
+	color: inherit;
+	font-size: var(--cw-font-size-sm);
+	font-weight: 400;
 }
 
-.cinderwell-form:is(
-	[class*="--bg-brand-dark"],
-	[class*="--bg-muted"],
-	[class*="--bg-info"],
-	[class*="--bg-success"],
-	[class*="--bg-danger"],
-	[class*="--bg-accent-"]
-) .gform-theme {
-	--gf-color-primary-contrast: var(--cw-surface-background, var(--cw-color-dark)) !important;
-	--gf-color-in-ctrl-primary-contrast: var(--cw-surface-background, var(--cw-color-dark)) !important;
-}
-
-.cinderwell-form .gfield input[type="text"],
-.cinderwell-form .gfield input[type="email"],
-.cinderwell-form .gfield input[type="tel"],
-.cinderwell-form .gfield input[type="url"],
-.cinderwell-form .gfield input[type="number"],
-.cinderwell-form .gfield textarea,
-.cinderwell-form .gfield select {
-	border: 1px solid var(--cw-color-border);
-	font-family: var(--cw-font-body);
-	padding: 0.75rem;
-	border-radius: var(--cw-radius-sm);
-	width: 100%;
+.cinderwell-form :is(.gfield_description, .ginput_counter, .gform_required_legend) {
+	color: var(--cw-form-help-color);
+	font-size: var(--cw-font-size-xs);
+	line-height: 1.5;
 }
 
 .cinderwell-form .gform_button {
-	background: var(--cw-color-brand);
-	color: var(--cw-color-brand-contrast);
-	border: none;
+	min-height: var(--cw-form-control-height);
+	border: 1px solid var(--cw-button-primary-background);
+	background: var(--cw-button-primary-background);
+	color: var(--cw-button-primary-foreground);
 	padding: 0.75rem 1.5rem;
 	border-radius: var(--cw-radius-sm);
 	cursor: pointer;
 	font-family: var(--cw-font-body);
+	font-size: var(--cw-font-size-md);
 	transition: background-color var(--cw-duration-normal) var(--cw-ease-standard), border-color var(--cw-duration-normal) var(--cw-ease-standard), color var(--cw-duration-normal) var(--cw-ease-standard);
 }
 
 .cinderwell-form .gform_button:hover {
-	background: var(--cw-color-dark);
-	color: var(--cw-color-white);
+	border-color: var(--cw-button-primary-hover-background);
+	background: var(--cw-button-primary-hover-background);
+	color: var(--cw-button-primary-hover-foreground);
 }
 
 .cinderwell-form .gform_button:focus-visible {
@@ -142,10 +134,10 @@
  * while these selectors keep legacy and inherited theme markup on the same
  * Cinderwell status-token contract. */
 .cinderwell-form :is(
-	.gform_validation_errors,
-	.validation_error,
-	.gfield_validation_message,
-	.validation_message
+.gform_validation_errors,
+.validation_error,
+.gfield_validation_message,
+.validation_message
 ) {
 	border-color: var(--cw-color-danger) !important;
 	background: var(--cw-form-danger-surface) !important;
@@ -154,47 +146,31 @@
 }
 
 .cinderwell-form :is(
-	.gform_validation_errors,
-	.validation_error,
-	.gfield_validation_message,
-	.validation_message
+.gform_validation_errors,
+.validation_error,
+.gfield_validation_message,
+.validation_message
 ) :is(a, h2) {
 	color: inherit !important;
 }
 
 .cinderwell-form :is(
-	.gform_validation_errors,
-	.validation_error,
-	.gfield_validation_message,
-	.validation_message
+.gform_validation_errors,
+.validation_error,
+.gfield_validation_message,
+.validation_message
 ) a {
 	text-decoration: underline;
 	text-underline-offset: 0.15em;
 }
 
 .cinderwell-form :is(
-	.gform_validation_errors,
-	.validation_error,
-	.gfield_validation_message,
-	.validation_message
-):focus,
-.cinderwell-form :is(
-	.gform_validation_errors,
-	.validation_error,
-	.gfield_validation_message,
-	.validation_message
-) a:focus-visible {
-	outline: 2px solid var(--cw-color-danger) !important;
-	outline-offset: 2px;
-}
-
-.cinderwell-form :is(
-	.gfield_error label,
-	.gfield_error legend,
-	.gfield_error .gfield_description,
-	.gfield_error .gfield_validation_message,
-	.gfield_required,
-	.gform_submission_error
+.gfield_error label,
+.gfield_error legend,
+.gfield_error .gfield_description,
+.gfield_error .gfield_validation_message,
+.gfield_required,
+.gform_submission_error
 ) {
 	color: var(--cw-color-danger) !important;
 }
@@ -222,6 +198,22 @@
 	text-underline-offset: 0.15em;
 }
 
+.cinderwell-form :is(
+.gform_validation_errors,
+.validation_error,
+.gfield_validation_message,
+.validation_message
+):focus,
+.cinderwell-form :is(
+.gform_validation_errors,
+.validation_error,
+.gfield_validation_message,
+.validation_message
+) a:focus-visible {
+	outline: 2px solid var(--cw-color-danger) !important;
+	outline-offset: 2px;
+}
+
 .cinderwell-form .form_saved_message:not(.form_saved_message_sent) {
 	padding: var(--cw-spacing-sm);
 	border: 1px solid var(--cw-color-info);
@@ -236,12 +228,12 @@
 }
 
 .cinderwell-form :is(
-	.gform_confirmation_message,
-	.form_saved_message,
-	.gform_save_link
+.gform_confirmation_message,
+.form_saved_message,
+.gform_save_link
 ) a:focus-visible,
 .cinderwell-form .gform_save_link:focus-visible {
-	outline: 2px solid currentColor !important;
+	outline: 2px solid currentcolor !important;
 	outline-offset: 2px;
 }
 

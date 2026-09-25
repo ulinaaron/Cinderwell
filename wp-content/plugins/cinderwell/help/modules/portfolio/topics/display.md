@@ -1,0 +1,1 @@
+Add a Cinderwell Loop block and choose Portfolio as its content type. Filter by category when needed. Project titles, images, and configured summary fields are drawn from the portfolio entries, so update the source item rather than duplicating that information on each page.

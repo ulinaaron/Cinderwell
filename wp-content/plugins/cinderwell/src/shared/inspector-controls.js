@@ -13,6 +13,8 @@ import { __ } from '@wordpress/i18n';
 import { useState } from '@wordpress/element';
 import { ConditionsPanel } from './conditions-panel';
 import { EditableLink, LinkSettingsControl } from './link-control';
+import { ButtonDestinationControl, ButtonIconControl } from './button-controls';
+import { getButtonHref, getButtonIconProps } from './button-utils';
 import { getContrastSafeTextOptions, getPaletteOptions, useColorRegistry } from './color-registry';
 
 /**
@@ -77,7 +79,7 @@ export const HelpTooltip = ( { text } ) => (
 /**
  * Segmented control — for spacing, width, alignment.
  */
-export const SegmentedControl = ( { label, value, options, onChange, help = '' } ) => {
+export const SegmentedControl = ( { label, value, options, onChange, help = '', disabled = false } ) => {
     return (
         <div className="cw-field">
             { label && <div className="cw-field__label">{ label }</div> }
@@ -89,7 +91,7 @@ export const SegmentedControl = ( { label, value, options, onChange, help = '' }
                         className={ value === opt.value ? 'is-active' : '' }
                         onClick={ () => onChange( opt.value ) }
                         aria-pressed={ value === opt.value }
-                        disabled={ opt.disabled }
+                        disabled={ disabled || opt.disabled }
                     >
                         { opt.label }
                     </button>
@@ -347,6 +349,19 @@ const backgroundPositions = {
     'bottom-right': 'right bottom',
 };
 
+const BackgroundMediaIcon = ( { type } ) => type === 'video' ? (
+    <svg className="cw-background-image-control__add-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <path d="m10 9 5 3-5 3Z" />
+    </svg>
+) : (
+    <svg className="cw-background-image-control__add-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <circle cx="8.5" cy="9" r="1.5" />
+        <path d="m4 17 5-5 4 4 2-2 5 5" />
+    </svg>
+);
+
 /**
  * Adds an optional background image and overlay class without changing markup
  * for blocks that still use the automatic/no-image default.
@@ -368,7 +383,7 @@ export const getBackgroundImageProps = ( props, attributes ) => {
     };
 };
 
-export const BackgroundImageControl = ( { imageId = 0, imageUrl = '', fit = 'cover', position = 'center', overlay = 'none', onChange } ) => {
+export const BackgroundImageControl = ( { imageId = 0, imageUrl = '', fit = 'cover', position = 'center', overlay = 'none', addLabel = __( 'Image', 'cinderwell' ), onChange } ) => {
     const [ isOpen, setIsOpen ] = useState( false );
     const [ anchor, setAnchor ] = useState( null );
     const close = () => { setIsOpen( false ); setAnchor( null ); };
@@ -376,9 +391,9 @@ export const BackgroundImageControl = ( { imageId = 0, imageUrl = '', fit = 'cov
     const overlayLabel = backgroundOverlayOptions.find( ( option ) => option.value === overlay )?.label;
 
     return <MediaUpload value={ imageId } allowedTypes={ [ 'image' ] } onSelect={ ( media ) => onChange( { imageId: media.id, imageUrl: media.url || media.source_url || '' } ) } render={ ( { open } ) => <div className="cw-background-image-control">
-            { ! hasImage ? <MediaUploadCheck><Button variant="secondary" className="cw-background-image-control__add" onClick={ open }>+ { __( 'Add background image', 'cinderwell' ) }</Button></MediaUploadCheck> : <>
+            { ! hasImage ? <MediaUploadCheck><Button variant="secondary" className="cw-background-image-control__add" aria-label={ __( 'Add background image', 'cinderwell' ) } onClick={ open }><BackgroundMediaIcon type="image" /><span>{ addLabel }</span></Button></MediaUploadCheck> : <>
                 <button type="button" className="cw-chip cw-background-image-control__trigger" onClick={ ( event ) => { if ( isOpen ) close(); else { setAnchor( event.currentTarget ); setIsOpen( true ); } } } aria-expanded={ isOpen }>
-                    <span aria-hidden="true">▧</span><span>{ __( 'Image settings', 'cinderwell' ) }</span><span className="cw-background-image-control__status">{ overlayLabel }</span>
+                    <BackgroundMediaIcon type="image" /><span>{ __( 'Image settings', 'cinderwell' ) }</span><span className="cw-background-image-control__status">{ overlayLabel }</span>
                 </button>
                 { isOpen && <Popover anchor={ anchor } onClose={ close } placement="left-start" offset={ 28 } flip={ false } shift className="cw-popover cw-background-image-popover"><div className="cw-popover__inner">
                 <div className="cw-popover__head"><span className="cw-popover__title">{ __( 'Background image', 'cinderwell' ) }</span><button type="button" className="cw-popover__close" onClick={ close } aria-label={ __( 'Close', 'cinderwell' ) }>&times;</button></div>
@@ -391,10 +406,49 @@ export const BackgroundImageControl = ( { imageId = 0, imageUrl = '', fit = 'cov
         </div> } />;
 };
 
+export const BackgroundVideoControl = ( { videoId = 0, videoUrl = '', posterId = 0, posterUrl = '', fit = 'cover', position = 'center', overlay = 'none', addLabel = __( 'Video', 'cinderwell' ), onChange } ) => {
+    const [ isOpen, setIsOpen ] = useState( false );
+    const [ anchor, setAnchor ] = useState( null );
+    const [ sourceType, setSourceType ] = useState( videoId > 0 ? 'library' : ( videoUrl ? 'external' : 'library' ) );
+    const close = () => { setIsOpen( false ); setAnchor( null ); };
+    const openSettings = ( event ) => { setAnchor( event.currentTarget ); setIsOpen( true ); };
+    const hasVideo = Boolean( videoUrl );
+    const overlayLabel = backgroundOverlayOptions.find( ( option ) => option.value === overlay )?.label;
+    const sourceLabel = videoId > 0 ? __( 'Library', 'cinderwell' ) : __( 'External', 'cinderwell' );
+    const changeSource = ( nextSource ) => {
+        if ( nextSource === sourceType ) return;
+        setSourceType( nextSource );
+        onChange( { videoId: 0, videoUrl: '' } );
+    };
+
+    return <MediaUpload value={ videoId } allowedTypes={ [ 'video' ] } onSelect={ ( media ) => onChange( { videoId: media.id, videoUrl: media.url || media.source_url || '' } ) } render={ ( { open } ) => <div className="cw-background-image-control cw-background-video-control">
+        { ! hasVideo ? <Button variant="secondary" className="cw-background-image-control__add" aria-label={ __( 'Add background video', 'cinderwell' ) } onClick={ openSettings } aria-expanded={ isOpen }><BackgroundMediaIcon type="video" /><span>{ addLabel }</span></Button> :
+            <button type="button" className="cw-chip cw-background-image-control__trigger" onClick={ ( event ) => { if ( isOpen ) close(); else openSettings( event ); } } aria-expanded={ isOpen }>
+                <BackgroundMediaIcon type="video" /><span>{ __( 'Video settings', 'cinderwell' ) }</span><span className="cw-background-image-control__status">{ sourceLabel } · { overlayLabel }</span>
+            </button> }
+        { isOpen && <Popover anchor={ anchor } onClose={ close } placement="left-start" offset={ 28 } flip={ false } shift className="cw-popover cw-background-image-popover cw-background-video-popover"><div className="cw-popover__inner">
+                <div className="cw-popover__head"><span className="cw-popover__title">{ __( 'Background video', 'cinderwell' ) }</span><button type="button" className="cw-popover__close" onClick={ close } aria-label={ __( 'Close', 'cinderwell' ) }>&times;</button></div>
+                <SegmentedControl label={ __( 'Source', 'cinderwell' ) } value={ sourceType } options={ [ { value: 'library', label: __( 'Media library', 'cinderwell' ) }, { value: 'external', label: __( 'External URL', 'cinderwell' ) } ] } onChange={ changeSource } />
+                { sourceType === 'library' ? <MediaUploadCheck><Button variant="secondary" className="cw-background-video-control__source-action" onClick={ open }>{ videoId > 0 ? __( 'Replace video', 'cinderwell' ) : __( 'Choose video', 'cinderwell' ) }</Button></MediaUploadCheck> : <TextControl type="url" label={ __( 'Video file URL', 'cinderwell' ) } value={ videoId > 0 ? '' : videoUrl } placeholder="https://cdn.example.com/video.mp4" help={ __( 'Use a direct HTTPS link to an MP4 or WebM file. YouTube and Vimeo links are not supported here.', 'cinderwell' ) } onChange={ ( value ) => onChange( { videoId: 0, videoUrl: value.trim() } ) } /> }
+                { hasVideo && <>
+                    <video className="cw-background-image-control__preview" src={ videoUrl } poster={ posterUrl || undefined } muted playsInline />
+                    <div className="cw-popover__actions"><Button variant="tertiary" isDestructive onClick={ () => onChange( { videoId: 0, videoUrl: '', posterId: 0, posterUrl: '' } ) }>{ __( 'Remove video', 'cinderwell' ) }</Button></div>
+                    <MediaUploadCheck><MediaUpload value={ posterId } allowedTypes={ [ 'image' ] } onSelect={ ( media ) => onChange( { posterId: media.id, posterUrl: media.url || media.source_url || '' } ) } render={ ( { open: openPoster } ) => <Button variant="secondary" className="cw-background-video-control__poster" onClick={ openPoster }>{ posterUrl ? __( 'Replace poster image', 'cinderwell' ) : __( 'Add poster image', 'cinderwell' ) }</Button> } /></MediaUploadCheck>
+                    { posterUrl && <Button variant="tertiary" isDestructive onClick={ () => onChange( { posterId: 0, posterUrl: '' } ) }>{ __( 'Remove poster', 'cinderwell' ) }</Button> }
+                    <SelectControl label={ __( 'Fit', 'cinderwell' ) } value={ fit } options={ backgroundFitOptions } onChange={ ( value ) => onChange( { fit: value } ) } />
+                    <SelectControl label={ __( 'Position', 'cinderwell' ) } value={ position } options={ backgroundPositionOptions } onChange={ ( value ) => onChange( { position: value } ) } />
+                    <SegmentedControl label={ __( 'Dark overlay', 'cinderwell' ) } value={ overlay } options={ backgroundOverlayOptions } onChange={ ( value ) => onChange( { overlay: value } ) } />
+                    <p className="cw-background-video-control__help">{ __( 'Background video is muted and loops automatically. Visitors can pause it, and reduced-motion preferences are respected.', 'cinderwell' ) }</p>
+                </> }
+                <div className="cw-popover__footer"><Button variant="primary" onClick={ close }>{ __( 'Done', 'cinderwell' ) }</Button></div>
+            </div></Popover> }
+    </div> } />;
+};
+
 /**
  * Icon group — for text alignment with arrow icons.
  */
-export const IconGroup = ( { label, value, options, onChange } ) => {
+export const IconGroup = ( { label, value, options, onChange, disabled = false } ) => {
     return (
         <div className="cw-field">
             { label && <label className="cw-field__label">{ label }</label> }
@@ -408,6 +462,7 @@ export const IconGroup = ( { label, value, options, onChange } ) => {
                         title={ opt.label }
                         aria-label={ opt.label }
                         aria-pressed={ value === opt.value }
+                        disabled={ disabled || opt.disabled }
                     >
                         { opt.icon }
                     </button>
@@ -418,45 +473,87 @@ export const IconGroup = ( { label, value, options, onChange } ) => {
 };
 
 /**
+ * Supporting-copy measure is constrained by default. The opt-out class is
+ * emitted only when an author disables the setting, preserving the serialized
+ * markup of existing blocks.
+ */
+export const getCopyMeasureClassName = ( attributes ) => attributes.constrainCopyWidth === false ? ' cinderwell-copy-unconstrained' : '';
+
+/**
  * Layout panel — spacing, width, alignment.
  */
-export const LayoutControls = ( { attributes, setAttributes, showAlignment = false, disableWidth = false, widthHelp = '', children } ) => {
+const ControlledControl = ( { reason = '', children } ) => {
+    const controlled = reason !== false && reason !== null && reason !== undefined;
+    if ( ! controlled ) return children;
+
+    return (
+        <fieldset className="cw-control-lock is-locked" disabled>
+            { children }
+            <div className="cw-control-notice" role="note">
+                <span className="cw-control-notice__icon" aria-hidden="true">i</span>
+                <span>{ reason || __( 'This setting is controlled by the active variation.', 'cinderwell' ) }</span>
+            </div>
+        </fieldset>
+    );
+};
+
+export const LayoutControls = ( { attributes, setAttributes, showAlignment = false, showSpacing = true, disableWidth = false, widthHelp = '', controlled = {}, children } ) => {
+    const widthControlled = disableWidth || Object.prototype.hasOwnProperty.call( controlled, 'width' );
+    const widthReason = widthHelp || controlled.width || '';
     return (
         <>
+        { showSpacing && (
         <PanelBody title={ __( 'Spacing', 'cinderwell' ) } initialOpen={ false } className="cw-panel cw-access-spacing">
-            <ResponsiveSpacingControl attributes={ attributes } setAttributes={ setAttributes } />
+            <ControlledControl reason={ Object.prototype.hasOwnProperty.call( controlled, 'spacing' ) ? controlled.spacing : false }>
+                <ResponsiveSpacingControl attributes={ attributes } setAttributes={ setAttributes } />
+            </ControlledControl>
         </PanelBody>
+        ) }
         <PanelBody title={ __( 'Layout', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-layout">
-            <div className={ `cw-control-lock${ disableWidth ? ' is-locked' : '' }` }>
+            <div className={ `cw-control-lock${ widthControlled ? ' is-locked' : '' }` }>
                 <SegmentedControl
                     label={ __( 'Content Width', 'cinderwell' ) }
                     value={ attributes.width || 'standard' }
                     options={ [
-                        { value: 'narrow', label: __( 'Narrow', 'cinderwell' ), disabled: disableWidth },
-                        { value: 'standard', label: __( 'Standard', 'cinderwell' ), disabled: disableWidth },
-                        { value: 'wide', label: __( 'Wide', 'cinderwell' ), disabled: disableWidth },
-                        { value: 'full', label: __( 'Full', 'cinderwell' ), disabled: disableWidth },
+                        { value: 'narrow', label: __( 'Narrow', 'cinderwell' ), disabled: widthControlled },
+                        { value: 'standard', label: __( 'Standard', 'cinderwell' ), disabled: widthControlled },
+                        { value: 'wide', label: __( 'Wide', 'cinderwell' ), disabled: widthControlled },
+                        { value: 'full', label: __( 'Full', 'cinderwell' ), disabled: widthControlled },
                     ] }
                     onChange={ ( v ) => setAttributes( { width: v } ) }
                 />
-                { disableWidth && widthHelp && (
+                { widthControlled && (
                     <div className="cw-control-notice" role="note">
                         <span className="cw-control-notice__icon" aria-hidden="true">i</span>
-                        <span>{ widthHelp }</span>
+                        <span>{ widthReason || __( 'Content width is controlled by the active variation.', 'cinderwell' ) }</span>
                     </div>
                 ) }
             </div>
             { showAlignment && (
-                <IconGroup
-                    label={ __( 'Alignment', 'cinderwell' ) }
-                    value={ attributes.alignment || 'left' }
-                    options={ [
-                        { value: 'left', label: __( 'Left', 'cinderwell' ), icon: '←' },
-                        { value: 'center', label: __( 'Center', 'cinderwell' ), icon: '↔' },
-                        { value: 'right', label: __( 'Right', 'cinderwell' ), icon: '→' },
-                    ] }
-                    onChange={ ( v ) => setAttributes( { alignment: v } ) }
-                />
+                <ControlledControl reason={ Object.prototype.hasOwnProperty.call( controlled, 'alignment' ) ? controlled.alignment : false }>
+                    <IconGroup
+                        label={ __( 'Alignment', 'cinderwell' ) }
+                        value={ attributes.alignment || 'left' }
+                        options={ [
+                            { value: 'left', label: __( 'Left', 'cinderwell' ), icon: '←' },
+                            { value: 'center', label: __( 'Center', 'cinderwell' ), icon: '↔' },
+                            { value: 'right', label: __( 'Right', 'cinderwell' ), icon: '→' },
+                        ] }
+                        onChange={ ( v ) => setAttributes( { alignment: v } ) }
+                    />
+                </ControlledControl>
+            ) }
+            { Object.prototype.hasOwnProperty.call( attributes, 'constrainCopyWidth' ) && (
+                <div className="cw-field">
+                    <ToggleRow
+                        label={ __( 'Constrain supporting text', 'cinderwell' ) }
+                        checked={ attributes.constrainCopyWidth !== false }
+                        onChange={ () => setAttributes( { constrainCopyWidth: attributes.constrainCopyWidth === false } ) }
+                    />
+                    <p className="components-base-control__help">
+                        { __( 'Keeps descriptive copy within Cinderwell’s readable heading measure. Disable for deliberately wider text.', 'cinderwell' ) }
+                    </p>
+                </div>
             ) }
             { children }
         </PanelBody>
@@ -467,7 +564,7 @@ export const LayoutControls = ( { attributes, setAttributes, showAlignment = fal
 /**
  * Background panel — square swatches mapped to design tokens.
  */
-export const BackgroundControls = ( { value, onChange, attributes, setAttributes, media, children } ) => {
+export const BackgroundControls = ( { value, onChange, attributes, setAttributes, media, video, children, controlled = {} } ) => {
     const colorRegistry = useColorRegistry();
     const swatches = getPaletteOptions( colorRegistry, 'background' );
 
@@ -480,16 +577,45 @@ export const BackgroundControls = ( { value, onChange, attributes, setAttributes
         onChange: ( changes ) => setAttributes( {
             ...( Object.prototype.hasOwnProperty.call( changes, 'imageId' ) ? { backgroundImage: changes.imageId } : {} ),
             ...( Object.prototype.hasOwnProperty.call( changes, 'imageUrl' ) ? { backgroundImageUrl: changes.imageUrl } : {} ),
+            ...( changes.imageId > 0 ? { backgroundVideo: 0, backgroundVideoUrl: '', backgroundVideoPoster: 0, backgroundVideoPosterUrl: '' } : {} ),
             ...( changes.fit ? { backgroundImageFit: changes.fit } : {} ),
             ...( changes.position ? { backgroundImagePosition: changes.position } : {} ),
             ...( changes.overlay ? { backgroundOverlay: changes.overlay } : {} ),
         } ),
     } : null );
 
+    const backgroundVideo = video || ( attributes && setAttributes && Object.prototype.hasOwnProperty.call( attributes, 'backgroundVideo' ) ? {
+        videoId: attributes.backgroundVideo || 0,
+        videoUrl: attributes.backgroundVideoUrl || '',
+        posterId: attributes.backgroundVideoPoster || 0,
+        posterUrl: attributes.backgroundVideoPosterUrl || '',
+        fit: attributes.backgroundVideoFit || 'cover',
+        position: attributes.backgroundVideoPosition || 'center',
+        overlay: attributes.backgroundOverlay || 'none',
+        onChange: ( changes ) => setAttributes( {
+            ...( Object.prototype.hasOwnProperty.call( changes, 'videoId' ) ? { backgroundVideo: changes.videoId } : {} ),
+            ...( Object.prototype.hasOwnProperty.call( changes, 'videoUrl' ) ? { backgroundVideoUrl: changes.videoUrl } : {} ),
+            ...( changes.videoId > 0 || changes.videoUrl ? { backgroundImage: 0, backgroundImageUrl: '' } : {} ),
+            ...( Object.prototype.hasOwnProperty.call( changes, 'posterId' ) ? { backgroundVideoPoster: changes.posterId } : {} ),
+            ...( Object.prototype.hasOwnProperty.call( changes, 'posterUrl' ) ? { backgroundVideoPosterUrl: changes.posterUrl } : {} ),
+            ...( changes.fit ? { backgroundVideoFit: changes.fit } : {} ),
+            ...( changes.position ? { backgroundVideoPosition: changes.position } : {} ),
+            ...( changes.overlay ? { backgroundOverlay: changes.overlay } : {} ),
+        } ),
+    } : null );
+
     return (
         <PanelBody title={ __( 'Background', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-appearance">
-            <ColorTokenControl value={ value } options={ swatches } onChange={ onChange } />
-            { backgroundMedia && <BackgroundImageControl { ...backgroundMedia } /> }
+            <ControlledControl reason={ Object.prototype.hasOwnProperty.call( controlled, 'background' ) ? controlled.background : false }>
+                <ColorTokenControl value={ value } options={ swatches } onChange={ onChange } />
+            </ControlledControl>
+            { ( backgroundMedia || backgroundVideo ) && <div className="cw-background-media-field">
+                <div className="cw-field__label">{ __( 'Media', 'cinderwell' ) }</div>
+                <div className="cw-background-media-actions">
+                    { backgroundMedia && <BackgroundImageControl { ...backgroundMedia } addLabel={ backgroundVideo?.videoUrl ? __( 'Switch to image', 'cinderwell' ) : __( 'Image', 'cinderwell' ) } /> }
+                    { backgroundVideo && <BackgroundVideoControl { ...backgroundVideo } addLabel={ backgroundMedia?.imageId ? __( 'Switch to video', 'cinderwell' ) : __( 'Video', 'cinderwell' ) } /> }
+                </div>
+            </div> }
             { children && <div className="cw-background-media">{ children }</div> }
         </PanelBody>
     );
@@ -651,7 +777,7 @@ const TypographyFields = ( { size, color, background, onSizeChange, onColorChang
 /**
  * Text panel — a compact, token-only type scale and color palette.
  */
-export const TypographyControls = ( { attributes, setAttributes, sections = [] } ) => {
+export const TypographyControls = ( { attributes, setAttributes, sections = [], controlled = {} } ) => {
     const updatePart = ( part, property, value ) => {
         const textStyles = attributes.textStyles || {};
         setAttributes( {
@@ -668,6 +794,7 @@ export const TypographyControls = ( { attributes, setAttributes, sections = [] }
     return (
         <>
         <PanelBody title={ __( 'Text', 'cinderwell' ) } initialOpen={ false } className="cw-panel cw-access-appearance">
+            <ControlledControl reason={ Object.prototype.hasOwnProperty.call( controlled, 'typography' ) ? controlled.typography : false }>
             <span className="cw-type-label">{ __( 'All text', 'cinderwell' ) }</span>
             <TypographyFields
                 size={ attributes.textSize }
@@ -716,6 +843,7 @@ export const TypographyControls = ( { attributes, setAttributes, sections = [] }
                     );
                 } ) }
             </div>
+            </ControlledControl>
         </PanelBody>
         <ConditionsPanel attributes={ attributes } setAttributes={ setAttributes } />
         </>
@@ -729,12 +857,14 @@ export const ButtonRepeater = ( { buttons = [], onChange } ) => {
     const MAX = 3;
     const [ editingIndex, setEditingIndex ] = useState( null );
     const [ popoverAnchor, setPopoverAnchor ] = useState( null );
+    const [ dragOverIndex, setDragOverIndex ] = useState( null );
+    const dragType = 'application/x-cinderwell-button';
 
     const add = ( event ) => {
         if ( buttons.length >= MAX ) return;
-        onChange( [ ...buttons, { text: '', url: '', urlDynamic: {}, opensInNewTab: false, variant: 'primary', size: 'md' } ] );
+        onChange( [ ...buttons, { text: '', url: '', urlDynamic: {}, opensInNewTab: false, destinationType: 'link', phoneNumber: '', emailAddress: '', icon: '', iconPosition: 'before', variant: 'primary', size: 'md' } ] );
         setEditingIndex( buttons.length );
-        setPopoverAnchor( event.currentTarget.parentElement );
+        setPopoverAnchor( event.currentTarget );
     };
     const update = ( i, field, val ) => {
         onChange( buttons.map( ( b, idx ) => idx === i ? { ...b, [ field ]: val } : b ) );
@@ -747,11 +877,69 @@ export const ButtonRepeater = ( { buttons = [], onChange } ) => {
         setEditingIndex( null );
         setPopoverAnchor( null );
     };
+    const move = ( fromIndex, toIndex ) => {
+        if ( fromIndex === toIndex ) return;
+        onChange( moveArrayItem( buttons, fromIndex, toIndex ) );
+        setEditingIndex( null );
+        setPopoverAnchor( null );
+    };
+    const duplicate = ( i ) => {
+        if ( buttons.length >= MAX ) return;
+        const duplicated = { ...buttons[ i ] };
+        onChange( [ ...buttons.slice( 0, i + 1 ), duplicated, ...buttons.slice( i + 1 ) ] );
+        setEditingIndex( null );
+        setPopoverAnchor( null );
+    };
+    const onDrop = ( event, toIndex ) => {
+        event.preventDefault();
+        setDragOverIndex( null );
+
+        try {
+            const fromIndex = Number.parseInt( event.dataTransfer.getData( dragType ) || event.dataTransfer.getData( 'text/plain' ), 10 );
+            if ( Number.isInteger( fromIndex ) ) move( fromIndex, toIndex );
+        } catch ( error ) {
+            // Ignore unrelated or malformed drag data.
+        }
+    };
 
     return (
         <div className="cw-chips">
             { buttons.map( ( btn, i ) => (
-                <div key={ i } className="cw-chip-wrap">
+                <div
+                    key={ i }
+                    className={ `cw-chip-wrap${ dragOverIndex === i ? ' is-drag-over' : '' }` }
+                    onDragOver={ ( event ) => {
+                        event.preventDefault();
+                        event.dataTransfer.dropEffect = 'move';
+                        setDragOverIndex( i );
+                    } }
+                    onDragLeave={ () => setDragOverIndex( null ) }
+                    onDrop={ ( event ) => onDrop( event, i ) }
+                >
+                    <button
+                        type="button"
+                        className="cw-chip__handle"
+                        draggable
+                        onDragStart={ ( event ) => {
+                            event.dataTransfer.effectAllowed = 'move';
+                            event.dataTransfer.setData( dragType, String( i ) );
+                            event.dataTransfer.setData( 'text/plain', String( i ) );
+                        } }
+                        onKeyDown={ ( event ) => {
+                            if ( event.key === 'ArrowUp' && i > 0 ) {
+                                event.preventDefault();
+                                move( i, i - 1 );
+                            }
+                            if ( event.key === 'ArrowDown' && i < buttons.length - 1 ) {
+                                event.preventDefault();
+                                move( i, i + 1 );
+                            }
+                        } }
+                        aria-label={ `${ __( 'Drag to reorder', 'cinderwell' ) }: ${ btn.text || __( 'Button', 'cinderwell' ) }` }
+                        title={ __( 'Drag to reorder. Use arrow keys to move.', 'cinderwell' ) }
+                    >
+                        <span aria-hidden="true">⠿</span>
+                    </button>
                     <button
                         type="button"
                         className="cw-chip"
@@ -762,7 +950,17 @@ export const ButtonRepeater = ( { buttons = [], onChange } ) => {
                         } }
                     >
                         <span className="cw-chip__dot" />
-                        { btn.text || __( 'Button', 'cinderwell' ) }
+                        <span className="cw-chip__label">{ btn.text || __( 'Button', 'cinderwell' ) }</span>
+                    </button>
+                    <button
+                        type="button"
+                        className="cw-chip__duplicate"
+                        onClick={ () => duplicate( i ) }
+                        disabled={ buttons.length >= MAX }
+                        aria-label={ `${ __( 'Duplicate', 'cinderwell' ) }: ${ btn.text || __( 'Button', 'cinderwell' ) }` }
+                        title={ buttons.length >= MAX ? __( 'A maximum of three buttons is allowed.', 'cinderwell' ) : __( 'Duplicate button', 'cinderwell' ) }
+                    >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></svg>
                     </button>
                     { editingIndex === i && (
                         <Popover
@@ -779,14 +977,20 @@ export const ButtonRepeater = ( { buttons = [], onChange } ) => {
                                     <span className="cw-popover__title">{ __( 'Edit button', 'cinderwell' ) }</span>
                                     <button type="button" className="cw-popover__close" onClick={ () => { setEditingIndex( null ); setPopoverAnchor( null ); } } aria-label={ __( 'Close', 'cinderwell' ) }>&times;</button>
                                 </div>
-                                <LinkSettingsControl
+                                <ButtonDestinationControl
+                                    destinationType={ btn.destinationType || 'link' }
                                     url={ btn.url }
+                                    phoneNumber={ btn.phoneNumber || '' }
+                                    emailAddress={ btn.emailAddress || '' }
                                     opensInNewTab={ Boolean( btn.opensInNewTab ) }
                                     dynamicData={ btn.urlDynamic || {} }
                                     onChange={ ( changes ) => updateFields( i, {
                                         ...( Object.prototype.hasOwnProperty.call( changes, 'url' ) ? { url: changes.url } : {} ),
                                         ...( Object.prototype.hasOwnProperty.call( changes, 'opensInNewTab' ) ? { opensInNewTab: changes.opensInNewTab } : {} ),
                                         ...( Object.prototype.hasOwnProperty.call( changes, 'dynamicData' ) ? { urlDynamic: changes.dynamicData } : {} ),
+                                        ...( Object.prototype.hasOwnProperty.call( changes, 'destinationType' ) ? { destinationType: changes.destinationType } : {} ),
+                                        ...( Object.prototype.hasOwnProperty.call( changes, 'phoneNumber' ) ? { phoneNumber: changes.phoneNumber } : {} ),
+                                        ...( Object.prototype.hasOwnProperty.call( changes, 'emailAddress' ) ? { emailAddress: changes.emailAddress } : {} ),
                                     } ) }
                                 />
                                 <SegmentedControl
@@ -810,6 +1014,11 @@ export const ButtonRepeater = ( { buttons = [], onChange } ) => {
                                     ] }
                                     onChange={ ( v ) => update( i, 'size', v ) }
                                 />
+                                <ButtonIconControl
+                                    icon={ btn.icon || '' }
+                                    iconPosition={ btn.iconPosition || 'before' }
+                                    onChange={ ( changes ) => updateFields( i, changes ) }
+                                />
                                 <div className="cw-popover__actions">
                                     <button type="button" className="cw-btn-secondary" onClick={ () => { setEditingIndex( null ); setPopoverAnchor( null ); } }>{ __( 'Done', 'cinderwell' ) }</button>
                                     <button type="button" className="cw-btn-danger" onClick={ () => remove( i ) }>{ __( 'Remove', 'cinderwell' ) }</button>
@@ -820,7 +1029,7 @@ export const ButtonRepeater = ( { buttons = [], onChange } ) => {
                 </div>
             ) ) }
             { buttons.length < MAX && (
-                <button type="button" className="cw-chip cw-chip--add" onClick={ add }>+ { __( 'Add', 'cinderwell' ) }</button>
+                <button type="button" className="cw-chip cw-chip--add" onClick={ add }>+ { __( 'Add button', 'cinderwell' ) }</button>
             ) }
         </div>
     );
@@ -837,7 +1046,27 @@ export const ButtonSave = ( { buttons = [], onChange } ) => {
         ...( Object.prototype.hasOwnProperty.call( changes, 'url' ) ? { url: changes.url } : {} ),
         ...( Object.prototype.hasOwnProperty.call( changes, 'opensInNewTab' ) ? { opensInNewTab: changes.opensInNewTab } : {} ),
         ...( Object.prototype.hasOwnProperty.call( changes, 'dynamicData' ) ? { urlDynamic: changes.dynamicData } : {} ),
+        ...( Object.prototype.hasOwnProperty.call( changes, 'destinationType' ) ? { destinationType: changes.destinationType } : {} ),
+        ...( Object.prototype.hasOwnProperty.call( changes, 'phoneNumber' ) ? { phoneNumber: changes.phoneNumber } : {} ),
+        ...( Object.prototype.hasOwnProperty.call( changes, 'emailAddress' ) ? { emailAddress: changes.emailAddress } : {} ),
     } : button ) );
+    const renderSavedButton = ( btn, index ) => {
+        const destinationType = btn.destinationType || 'link';
+        const iconProps = getButtonIconProps( btn.icon, btn.iconPosition );
+        return <RichText.Content
+            key={ index }
+            tagName="a"
+            href={ getButtonHref( btn ) || '#' }
+            target={ destinationType === 'link' && btn.opensInNewTab ? '_blank' : undefined }
+            rel={ destinationType === 'link' && btn.opensInNewTab ? 'noopener noreferrer' : undefined }
+            data-cw-url-source={ destinationType === 'link' && btn.urlDynamic?.source && btn.urlDynamic.source !== 'static' ? btn.urlDynamic.source : undefined }
+            data-cw-url-field={ destinationType === 'link' ? btn.urlDynamic?.field || undefined : undefined }
+            data-cw-url-fallback={ destinationType === 'link' ? btn.urlDynamic?.fallback || undefined : undefined }
+            className={ `btn btn--${ btn.variant || 'primary' } btn--${ btn.size || 'md' }${ iconProps.className ? ` ${ iconProps.className }` : '' }` }
+            style={ iconProps.style }
+            value={ btn.text }
+        />;
+    };
 
     return (
         <div className="cinderwell-buttons">
@@ -850,26 +1079,27 @@ export const ButtonSave = ( { buttons = [], onChange } ) => {
                     url={ btn.url }
                     opensInNewTab={ Boolean( btn.opensInNewTab ) }
                     dynamicData={ btn.urlDynamic || {} }
+                    destinationType={ btn.destinationType || 'link' }
+                    phoneNumber={ btn.phoneNumber || '' }
+                    emailAddress={ btn.emailAddress || '' }
+                    icon={ btn.icon || '' }
+                    iconPosition={ btn.iconPosition || 'before' }
+                    settingsControl={ <ButtonDestinationControl
+                        destinationType={ btn.destinationType || 'link' }
+                        url={ btn.url }
+                        phoneNumber={ btn.phoneNumber || '' }
+                        emailAddress={ btn.emailAddress || '' }
+                        opensInNewTab={ Boolean( btn.opensInNewTab ) }
+                        dynamicData={ btn.urlDynamic || {} }
+                        onChange={ ( changes ) => updateLink( i, changes ) }
+                    /> }
                     onTextChange={ ( text ) => updateText( i, text ) }
                     onLinkChange={ ( changes ) => updateLink( i, changes ) }
                     contextLabel={ __( 'Button destination', 'cinderwell' ) }
                     placeholder={ __( 'Button text…', 'cinderwell' ) }
                     allowedFormats={ [] }
                 />
-            ) : (
-                <RichText.Content
-                    key={ i }
-                    tagName="a"
-                    href={ btn.url || '#' }
-                    target={ btn.opensInNewTab ? '_blank' : undefined }
-                    rel={ btn.opensInNewTab ? 'noopener noreferrer' : undefined }
-                    data-cw-url-source={ btn.urlDynamic?.source && btn.urlDynamic.source !== 'static' ? btn.urlDynamic.source : undefined }
-                    data-cw-url-field={ btn.urlDynamic?.field || undefined }
-                    data-cw-url-fallback={ btn.urlDynamic?.fallback || undefined }
-                    className={ `btn btn--${ btn.variant || 'primary' } btn--${ btn.size || 'md' }` }
-                    value={ btn.text }
-                />
-            ) ) }
+            ) : renderSavedButton( btn, i ) ) }
         </div>
     );
 };

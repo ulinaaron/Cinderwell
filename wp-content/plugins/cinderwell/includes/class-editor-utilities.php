@@ -56,7 +56,7 @@ class Editor_Utilities {
 	public static function render_settings() {
 		$settings = self::get_settings();
 		?>
-		<div class="card" style="max-width: 760px; margin-top: 20px;">
+		<div class="card cw-settings-card">
 			<h2><?php esc_html_e( 'Advanced', 'cinderwell' ); ?></h2>
 			<p><?php esc_html_e( 'Control optional editor conveniences and integration behavior.', 'cinderwell' ); ?></p>
 			<form action="options.php" method="post">

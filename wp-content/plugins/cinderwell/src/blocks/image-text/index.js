@@ -3,18 +3,22 @@ import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-edi
 import { PanelBody } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { BlockIdentity, SectionToggles, LayoutControls, BackgroundControls, getBackgroundImageProps, TypographyControls, getTypographyClassName, getTextStyleClassName, getHeadingTagName, SegmentedControl, ButtonRepeater, ButtonSave } from '../../shared/inspector-controls';
+import { BlockIdentity, SectionToggles, LayoutControls, BackgroundControls, getBackgroundImageProps, TypographyControls, getTypographyClassName, getTextStyleClassName, getHeadingTagName, getCopyMeasureClassName, SegmentedControl, ButtonRepeater, ButtonSave } from '../../shared/inspector-controls';
 import { ImageOverlayControls, ImageSettingsControl } from '../../shared/image-controls';
 import { getImageClassName, getMediaUrl } from '../../shared/media';
 import { ALLOWED_INLINE_FORMATS, ALLOWED_BODY_FORMATS } from '../../shared/rich-text';
+import { canEditControl, filterEditorAccessChanges } from '../../shared/editor-access';
+import { VariationPicker, resolveBlockVariation } from '../../shared/variation-picker';
 import metadata from './block.json';
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => {
+        const resolvedLayout = resolveBlockVariation( metadata.name, attributes.layout, 'standard' );
+        const activeLayout = resolvedLayout?.slug || 'standard';
         const imageMedia = useSelect( ( select ) => attributes.image > 0 ? select( 'core' ).getMedia( attributes.image ) : null, [ attributes.image ] );
         const imageUrl = attributes.imageUrl || getMediaUrl( imageMedia );
         const blockProps = useBlockProps( getBackgroundImageProps( {
-            className: `cinderwell-image-text cinderwell-image-text--bg-${ attributes.background } cinderwell-image-text--align-${ attributes.alignment }${ getTypographyClassName( attributes ) }`,
+            className: `cinderwell-image-text cinderwell-image-text--layout-${ activeLayout } cinderwell-image-text--bg-${ attributes.background } cinderwell-image-text--align-${ attributes.alignment }${ getCopyMeasureClassName( attributes ) }${ getTypographyClassName( attributes ) }`,
         }, attributes ) );
         const secs = { eyebrow: attributes.showEyebrow, heading: attributes.showHeading, image: attributes.showImage, caption: attributes.showCaption, body: attributes.showBody, footnote: attributes.showFootnote };
         const onSecs = ( v ) => setAttributes( { showEyebrow: v.eyebrow, showHeading: v.heading, showImage: v.image, showCaption: v.caption, showBody: v.body, showFootnote: v.footnote } );
@@ -22,6 +26,9 @@ registerBlockType( metadata.name, {
             <>
                 <InspectorControls>
                     <BlockIdentity icon="&#9713;" title={ __( 'Image + Text', 'cinderwell' ) } description={ __( 'Side-by-side image and text', 'cinderwell' ) } />
+                    { canEditControl( 'layout' ) && (
+                        <VariationPicker blockName={ metadata.name } value={ attributes.layout } fallback="standard" title={ __( 'Variation', 'cinderwell' ) } onChange={ ( variation ) => setAttributes( filterEditorAccessChanges( variation.attributes || {}, attributes ) ) } />
+                    ) }
                     <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cinderwell-content-panel">
                         <SectionToggles sections={ [
                             { key: 'eyebrow', label: __( 'Eyebrow', 'cinderwell' ) },
@@ -50,7 +57,7 @@ registerBlockType( metadata.name, {
                     <PanelBody title={ __( 'Buttons', 'cinderwell' ) } initialOpen={ false } className="cinderwell-buttons-panel">
                         <ButtonRepeater buttons={ attributes.buttons } onChange={ ( b ) => setAttributes( { buttons: b } ) } />
                     </PanelBody>
-                    <LayoutControls attributes={ attributes } setAttributes={ setAttributes } />
+                    <LayoutControls controlled={ resolvedLayout?.controlled || {} } attributes={ attributes } setAttributes={ setAttributes } />
                     <PanelBody title={ __( 'Direction', 'cinderwell' ) } initialOpen={ false } className="cw-panel cw-access-layout">
                         <SegmentedControl
                             label={ __( 'Image position', 'cinderwell' ) }
@@ -62,8 +69,8 @@ registerBlockType( metadata.name, {
                             onChange={ ( v ) => setAttributes( { alignment: v } ) }
                         />
                     </PanelBody>
-                    <BackgroundControls value={ attributes.background } onChange={ ( v ) => setAttributes( { background: v } ) } attributes={ attributes } setAttributes={ setAttributes } />
-                    <TypographyControls attributes={ attributes } setAttributes={ setAttributes } sections={ [
+                    <BackgroundControls controlled={ resolvedLayout?.controlled || {} } value={ attributes.background } onChange={ ( v ) => setAttributes( { background: v } ) } attributes={ attributes } setAttributes={ setAttributes } />
+                    <TypographyControls controlled={ resolvedLayout?.controlled || {} } attributes={ attributes } setAttributes={ setAttributes } sections={ [
                         { key: 'eyebrow', label: __( 'Eyebrow', 'cinderwell' ), enabled: attributes.showEyebrow },
                         { key: 'heading', label: __( 'Heading', 'cinderwell' ), enabled: attributes.showHeading },
                         { key: 'caption', label: __( 'Caption', 'cinderwell' ), enabled: attributes.showImage && attributes.showCaption },
@@ -105,7 +112,7 @@ registerBlockType( metadata.name, {
         );
     },
     save: ( { attributes } ) => {
-        const blockProps = useBlockProps.save( getBackgroundImageProps( { className: `cinderwell-image-text cinderwell-image-text--bg-${ attributes.background } cinderwell-image-text--align-${ attributes.alignment }${ getTypographyClassName( attributes ) }` }, attributes ) );
+        const blockProps = useBlockProps.save( getBackgroundImageProps( { className: `cinderwell-image-text cinderwell-image-text--bg-${ attributes.background } cinderwell-image-text--align-${ attributes.alignment }${ getCopyMeasureClassName( attributes ) }${ getTypographyClassName( attributes ) }` }, attributes ) );
         return (
             <div { ...blockProps }>
                 <div className="cinderwell-image-text__inner" style={ { maxWidth: `var(--cw-width-${ attributes.width })` } }>

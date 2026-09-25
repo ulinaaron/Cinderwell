@@ -14,6 +14,8 @@ const keys = {
 	description: '_cw_page_header_description',
 	background: '_cw_page_header_background',
 	breadcrumbs: '_cw_page_header_breadcrumbs',
+	postDate: '_cw_page_header_post_date',
+	postTerms: '_cw_page_header_post_terms',
 };
 
 const PageHeaderPanel = () => {
@@ -22,8 +24,10 @@ const PageHeaderPanel = () => {
 	const { editPost } = useDispatch( 'core/editor' );
 	const registry = useColorRegistry();
 	const defaults = window.cinderwellEditorSettings?.pageHeader || {};
+	const supportedPostTypes = defaults.postTypes || [ 'page', 'post' ];
+	const postTypeFeatures = defaults.postTypeFeatures?.[ postType ] || {};
 
-	if ( ! [ 'page', 'post' ].includes( postType ) ) return null;
+	if ( ! supportedPostTypes.includes( postType ) ) return null;
 
 	const update = ( key, value ) => editPost( { meta: { ...meta, [ key ]: value } } );
 	const visibility = meta[ keys.visibility ] || '';
@@ -31,24 +35,25 @@ const PageHeaderPanel = () => {
 	const palette = getPaletteOptions( registry, 'background' );
 
 	return <PluginDocumentSettingPanel name="cinderwell-page-header" title={ __( 'Page Header', 'cinderwell' ) } initialOpen={ true }>
-		{ canEditControl( 'layout' ) && <InheritedSegmentedControl
-			label={ __( 'Header visibility', 'cinderwell' ) }
-			value={ visibility }
-			defaultValue={ defaults.enabled ? 'show' : 'hide' }
-			inheritValue=""
-			options={ [
-				{ label: __( 'Show', 'cinderwell' ), value: 'show' },
-				{ label: __( 'Hide', 'cinderwell' ), value: 'hide' },
-			] }
-			onChange={ ( value ) => update( keys.visibility, value ) }
-		/> }
-		{ visibility !== 'hide' && <>
+		<div className="cw-page-header-panel__controls">
+			{ canEditControl( 'layout' ) && <InheritedSegmentedControl
+				label={ __( 'Header visibility', 'cinderwell' ) }
+				value={ visibility }
+				defaultValue={ defaults.enabled ? 'show' : 'hide' }
+				inheritValue=""
+				options={ [
+					{ label: __( 'Show', 'cinderwell' ), value: 'show' },
+					{ label: __( 'Hide', 'cinderwell' ), value: 'hide' },
+				] }
+				onChange={ ( value ) => update( keys.visibility, value ) }
+			/> }
+			{ visibility !== 'hide' && <>
 			{ canEditControl( 'content' ) && <TextControl
 				label={ __( 'Title override', 'cinderwell' ) }
 				value={ meta[ keys.title ] || '' }
-				help={ postType === 'post'
-					? __( 'Leave blank to use the WordPress post title.', 'cinderwell' )
-					: __( 'Leave blank to use the WordPress page title.', 'cinderwell' ) }
+				help={ postTypeFeatures.titleHelp || ( postType === 'page'
+					? __( 'Leave blank to use the WordPress page title.', 'cinderwell' )
+					: __( 'Leave blank to use this entry title.', 'cinderwell' ) ) }
 				onChange={ ( value ) => update( keys.title, value ) }
 			/> }
 			{ canEditControl( 'content' ) && <SelectControl
@@ -84,7 +89,30 @@ const PageHeaderPanel = () => {
 				] }
 				onChange={ ( value ) => update( keys.breadcrumbs, value ) }
 			/> }
-		</> }
+			{ postTypeFeatures.date && canEditControl( 'content' ) && <InheritedSegmentedControl
+				label={ postTypeFeatures.dateLabel || __( 'Date', 'cinderwell' ) }
+				value={ meta[ keys.postDate ] || '' }
+				defaultValue={ defaults.post_date ? 'show' : 'hide' }
+				inheritValue=""
+				options={ [
+					{ label: __( 'Show', 'cinderwell' ), value: 'show' },
+					{ label: __( 'Hide', 'cinderwell' ), value: 'hide' },
+				] }
+				onChange={ ( value ) => update( keys.postDate, value ) }
+			/> }
+			{ postTypeFeatures.terms && canEditControl( 'content' ) && <InheritedSegmentedControl
+				label={ postTypeFeatures.termsLabel || __( 'Categories', 'cinderwell' ) }
+				value={ meta[ keys.postTerms ] || '' }
+				defaultValue={ defaults.post_terms ? 'show' : 'hide' }
+				inheritValue=""
+				options={ [
+					{ label: __( 'Show', 'cinderwell' ), value: 'show' },
+					{ label: __( 'Hide', 'cinderwell' ), value: 'hide' },
+				] }
+				onChange={ ( value ) => update( keys.postTerms, value ) }
+			/> }
+			</> }
+		</div>
 	</PluginDocumentSettingPanel>;
 };
 

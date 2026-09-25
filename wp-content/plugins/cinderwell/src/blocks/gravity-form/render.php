@@ -6,25 +6,11 @@
  */
 
 $form_id     = $attributes['formId'] ?? 0;
-$show_title  = $attributes['title'] ?? true;
 $show_desc   = $attributes['description'] ?? true;
 $ajax        = $attributes['ajax'] ?? true;
 $width       = $attributes['width'] ?? 'standard';
-$allowed_backgrounds = \Cinderwell\Design_Tokens::get_color_slugs( 'background' );
-$background          = in_array( $attributes['background'] ?? '', $allowed_backgrounds, true ) ? $attributes['background'] : 'white';
 
-$wrapper_classes = sprintf( 'cinderwell-form cinderwell-form--bg-%s', esc_attr( $background ) );
-
-$responsive_spacing = $attributes['spacingResponsive'] ?? [];
-$spacing_values      = [ 'none', 'xs', 'sm', 'md', 'lg', 'xl' ];
-foreach ( [ 'desktop', 'tablet', 'mobile' ] as $breakpoint ) {
-    foreach ( [ 'top', 'bottom' ] as $edge ) {
-        $value = $responsive_spacing[ $breakpoint ][ $edge ] ?? '';
-        if ( in_array( $value, $spacing_values, true ) ) {
-            $wrapper_classes .= sprintf( ' cw-spacing-%s-%s-%s', $breakpoint, $edge, $value );
-        }
-    }
-}
+$wrapper_classes = 'cinderwell-form';
 
 $wrapper_attr = get_block_wrapper_attributes( [ 'class' => $wrapper_classes ] );
 
@@ -40,7 +26,7 @@ if ( ! class_exists( 'GFForms' ) ) {
 
 $args = [
     'id'          => $form_id,
-    'title'       => $show_title ? 'true' : 'false',
+    'title'       => 'false',
     'description' => $show_desc ? 'true' : 'false',
     'ajax'        => $ajax ? 'true' : 'false',
 ];

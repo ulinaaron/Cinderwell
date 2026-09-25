@@ -1,0 +1,37 @@
+/* stylelint-disable no-descending-specificity -- editor focus and inline-field
+ * selectors intentionally refine the shared testimonial markup. */
+.cinderwell-testimonials__controls[aria-hidden="true"] {
+	display: flex;
+	pointer-events: none;
+}
+
+.cinderwell-testimonials__item .block-editor-rich-text__editable:focus {
+	outline: 2px solid var(--wp-admin-theme-color);
+	outline-offset: 3px;
+}
+
+.cinderwell-testimonials__photo-control {
+	display: block;
+	flex: 0 0 4rem;
+	width: 4rem;
+	height: 4rem;
+}
+
+.cinderwell-testimonials__photo-control.cw-image-control-host.is-empty {
+	display: grid;
+	min-height: 4rem;
+	border-radius: 50%;
+}
+
+.cinderwell-testimonials__photo-control > .cw-image-control-overlay {
+	right: 0;
+	bottom: 0;
+}
+
+.cinderwell-testimonials__details .block-editor-rich-text__editable {
+	display: inline;
+}
+
+.cinderwell-testimonials__details .block-editor-rich-text__editable + .block-editor-rich-text__editable::before {
+	content: ", ";
+}

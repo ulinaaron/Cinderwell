@@ -36,10 +36,14 @@
 			"type": "string",
 			"default": "always"
 		},
-		"visibilityConfig": {
-			"type": "object",
-			"default": {}
-		},
+        "visibilityConfig": {
+            "type": "object",
+            "default": {}
+        },
+        "layout": {
+            "type": "string",
+            "default": "standard"
+        },
         "eyebrow": {
             "type": "string",
             "default": ""
@@ -98,6 +102,10 @@
             "default": ""
         },
         "showBody": {
+            "type": "boolean",
+            "default": true
+        },
+        "constrainCopyWidth": {
             "type": "boolean",
             "default": true
         },

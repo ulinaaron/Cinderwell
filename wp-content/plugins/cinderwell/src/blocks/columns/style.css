@@ -1,0 +1,112 @@
+.cinderwell-columns {
+	width: 100%;
+	padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+	background-color: var(--cw-color-bg);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-columns--bg-white {
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-columns--bg-light {
+	background-color: var(--cw-color-light);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-columns--bg-dark {
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+.cinderwell-columns--bg-brand {
+	background-color: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
+
+.cinderwell-columns__inner {
+	margin-inline: auto;
+	padding-inline: var(--cw-layout-gutter);
+}
+
+.cinderwell-columns__grid {
+	display: flex;
+	align-items: stretch;
+	min-width: 0;
+}
+
+.cinderwell-columns--gap-none .cinderwell-columns__grid {
+	gap: var(--cw-spacing-none);
+}
+
+.cinderwell-columns--gap-sm .cinderwell-columns__grid {
+	gap: var(--cw-gap-sm);
+}
+
+.cinderwell-columns--gap-md .cinderwell-columns__grid {
+	gap: var(--cw-gap-md);
+}
+
+.cinderwell-columns--gap-lg .cinderwell-columns__grid {
+	gap: var(--cw-gap-lg);
+}
+
+.cinderwell-columns--gap-xl .cinderwell-columns__grid {
+	gap: var(--cw-spacing-comfy);
+}
+
+.cinderwell-columns--align-start .cinderwell-columns__grid {
+	align-items: flex-start;
+}
+
+.cinderwell-columns--align-center .cinderwell-columns__grid {
+	align-items: center;
+}
+
+.cinderwell-columns--align-end .cinderwell-columns__grid {
+	align-items: flex-end;
+}
+
+/* The Columns surface owns nested block rhythm by default. Editors can opt
+ * into independent child surfaces when a card-like composition needs them. */
+.cinderwell-columns:not(.cinderwell-columns--children-own-backgrounds)
+.cinderwell-column > .cinderwell-column__inner > [class*="wp-block-cinderwell-"][class*="--bg-"] {
+	padding-inline: 0 !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	color: inherit !important;
+}
+
+.cinderwell-columns:not(.cinderwell-columns--children-own-backgrounds)
+.cinderwell-column > .cinderwell-column__inner > [class*="wp-block-cinderwell-"] > [class*="cinderwell-"][class*="__inner"] {
+	padding-inline: 0 !important;
+}
+
+@media (max-width: 899px) {
+
+	.cinderwell-columns--stack-tablet .cinderwell-columns__grid {
+		flex-direction: column;
+	}
+
+	.cinderwell-columns--stack-tablet.cinderwell-columns--reverse-mobile
+	.cinderwell-columns__grid {
+		flex-direction: column-reverse;
+	}
+}
+
+@media (max-width: 699px) {
+
+	.cinderwell-columns--stack-mobile .cinderwell-columns__grid {
+		flex-direction: column;
+	}
+
+	.cinderwell-columns--stack-mobile.cinderwell-columns--reverse-mobile
+	.cinderwell-columns__grid {
+		flex-direction: column-reverse;
+	}
+}
+
+[dir="rtl"] .cinderwell-columns {
+	text-align: right;
+}

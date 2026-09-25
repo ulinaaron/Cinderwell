@@ -15,8 +15,6 @@ export const responsiveVisibilityLabels = {
   quote: __("Quote", "cinderwell"),
   attribution: __("Attribution", "cinderwell"),
   context: __("Context", "cinderwell"),
-  leftContent: __("Left column", "cinderwell"),
-  rightContent: __("Right column", "cinderwell"),
   content: __("Content", "cinderwell"),
   text: __("Text", "cinderwell"),
   image: __("Image", "cinderwell"),

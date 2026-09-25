@@ -1,0 +1,145 @@
+.cinderwell-map-editor__empty {
+	align-items: center;
+	background: color-mix(in srgb, var(--cw-color-white) 92%, transparent);
+	border: 1px solid color-mix(in srgb, var(--cw-color-text) 14%, transparent);
+	border-radius: var(--cw-radius-md);
+	display: grid;
+	gap: 0.25rem;
+	left: 50%;
+	max-width: min(24rem, calc(100% - 3rem));
+	padding: 1rem 1.25rem;
+	position: absolute;
+	text-align: center;
+	top: 50%;
+	transform: translate(-50%, -50%);
+	z-index: 500;
+}
+
+.cinderwell-map-editor__empty span {
+	font-size: var(--cw-font-size-sm);
+}
+
+.cinderwell-map-editor__status {
+	font-size: 12px;
+	margin: 8px 0 0;
+}
+
+.cinderwell-map-editor__status.is-success {
+	color: #16733a;
+}
+
+.cinderwell-map-editor__status.is-error {
+	color: #b32d2e;
+}
+
+.cinderwell-map-editor__coordinates {
+	border-top: 1px solid #ddd;
+	margin-top: 12px;
+	padding-top: 10px;
+}
+
+.cinderwell-map-editor__coordinates summary {
+	cursor: pointer;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.cinderwell-map-editor__coordinate-fields {
+	display: grid;
+	gap: 8px;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	padding-top: 10px;
+}
+
+.cinderwell-map-editor__coordinate-fields .components-base-control {
+	margin-bottom: 0;
+}
+
+.editor-styles-wrapper .cinderwell-map__inner--directory {
+	display: grid;
+	grid-template-columns: minmax(0, 1.5fr) minmax(14rem, 0.75fr);
+	gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.editor-styles-wrapper .cinderwell-map__canvas,
+.editor-styles-wrapper .cinderwell-map__canvas * {
+	pointer-events: none;
+}
+
+.cinderwell-map-editor__preview-placeholder {
+	display: grid;
+	min-height: 20rem;
+	place-content: center;
+	justify-items: center;
+	gap: var(--cw-spacing-sm);
+	padding: var(--cw-spacing-md);
+	border: 1px dashed color-mix(in srgb, var(--cw-color-text) 28%, transparent);
+	border-radius: var(--cw-radius-lg);
+	background:
+		linear-gradient(90deg, color-mix(in srgb, var(--cw-color-text) 6%, transparent) 1px, transparent 1px) 0 0 / 3rem 3rem,
+		linear-gradient(color-mix(in srgb, var(--cw-color-text) 6%, transparent) 1px, transparent 1px) 0 0 / 3rem 3rem,
+		var(--cw-color-light);
+	text-align: center;
+}
+
+.cinderwell-map-editor__preview-placeholder > div {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.cinderwell-map-editor__preview-placeholder span {
+	color: var(--cw-color-muted);
+	font-size: var(--cw-font-size-sm);
+}
+
+.cinderwell-map-editor__locator-tools {
+	pointer-events: none;
+}
+
+.cinderwell-map-editor__preview-control,
+.cinderwell-map-editor__preview-button {
+	display: flex;
+	box-sizing: border-box;
+	min-height: 2.75rem;
+	align-items: center;
+	padding: 0.65rem 0.85rem;
+	border: 1px solid color-mix(in srgb, var(--cw-color-text) 28%, transparent);
+	border-radius: var(--cw-radius-sm);
+	background: var(--cw-color-surface, var(--cw-color-white));
+}
+
+.cinderwell-map-editor__preview-select {
+	justify-content: space-between;
+}
+
+.cinderwell-map-editor__preview-select::after {
+	content: "⌄";
+	font-weight: 700;
+}
+
+.cinderwell-map-editor__preview-button {
+	border-color: var(--cw-button-secondary-foreground, var(--cw-color-brand));
+	color: var(--cw-button-secondary-foreground, var(--cw-color-brand));
+	font-weight: 650;
+}
+
+.cinderwell-map--height-large .cinderwell-map-editor__preview-placeholder {
+	min-height: min(42rem, 75vh);
+}
+
+.cinderwell-map--height-medium .cinderwell-map-editor__preview-placeholder {
+	min-height: 30rem;
+}
+
+@media (max-width: 700px) {
+
+	.editor-styles-wrapper .cinderwell-map__inner--directory {
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-map-editor__preview-placeholder,
+	.cinderwell-map--height-medium .cinderwell-map-editor__preview-placeholder,
+	.cinderwell-map--height-large .cinderwell-map-editor__preview-placeholder {
+		min-height: 24rem;
+	}
+}

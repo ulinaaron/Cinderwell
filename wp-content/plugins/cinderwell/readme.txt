@@ -1,18 +1,18 @@
 === Cinderwell ===
 Contributors: stevensinc
-Tags: gutenberg, blocks, design-system, accessibility
+Tags: wordpress, foundation, gutenberg, blocks, design-system
 Requires at least: 6.3
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 0.1.61
+Stable tag: 0.1.88
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-A curated Gutenberg block library with design system constraints.
+A governed WordPress foundation with a curated block kit, design system, client theme layer, and focused add-on ecosystem.
 
 == Description ==
 
-Cinderwell is a curated Gutenberg block library that enforces design system constraints. Content editors get clean, accessible blocks with only content fields and design-system dropdowns — no raw design controls.
+Cinderwell is a governed WordPress foundation for building maintainable client sites. Its curated block kit, design tokens, client theme layer, structured content modules, and focused add-ons work together without turning every site into a custom platform.
 
 = Features =
 
@@ -32,6 +32,56 @@ Cinderwell is a curated Gutenberg block library that enforces design system cons
 3. Run `npm install && npm run build` in the plugin directory
 
 == Changelog ==
+
+= 0.1.88 =
+* Expose the standard section layout, background, typography, spacing, conditions, and visibility controls to add-on blocks.
+
+= 0.1.84 =
+* Add a dedicated Testimonials block with optional portraits, responsive card columns, and a progressively enhanced accessible carousel.
+
+= 0.1.83 =
+* Keep facet controls mounted during live filtering so keyboard focus and text entry remain stable.
+* Add persistent result announcements, loading state semantics, reduced-motion handling, and stale-request cancellation.
+
+= 0.1.82 =
+* Add an opt-in, provider-neutral facet framework with shareable URLs and conditionally loaded live filtering.
+* Add configurable search, taxonomy, and sorting facets to the Cinderwell Loop block.
+
+= 0.1.78 =
+* Replace the block-centric General screen with an ecosystem dashboard.
+* Move registered blocks and patterns into a dedicated Block Kit tab.
+* Include active Cinderwell add-on blocks in the Block Kit inventory.
+
+= 0.1.71 =
+* Make Gravity Forms transparent and flush with surrounding content, remove section-like spacing controls, and hide the duplicate form title.
+
+= 0.1.70 =
+* Rebalance the fluid heading tokens for more readable hierarchy across blocks, themes, and responsive layouts.
+* Preserve semantic typography scales when editors size an individual heading or subheading.
+
+= 0.1.69 =
+* Extend named presentation variations to Image + Text and CTA blocks with Editor Access integration and stable frontend modifier classes.
+
+= 0.1.68 =
+* Add inherited post date and category metadata to single-post Page Headers, with site, template, and per-post controls.
+
+= 0.1.67 =
+* Add Magazine, Image Overlay, Alternating, and numbered Index Loop variations with responsive editor previews.
+
+= 0.1.66 =
+* Present Loop card categories as accessible, token-driven badges in the editor and front end.
+
+= 0.1.65 =
+* Present Company Details sections in a single full-width column for easier scanning and editing.
+
+= 0.1.64 =
+* Show live resolved-color swatches beside inherited and customized button token recipes.
+
+= 0.1.63 =
+* Redesign Design Tokens with searchable groups, live previews, clearer inherited/custom states, editable hex values, and per-token resets.
+
+= 0.1.62 =
+* Unify the complete Cinderwell settings interface with a shared responsive shell, cards, navigation, switches, subtabs, and save states.
 
 = 0.1.61 =
 * Use reusable segmented pills and token color chips for Page Header global defaults.

@@ -4,6 +4,7 @@
 	transition-property: opacity, transform;
 	transition-timing-function: var(--cw-ease-standard);
 }
+
 .cw-animation-item[data-cw-animation-duration="fast"] {
 	--cw-animation-duration: var(--cw-duration-fast);
 }

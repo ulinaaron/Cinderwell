@@ -65,6 +65,10 @@
             "type": "boolean",
             "default": false
         },
+        "constrainCopyWidth": {
+            "type": "boolean",
+            "default": true
+        },
         "bgImage": {
             "type": "integer",
             "default": 0
@@ -97,6 +101,12 @@
             "type": "string",
             "default": "medium"
         },
+        "bgVideo": { "type": "integer", "default": 0 },
+        "bgVideoUrl": { "type": "string", "default": "" },
+        "bgVideoPoster": { "type": "integer", "default": 0 },
+        "bgVideoPosterUrl": { "type": "string", "default": "" },
+        "bgVideoFit": { "type": "string", "default": "cover" },
+        "bgVideoPosition": { "type": "string", "default": "center" },
         "image": {
             "type": "integer",
             "default": 0
@@ -192,5 +202,6 @@
     },
     "editorScript": "file:./index.js",
     "style": "file:./style.css",
-    "editorStyle": "file:./editor.css"
+    "editorStyle": "file:./editor.css",
+    "viewScript": "file:./view.js"
 }

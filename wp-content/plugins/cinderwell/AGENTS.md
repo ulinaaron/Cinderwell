@@ -4,6 +4,11 @@
 
 Cinderwell is a curated Gutenberg block library for WordPress that enforces design system constraints. Content editors get clean, accessible blocks with only content fields and design-system dropdowns — no raw design controls. Every block follows WCAG 2.1 AA. JS-first block storage, native HTML5/CSS for interactivity, extensible per-client via hooks.
 
+Core structured content uses the code-first `cinderwell_register_fields`
+registry. Preserve declared group IDs and storage keys, prefer native post,
+term, and user metadata (or a namespaced site option), and treat ACF as an
+optional compatibility adapter rather than a required client dependency.
+
 ## Architecture Quick Reference
 
 - **Plugin slug:** `cinderwell`
@@ -22,7 +27,7 @@ Cinderwell is a curated Gutenberg block library for WordPress that enforces desi
 |---|---|
 | Block definitions | `src/blocks/{name}/` |
 | Atom definitions | `src/atoms/{name}/` |
-| Shared components | `src/shared/` (`base.css`, `actions.css`, `responsive.css`, `media.css`) |
+| Shared components | `src/shared/` (`base.css`, `actions.css`, `responsive.css`, `media.css`, `forms.css`, `commerce.css`) |
 | Editor-level tools | `src/editor/` |
 | Slot atoms | `src/shared/slots/` |
 | PHP classes | `includes/` |
@@ -68,7 +73,7 @@ Cinderwell is a curated Gutenberg block library for WordPress that enforces desi
 **Title:** Card Grid
 **Description:** Authored cards for services, features, products, or related content
 **Content:** Per-card image or icon, eyebrow, title, description, and button
-**Design:** Raised, Bordered, Split Rows, Mosaic, Posters, and Directory layouts; responsive columns, card surface, spacing, width, background, and typography
+**Design:** Raised, Bordered, Split Rows, Mosaic, Posters, Image Boxes, and Directory layouts; responsive columns, card surface, spacing, width, background, and typography
 **Variation contract:** `layout` changes presentation only. Never replace, reorder, or edit the `cards` array when applying a variation.
 
 ### cinderwell/cta
@@ -93,6 +98,14 @@ Cinderwell is a curated Gutenberg block library for WordPress that enforces desi
 **Schema:** `Quotation` with `author`
 **Defaults:** spacing=comfy, width=standard, background=white, alignment=left
 
+### cinderwell/testimonials
+**Title:** Testimonials
+**Description:** Multiple client testimonials shown as responsive cards or a progressively enhanced carousel
+**Slots:** optional eyebrow and heading, testimonial quote, person name, optional role and organization, optional portrait, optional footnote
+**Design:** responsive columns, card color, photo shape, spacing, width, background, typography
+**Accessibility:** semantic figure/blockquote markup, complete horizontal-scroll fallback, keyboard navigation, visible focus, reduced-motion support, and polite slide announcements
+**Defaults:** layout=cards, columns=3, width=wide, background=white, card color=white, circular portraits
+
 ### cinderwell/gallery
 **Title:** Gallery
 **Description:** Image gallery with multiple images
@@ -109,6 +122,16 @@ Cinderwell is a curated Gutenberg block library for WordPress that enforces desi
 **Accessibility:** named carousel region, labeled slides, keyboard navigation, reduced-motion support, and polite slide announcements
 **Schema:** `ImageGallery`
 **Defaults:** width=wide, background=white, aspect=wide, fit=cover, arrows and indicators enabled
+
+### cinderwell/map
+**Title:** Map
+**Description:** OpenStreetMap map with one or more address-based pins
+**Data:** ordered locations containing name, address, latitude, and longitude
+**Variations:** single location (default) and multiple manually managed locations
+**Accessibility:** keyboard-focusable markers, labeled map region, visible focus, safe popup content, and a complete non-JavaScript location fallback
+**Performance:** locally bundled Leaflet; map scripts, styles, and tiles load only when the block renders; geocoding occurs only from an explicit editor action
+**Extension:** `cinderwell_map_locations` supplies records to the shared editor/frontend pipeline; sources, presentations, record schema, location queries, directory items, tiles, and geocoder services are filterable
+**Defaults:** width=wide, height=medium, maximum zoom=14, initial popup enabled for a single location
 
 ### cinderwell/faq
 **Title:** FAQ
@@ -134,6 +157,14 @@ dynamic-data attributes. Register client layouts through
 `cinderwell_block_variations`; keep CSS-only variants on the shared item markup
 and use `render_item_callback` only when the structure genuinely differs.
 
+Client-theme and add-on presentation recipes must declare `custom => true` in
+their `cinderwell_block_variations` definition. The flag records that the
+variation is not a Cinderwell default; core owns its normalization, editor
+indicator, styling, accessibility, and future behavior. Do not recreate the
+badge or flag behavior in a client theme. A materially constrained presentation
+must be a named custom variation scoped to its emitted layout modifier, not an
+opaque page-specific override.
+
 Card Grid variations use the same registry and add their frontend modifier at
 render time so old static markup remains valid. Use `render_callback` only for
 trusted client layouts that cannot be expressed against the stable card markup.
@@ -155,19 +186,12 @@ alignment, width, image side, and split gap.
 **Design:** underline/pills/boxed tab styles; responsive orientation and tab alignment; left/right side placement for vertical tabs; inherited or independent child-block surfaces; spacing, width, background, text size, text color
 **Defaults:** horizontal/start on desktop, desktop inheritance on tablet, vertical/stretch on mobile, width=standard, background=white
 
-### cinderwell/slot-layout
-**Title:** Slot Layout
-**Description:** Controlled grid for advanced compositions
-**Slots:** array of approved eyebrow, heading, rich text, image, buttons, divider, and note slots
-**Design:** 1–3 columns, controlled span, token gap, spacing, width, background, text size, text color
-**Defaults:** columns=2, gap=comfy, spacing=comfy, width=wide, background=white
-
-### cinderwell/two-column
-**Title:** Two Column
-**Description:** Two-column layout with independent content and buttons
-**Slots:** eyebrow (string), heading (string), leftContent (rich text), rightContent (rich text), leftButtons (array, max 3), rightButtons (array, max 3), footnote (string)
-**Design:** spacing, width, background, text size, text color
-**Defaults:** spacing=comfy, width=standard, background=white
+### cinderwell/columns and cinderwell/column
+**Title:** Columns
+**Description:** Responsive layout container with native nested-block editing
+**Content:** 1–4 `cinderwell/column` children. Each column accepts enabled Cinderwell blocks and supports native dragging, duplication, removal, and List View ordering.
+**Design:** Relative 1×/2×/3× column proportions, token gap, vertical alignment, mobile/tablet stacking, optional reverse stack, spacing, width, and background
+**Defaults:** two equal columns, medium gap, mobile stacking, wide width, white background
 
 ### cinderwell/section
 **Title:** Section
@@ -187,10 +211,10 @@ alignment, width, image side, and split gap.
 ### cinderwell/gravity-form
 **Title:** Gravity Form
 **Description:** Embed a Gravity Forms form with design token styling
-**Fields:** formId (number), title (bool), description (bool), ajax (bool)
-**Design:** spacing, width, background
+**Fields:** formId (number), description (bool), ajax (bool). The Gravity Forms title is always hidden so surrounding Cinderwell content owns the page hierarchy.
+**Design:** width only. The block surface and vertical rhythm inherit from its surrounding section.
 **Render:** PHP callback using `[gravityform]` shortcode
-**Defaults:** spacing=comfy, width=standard, background=white, title=true, description=true, ajax=true
+**Defaults:** width=standard, title=false, description=true, ajax=true
 
 ### cinderwell/utility-bar
 **Title:** Utility Bar
@@ -199,6 +223,15 @@ alignment, width, image side, and split gap.
 **Design:** dark, brand, light, or white token surface
 **Render:** PHP callback so Company Details changes update every header immediately; empty data produces no wrapper
 **Defaults:** phone and social profiles enabled, dark background
+
+### cinderwell/company-details
+**Title:** Company Details
+**Description:** Dynamic contact, address, and business-hours presentation powered by the optional Company Details module
+**Content:** Hours, Contact, Address, or All Details modes; optional heading, description, phone, email, current status, Contact action, and Directions action
+**Design:** Stacked, Card, and Split layouts; spacing, width, alignment, background, and typography
+**Render:** PHP callback so shared Company Details changes update every instance; the block is registered only while the module is enabled and empty data produces no wrapper
+**Accessibility:** semantic address and definition-list markup, explicit time ranges, keyboard-visible actions, and progressively enhanced open/closed status
+**Defaults:** Hours mode, Card layout, light background
 
 ## Atom Reference
 
@@ -243,6 +276,7 @@ rules safe by default; user-aware rules must be intentionally exposed.
 ### Utility Atoms (standalone blocks)
 - **Button** (`cinderwell/button`) — Native or dynamic link, optional new-tab behavior, variants: primary/secondary/ghost/link, and sizes: sm/md/lg. Classes: `btn btn--{variant} btn--{size}`
 - **Heading** (`cinderwell/heading`) — Standalone heading with level selection
+- **Number** (`cinderwell/number`) — Statistic or measurable result with an optional viewport-triggered count-up; the authored final value remains available without JavaScript and to assistive technology
 - **Image** (`cinderwell/image`) — Standalone image with required alt text
 - **Icon** (`cinderwell/icon`) — Searchable Lucide library or Media Library SVG with token size, color, treatment, and alignment
 - **Link** (`cinderwell/link`) — Styled inline link with new-tab option
@@ -295,10 +329,10 @@ rules safe by default; user-aware rules must be intentionally exposed.
 | `--cw-font-size-sm` | `clamp(0.875rem, 0.82rem + 0.22vw, 1rem)` | Fluid small type |
 | `--cw-font-size-md` | `clamp(1rem, 0.95rem + 0.25vw, 1.125rem)` | Fluid body type |
 | `--cw-font-size-lg` | `clamp(1.125rem, 1rem + 0.55vw, 1.375rem)` | Fluid lead type |
-| `--cw-font-size-xl` | `clamp(1.5rem, 1.2rem + 1.2vw, 2rem)` | Fluid small-heading type |
-| `--cw-font-size-2xl` | `clamp(2rem, 1.45rem + 2.3vw, 3rem)` | Fluid heading type |
-| `--cw-font-size-3xl` | `clamp(2.5rem, 1.7rem + 3.4vw, 4rem)` | Fluid display type |
-| `--cw-font-size-4xl` | `clamp(3rem, 1.9rem + 4.5vw, 5rem)` | Fluid large-display type |
+| `--cw-font-size-xl` | `clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem)` | Fluid small-heading type |
+| `--cw-font-size-2xl` | `clamp(1.75rem, 1.45rem + 1.35vw, 2.5rem)` | Fluid heading type |
+| `--cw-font-size-3xl` | `clamp(2.25rem, 1.75rem + 2.1vw, 3.25rem)` | Fluid display type |
+| `--cw-font-size-4xl` | `clamp(2.75rem, 2rem + 3vw, 4rem)` | Fluid large-display type |
 | `--cw-spacing-compact` | `2rem` | Compact spacing |
 | `--cw-spacing-comfy` | `4rem` | Comfy spacing |
 | `--cw-spacing-airy` | `8rem` | Airy spacing |
@@ -330,6 +364,7 @@ rules safe by default; user-aware rules must be intentionally exposed.
 - `cinderwell_loop_link_behavior` — Filter `page`/`none` item linking. Params: `$behavior`, `$post_type`, `$attributes`
 - `cinderwell_token_manifest` — Add tokens to manifest. Params: `$manifest`
 - `cinderwell_enable_accent_colors` — Show optional Accent 1–3 tokens and FSE presets. Return `false` from a client theme to remove them.
+- `cinderwell_sync_theme_json_tokens` — Enable or disable the starter theme bridge that supplies the WordPress palette, content widths, canvas colors, and link color from the Cinderwell registry. Params: `$enabled`, `$theme_json`
 - `cinderwell_enable_block_settings_clipboard` — Enable or disable the editor settings clipboard after the saved Advanced preference is resolved.
 - `cinderwell_admin_bar_capability` — Change the capability required for the shared admin-bar root
 
@@ -340,7 +375,7 @@ rules safe by default; user-aware rules must be intentionally exposed.
 - `cinderwell_loop_item_after_title` — Render structured Loop metadata after an item title
 
 ### Optional core modules
-- **Teams** (`teams`) — Disabled by default and enabled under Cinderwell → Add-Ons. Registers `cw_person`, `cw_people_category`, profile fields/settings, and the People variation of `cinderwell/loop`. Public profiles are independently optional; modal behavior must wait for the shared modal/off-canvas primitive.
+- **Teams** (`teams`) — Disabled by default and enabled under Cinderwell → Add-Ons. Registers `cw_person`, `cw_people_category`, profile fields/settings, and the People variation of `cinderwell/loop`. Public profile URLs are independently optional; each People Loop chooses accessible modal, page, or non-interactive profile behavior.
 - **Portfolio** (`portfolio`) — Disabled by default and enabled under Cinderwell → Add-Ons. Registers `cw_project`, `cw_portfolio_category`, configurable project fields, a focused Loop variation, and plugin-fallback FSE templates. Keep its standard template slugs so child themes override them from `templates/`.
 - Add bundled modules through `cinderwell_bundled_addons`; add settings tabs through `cinderwell_settings_tabs`.
 - Use `Admin_Fields` for bundled-module settings and post-meta forms. Field definitions should be schema-driven and filtered so future modules such as Company Details do not duplicate rendering and sanitization.
@@ -380,6 +415,13 @@ rules safe by default; user-aware rules must be intentionally exposed.
 5. Configure block availability and editing guardrails via Cinderwell > Editor Access
 6. Depend on the public `cinderwell-base`, `cinderwell-actions`, `cinderwell-responsive`, and `cinderwell-media` style handles as needed
 
+The Cinderwell Starter theme declares `cinderwell-design-tokens` support. While
+that support is active, core synchronizes the WordPress `theme.json` palette,
+content and wide sizes, canvas colors, and link color from the registered token
+manifest. Client child themes must not duplicate those values in `theme.json`.
+Override a palette name by changing the manifest entry's `label`; expose or hide
+a color by changing its `palette` metadata.
+
 New blocks automatically participate in the settings clipboard when their
 attributes follow the shared Editor Access grouping conventions. Clipboard
 pastes must preserve content, links, media selections, and dynamic data.
@@ -411,7 +453,7 @@ pastes must preserve content, links, media selections, and dynamic data.
 3. `services-grid` — Section + 3 CTA blocks
 4. `contact-form` — Body + Gravity Form
 5. `feature-list` — Section + multiple Image/Text
-6. `testimonial-row` — Section + 3 Quote blocks
+6. `testimonial-row` — Testimonials block with 3 client stories
 
 ## Phasing
 

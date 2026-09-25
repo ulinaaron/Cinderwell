@@ -1,35 +1,42 @@
 .cinderwell-atom-note {
-    padding: 1rem 1.5rem;
-    border-left: 4px solid var(--cw-color-border);
-    font-size: var(--cw-font-size-sm);
-    color: var(--cw-color-text);
-    opacity: 0.9;
+	padding: 1rem 1.5rem;
+	border-left: 4px solid var(--cw-color-border);
+	font-size: var(--cw-font-size-sm);
+	color: var(--cw-color-text);
+	opacity: 0.9;
 }
+
 .cinderwell-atom-note--disclaimer {
-    border-left-color: var(--cw-color-brand);
-    background: rgba(204, 85, 0, 0.05);
+	border-left-color: var(--cw-color-brand);
+	background: rgba(204, 85, 0, 0.05);
 }
+
 .cinderwell-atom-note--caption {
-    font-style: italic;
-    border-left-color: var(--cw-color-border);
+	font-style: italic;
+	border-left-color: var(--cw-color-border);
 }
+
 .cinderwell-atom-note--footnote {
-    font-size: var(--cw-font-size-xs);
-    border-left-color: var(--cw-color-border);
+	font-size: var(--cw-font-size-xs);
+	border-left-color: var(--cw-color-border);
 }
+
 .cinderwell-atom-note--legal {
-    font-size: var(--cw-font-size-xs);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-left-color: var(--cw-color-dark);
+	font-size: var(--cw-font-size-xs);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	border-left-color: var(--cw-color-dark);
 }
+
 [dir="rtl"] .cinderwell-atom-note {
-    border-left: none;
-    border-right: 4px solid var(--cw-color-border);
+	border-left: none;
+	border-right: 4px solid var(--cw-color-border);
 }
+
 [dir="rtl"] .cinderwell-atom-note--disclaimer {
-    border-right-color: var(--cw-color-brand);
+	border-right-color: var(--cw-color-brand);
 }
+
 [dir="rtl"] .cinderwell-atom-note--legal {
-    border-right-color: var(--cw-color-dark);
+	border-right-color: var(--cw-color-dark);
 }

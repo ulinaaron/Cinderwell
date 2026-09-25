@@ -64,7 +64,7 @@ const formatDate = (value) => {
 };
 
 registerBlockType(metadata.name, {
-  edit: ({ attributes, setAttributes }) => {
+  edit: ({ attributes, setAttributes, clientId }) => {
     const resolvedLayout = resolveBlockVariation(
       metadata.name,
       attributes.layout,
@@ -131,12 +131,12 @@ registerBlockType(metadata.name, {
                 showDate: false,
                 showTerms: false,
                 showExcerpt: false,
-                showReadMore: false,
-                readMoreLabel: __("Read more", "cinderwell"),
+                showReadMore: true,
+                readMoreLabel: __("View profile", "cinderwell"),
                 showTeamPosition: true,
                 showPortfolioDetails: false,
                 imageAspect: "portrait",
-                linkBehavior: teamsSettings.profilesPublic ? "page" : "none",
+                linkBehavior: "modal",
               },
             },
           ]
@@ -235,6 +235,11 @@ registerBlockType(metadata.name, {
     const selectedPostType = (postTypes || []).find(
       (item) => item.slug === attributes.postType,
     );
+    const displayTaxonomy =
+      attributes.taxonomy ||
+      ((taxonomies || []).some((item) => item.slug === "category")
+        ? "category"
+        : "");
     const query = {
       per_page: attributes.postsPerPage,
       order: attributes.order,
@@ -326,6 +331,26 @@ registerBlockType(metadata.name, {
         value: String(term.id),
       })),
     ];
+    const facetSettings = attributes.facets || {};
+    const updateFacet = (key, value) =>
+      setAttributes({
+        facets: {
+          ...facetSettings,
+          [key]: {
+            ...(facetSettings[key] || {}),
+            ...value,
+          },
+        },
+      });
+    const toggleFilters = (filtersEnabled) =>
+      setAttributes({
+        filtersEnabled,
+        ...(filtersEnabled && !attributes.facetId
+          ? {
+              facetId: `loop-${clientId.replace(/-/g, "").slice(0, 12)}`,
+            }
+          : {}),
+      });
 
     return (
       <>
@@ -415,8 +440,14 @@ registerBlockType(metadata.name, {
                 label={__("Query source", "cinderwell")}
                 value={attributes.queryMode || "custom"}
                 options={[
-                  { label: __("Selected", "cinderwell"), value: "custom" },
-                  { label: __("Template", "cinderwell"), value: "inherit" },
+                  {
+                    label: __("Selected", "cinderwell"),
+                    value: "custom",
+                  },
+                  {
+                    label: __("Template", "cinderwell"),
+                    value: "inherit",
+                  },
                 ]}
                 onChange={(queryMode) => setAttributes({ queryMode })}
                 help={__(
@@ -535,6 +566,133 @@ registerBlockType(metadata.name, {
               />
             )}
           </PanelBody>
+          {!isInheritedQuery && !isFocusedLoop && (
+            <PanelBody
+              title={__("Filters & sorting", "cinderwell")}
+              initialOpen={false}
+              className="cw-panel cw-access-content"
+            >
+              <ToggleRow
+                label={__("Enable filters", "cinderwell")}
+                checked={attributes.filtersEnabled}
+                onChange={toggleFilters}
+              />
+              {attributes.filtersEnabled && (
+                <>
+                  <ToggleRow
+                    label={__("Search", "cinderwell")}
+                    checked={Boolean(facetSettings.search?.enabled)}
+                    onChange={(enabled) => updateFacet("search", { enabled })}
+                  />
+                  {facetSettings.search?.enabled && (
+                    <TextControl
+                      label={__("Search label", "cinderwell")}
+                      value={facetSettings.search?.label || ""}
+                      placeholder={__("Search", "cinderwell")}
+                      onChange={(label) =>
+                        updateFacet("search", {
+                          label,
+                        })
+                      }
+                    />
+                  )}
+                  {(taxonomies || [])
+                    .filter(
+                      (taxonomy) =>
+                        taxonomy.visibility?.show_ui !== false &&
+                        taxonomy.slug !== "post_format",
+                    )
+                    .map((taxonomy) => {
+                      const value =
+                        facetSettings.taxonomies?.[taxonomy.slug] || {};
+                      const updateTaxonomy = (changes) =>
+                        setAttributes({
+                          facets: {
+                            ...facetSettings,
+                            taxonomies: {
+                              ...(facetSettings.taxonomies || {}),
+                              [taxonomy.slug]: {
+                                ...value,
+                                ...changes,
+                              },
+                            },
+                          },
+                        });
+                      return (
+                        <div className="cw-facet-editor" key={taxonomy.slug}>
+                          <ToggleRow
+                            label={decodeEntities(taxonomy.name)}
+                            checked={Boolean(value.enabled)}
+                            onChange={(enabled) =>
+                              updateTaxonomy({
+                                enabled,
+                              })
+                            }
+                          />
+                          {value.enabled && (
+                            <>
+                              <TextControl
+                                label={__("Label", "cinderwell")}
+                                value={value.label || ""}
+                                placeholder={decodeEntities(taxonomy.name)}
+                                onChange={(label) =>
+                                  updateTaxonomy({
+                                    label,
+                                  })
+                                }
+                              />
+                              <SegmentedControl
+                                label={__("Display", "cinderwell")}
+                                value={value.display || "select"}
+                                options={[
+                                  {
+                                    label: __("Select", "cinderwell"),
+                                    value: "select",
+                                  },
+                                  {
+                                    label: __("Pills", "cinderwell"),
+                                    value: "pills",
+                                  },
+                                  {
+                                    label: __("Checks", "cinderwell"),
+                                    value: "checkboxes",
+                                  },
+                                ]}
+                                onChange={(display) =>
+                                  updateTaxonomy({
+                                    display,
+                                  })
+                                }
+                              />
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
+                  <ToggleRow
+                    label={__("Sort", "cinderwell")}
+                    checked={Boolean(facetSettings.sort?.enabled)}
+                    onChange={(enabled) => updateFacet("sort", { enabled })}
+                  />
+                  {facetSettings.sort?.enabled && (
+                    <TextControl
+                      label={__("Sort label", "cinderwell")}
+                      value={facetSettings.sort?.label || ""}
+                      placeholder={__("Sort by", "cinderwell")}
+                      onChange={(label) => updateFacet("sort", { label })}
+                    />
+                  )}
+                  <ToggleRow
+                    label={__("Update results immediately", "cinderwell")}
+                    checked={attributes.liveFiltering}
+                    onChange={(liveFiltering) =>
+                      setAttributes({ liveFiltering })
+                    }
+                  />
+                </>
+              )}
+            </PanelBody>
+          )}
           <PanelBody
             title={__("Content", "cinderwell")}
             initialOpen={true}
@@ -646,6 +804,14 @@ registerBlockType(metadata.name, {
               }
               value={attributes.linkBehavior}
               options={[
+                ...(isTeamLoop
+                  ? [
+                      {
+                        label: __("Modal", "cinderwell"),
+                        value: "modal",
+                      },
+                    ]
+                  : []),
                 {
                   label: __("Page", "cinderwell"),
                   value: "page",
@@ -669,26 +835,27 @@ registerBlockType(metadata.name, {
                         ? "Public location pages are disabled in Cinderwell settings."
                         : isPortfolioLoop
                         ? "Public portfolio pages are disabled in Cinderwell settings."
-                        : "Public profile pages are disabled in Cinderwell settings.",
+                        : "Public profile pages are disabled in Teams settings. Modal profiles remain available.",
                       "cinderwell",
                     )
                   : undefined
               }
             />
-            {attributes.linkBehavior === "page" && (
+            {["page", "modal"].includes(attributes.linkBehavior) && (
               <ToggleRow
                 label={__("Read more link", "cinderwell")}
                 checked={attributes.showReadMore}
                 onChange={(showReadMore) => setAttributes({ showReadMore })}
               />
             )}
-            {attributes.linkBehavior === "page" && attributes.showReadMore && (
-              <TextControl
-                label={__("Read more label", "cinderwell")}
-                value={attributes.readMoreLabel}
-                onChange={(readMoreLabel) => setAttributes({ readMoreLabel })}
-              />
-            )}
+            {["page", "modal"].includes(attributes.linkBehavior) &&
+              attributes.showReadMore && (
+                <TextControl
+                  label={__("Read more label", "cinderwell")}
+                  value={attributes.readMoreLabel}
+                  onChange={(readMoreLabel) => setAttributes({ readMoreLabel })}
+                />
+              )}
             <ToggleRow
               label={__("Pagination", "cinderwell")}
               checked={attributes.showPagination}
@@ -731,16 +898,19 @@ registerBlockType(metadata.name, {
             />
           </PanelBody>
           <LayoutControls
+            controlled={resolvedLayout?.controlled || {}}
             attributes={attributes}
             setAttributes={setAttributes}
           />
           <BackgroundControls
+            controlled={resolvedLayout?.controlled || {}}
             value={attributes.background}
             onChange={(background) => setAttributes({ background })}
             attributes={attributes}
             setAttributes={setAttributes}
           />
           <TypographyControls
+            controlled={resolvedLayout?.controlled || {}}
             attributes={attributes}
             setAttributes={setAttributes}
             sections={[
@@ -826,6 +996,11 @@ registerBlockType(metadata.name, {
               <div className="cinderwell-loop__grid">
                 {posts.map((post, index) => {
                   const image = media[post.featured_media];
+                  const itemTerms = displayTaxonomy
+                    ? (post._embedded?.["wp:term"] || [])
+                        .flat()
+                        .filter((term) => term.taxonomy === displayTaxonomy)
+                    : [];
                   const ItemHeadingTag = getHeadingTagName(
                     attributes.itemHeadingLevel,
                     3,
@@ -870,6 +1045,19 @@ registerBlockType(metadata.name, {
                               __("Content", "cinderwell")}
                           </span>
                         )}
+                        {attributes.showTerms && itemTerms.length > 0 && (
+                          <div className="cinderwell-loop__terms">
+                            {itemTerms.map((term) => (
+                              <a
+                                href={term.link}
+                                key={term.id}
+                                onClick={(event) => event.preventDefault()}
+                              >
+                                {decodeEntities(term.name)}
+                              </a>
+                            ))}
+                          </div>
+                        )}
                         {attributes.showDate && (
                           <time
                             className="cinderwell-loop__date"
@@ -894,6 +1082,16 @@ registerBlockType(metadata.name, {
                                   __("(Untitled)", "cinderwell"),
                               )}
                             </a>
+                          ) : attributes.linkBehavior === "modal" ? (
+                            <button
+                              type="button"
+                              className="cinderwell-loop__modal-trigger"
+                            >
+                              {decodeEntities(
+                                post.title?.rendered ||
+                                  __("(Untitled)", "cinderwell"),
+                              )}
+                            </button>
                           ) : (
                             decodeEntities(
                               post.title?.rendered ||
@@ -942,8 +1140,8 @@ registerBlockType(metadata.name, {
                               {post.excerpt.rendered}
                             </RawHTML>
                           )}
-                        {attributes.linkBehavior === "page" &&
-                          attributes.showReadMore && (
+                        {attributes.showReadMore &&
+                          attributes.linkBehavior === "page" && (
                             <a
                               className="cinderwell-loop__read-more"
                               href={post.link}
@@ -954,6 +1152,18 @@ registerBlockType(metadata.name, {
                                 : {decodeEntities(post.title?.rendered || "")}
                               </span>
                             </a>
+                          )}
+                        {attributes.showReadMore &&
+                          attributes.linkBehavior === "modal" && (
+                            <button
+                              type="button"
+                              className="cinderwell-loop__read-more"
+                            >
+                              {attributes.readMoreLabel}
+                              <span className="screen-reader-text">
+                                : {decodeEntities(post.title?.rendered || "")}
+                              </span>
+                            </button>
                           )}
                       </div>
                     </article>

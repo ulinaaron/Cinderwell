@@ -2,13 +2,13 @@ import { registerBlockType } from '@wordpress/blocks';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { TextControl, PanelBody } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
-import { BlockIdentity, SectionToggles, LayoutControls, BackgroundControls, getBackgroundImageProps } from '../../shared/inspector-controls';
+import { BlockIdentity, SectionToggles, LayoutControls } from '../../shared/inspector-controls';
 import metadata from './block.json';
 
 registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => {
-        const blockProps = useBlockProps( getBackgroundImageProps( { className: `cinderwell-form cinderwell-form--bg-${ attributes.background }` }, attributes ) );
-        const options = { title: attributes.title, description: attributes.description, ajax: attributes.ajax };
+        const blockProps = useBlockProps( { className: 'cinderwell-form' } );
+        const options = { description: attributes.description, ajax: attributes.ajax };
         const onOptionsChange = ( values ) => setAttributes( values );
         return (
             <>
@@ -17,13 +17,11 @@ registerBlockType( metadata.name, {
                     <PanelBody title={ __( 'Content', 'cinderwell' ) } initialOpen={ true } className="cw-panel cw-access-content">
                         <TextControl label={ __( 'Form ID', 'cinderwell' ) } type="number" value={ attributes.formId } onChange={ ( v ) => setAttributes( { formId: parseInt( v, 10 ) || 0 } ) } />
                         <SectionToggles sections={ [
-                            { key: 'title', label: __( 'Title', 'cinderwell' ) },
                             { key: 'description', label: __( 'Description', 'cinderwell' ) },
                             { key: 'ajax', label: __( 'AJAX submission', 'cinderwell' ) },
                         ] } values={ options } onChange={ onOptionsChange } />
                     </PanelBody>
-                    <LayoutControls attributes={ attributes } setAttributes={ setAttributes } />
-                    <BackgroundControls value={ attributes.background } onChange={ ( v ) => setAttributes( { background: v } ) } attributes={ attributes } setAttributes={ setAttributes } />
+                    <LayoutControls attributes={ attributes } setAttributes={ setAttributes } showSpacing={ false } />
                 </InspectorControls>
                 <div { ...blockProps }>
                     <div className="cinderwell-form__inner" style={ { maxWidth: `var(--cw-width-${ attributes.width })` } }>

@@ -5,3 +5,12 @@
 .cinderwell-icon-list__items > .block-list-appender {
 	display: none;
 }
+
+.cinderwell-icon-list--section .cinderwell-icon-list__list {
+	min-width: 0;
+}
+
+.cinderwell-icon-list--section .cinderwell-icon-list__add {
+	position: relative;
+	z-index: 2;
+}

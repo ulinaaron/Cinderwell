@@ -1,0 +1,56 @@
+.cinderwell-column {
+	flex: var(--cw-column-proportion, 1) 1 0;
+	min-width: 0;
+}
+
+.cinderwell-column--proportion-1 {
+	--cw-column-proportion: 1;
+}
+
+.cinderwell-column--proportion-2 {
+	--cw-column-proportion: 2;
+}
+
+.cinderwell-column--proportion-3 {
+	--cw-column-proportion: 3;
+}
+
+.cinderwell-column__inner {
+	display: flex;
+	flex-direction: column;
+	gap: var(--cw-gap-md);
+	min-width: 0;
+}
+
+.cinderwell-column__inner > :first-child {
+	margin-block-start: 0;
+}
+
+.cinderwell-column__inner > :last-child {
+	margin-block-end: 0;
+}
+
+/* Alignment classes are page-level concepts. Nested blocks must stay inside
+ * the column instead of inheriting WordPress's negative align-wide margins. */
+.cinderwell-columns .cinderwell-column__inner > .alignwide,
+.cinderwell-columns .cinderwell-column__inner > .alignfull {
+	width: 100% !important;
+	max-width: 100% !important;
+	margin-inline: 0 !important;
+}
+
+@media (max-width: 899px) {
+
+	.cinderwell-columns--stack-tablet .cinderwell-column {
+		width: 100%;
+		flex-basis: auto;
+	}
+}
+
+@media (max-width: 699px) {
+
+	.cinderwell-columns--stack-mobile .cinderwell-column {
+		width: 100%;
+		flex-basis: auto;
+	}
+}

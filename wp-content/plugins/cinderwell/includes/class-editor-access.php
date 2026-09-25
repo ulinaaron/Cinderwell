@@ -59,7 +59,7 @@ class Editor_Access {
     public static function get_blocks() {
         $blocks = [];
         foreach ( \WP_Block_Type_Registry::get_instance()->get_all_registered() as $name => $block ) {
-            if ( 0 !== strpos( $name, 'cinderwell/' ) || false === ( $block->supports['inserter'] ?? true ) || ! empty( $block->parent ) ) {
+            if ( ! Block_Library::is_cinderwell_block( $name ) || false === ( $block->supports['inserter'] ?? true ) || ! empty( $block->parent ) || ! empty( $block->ancestor ) ) {
                 continue;
             }
             $blocks[ $name ] = $block->title ?: $name;
@@ -217,6 +217,7 @@ class Editor_Access {
         }
 
         update_option( self::OPTION, [ 'version' => 1, 'roles' => $roles ] );
+        Block_Library::save_from_request( $submitted_root['library'] ?? [] );
         wp_safe_redirect( add_query_arg( [ 'page' => 'cinderwell', 'tab' => 'editor-access', 'updated' => '1' ], admin_url( 'admin.php' ) ) );
         exit;
     }
@@ -226,6 +227,9 @@ class Editor_Access {
         $presets  = self::get_presets();
         $groups   = self::get_control_groups();
         $blocks   = self::get_blocks();
+        $library  = Block_Library::get_settings();
+        $profiles = Block_Library::get_profiles();
+        $external = Block_Library::get_external_blocks();
 
         if ( isset( $_GET['updated'] ) ) {
             echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Editor access settings saved.', 'cinderwell' ) . '</p></div>';
@@ -235,6 +239,54 @@ class Editor_Access {
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <input type="hidden" name="action" value="cinderwell_save_editor_access">
             <?php wp_nonce_field( 'cinderwell_save_editor_access' ); ?>
+            <section class="card cw-settings-card cw-block-library" data-cw-block-library>
+                <div class="cw-editor-access-role__heading">
+                    <div>
+                        <h2><?php esc_html_e( 'Block library', 'cinderwell' ); ?></h2>
+                        <p><?php esc_html_e( 'Choose the sitewide inserter baseline. Existing blocks remain editable even when they are hidden from insertion.', 'cinderwell' ); ?></p>
+                    </div>
+                    <span class="cw-editor-access-role__fixed"><?php esc_html_e( 'All roles', 'cinderwell' ); ?></span>
+                </div>
+                <fieldset class="cw-admin-segmented cw-block-library__profiles">
+                    <legend class="screen-reader-text"><?php esc_html_e( 'Block library profile', 'cinderwell' ); ?></legend>
+                    <?php foreach ( $profiles as $profile => $definition ) : ?>
+                        <label>
+                            <input class="screen-reader-text" type="radio" name="editor_access[library][profile]" value="<?php echo esc_attr( $profile ); ?>" <?php checked( $library['profile'], $profile ); ?> data-cw-library-profile>
+                            <span class="cw-admin-segmented__option"><?php echo esc_html( $definition['label'] ); ?></span>
+                        </label>
+                    <?php endforeach; ?>
+                </fieldset>
+                <p class="description" data-cw-library-description>
+                    <?php echo esc_html( $profiles[ $library['profile'] ]['description'] ); ?>
+                </p>
+                <details class="cw-editor-access-blocks cw-block-library__advanced">
+                    <summary><?php esc_html_e( 'Advanced block exceptions', 'cinderwell' ); ?></summary>
+                    <p class="description"><?php esc_html_e( 'Enable individual WordPress or plugin blocks in addition to the selected profile, or hide blocks included by it.', 'cinderwell' ); ?></p>
+                    <label class="cw-block-library__search">
+                        <span><?php esc_html_e( 'Search blocks', 'cinderwell' ); ?></span>
+                        <input type="search" class="regular-text" data-cw-library-search placeholder="<?php esc_attr_e( 'Search by block or provider', 'cinderwell' ); ?>">
+                    </label>
+                    <div class="cw-block-library__results" data-cw-library-results aria-live="polite"></div>
+                    <div class="cw-editor-access-block-grid cw-block-library__grid">
+                        <?php foreach ( $external as $block_name => $block ) : ?>
+                            <?php
+                            $enabled = Block_Library::is_external_enabled( $block_name, $library );
+                            $defaults = [];
+                            foreach ( array_keys( $profiles ) as $profile ) {
+                                $profile_settings = [ 'profile' => $profile, 'overrides' => [] ];
+                                if ( Block_Library::is_external_enabled( $block_name, $profile_settings ) ) {
+                                    $defaults[] = $profile;
+                                }
+                            }
+                            ?>
+                            <label data-cw-library-block data-search="<?php echo esc_attr( strtolower( $block['provider'] . ' ' . $block['label'] . ' ' . $block_name ) ); ?>">
+                                <input type="checkbox" name="editor_access[library][blocks][]" value="<?php echo esc_attr( $block_name ); ?>" <?php checked( $enabled ); ?> data-default-profiles="<?php echo esc_attr( implode( ',', $defaults ) ); ?>">
+                                <span><strong><?php echo esc_html( $block['label'] ); ?></strong><small><?php echo esc_html( $block['provider'] ); ?></small></span>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+                </details>
+            </section>
             <div class="cw-editor-access-roles">
                 <?php foreach ( self::get_roles() as $role => $label ) : ?>
                     <?php
@@ -245,7 +297,7 @@ class Editor_Access {
                     <section class="card cw-settings-card cw-editor-access-role" data-cw-editor-access-role>
                         <div class="cw-editor-access-role__heading">
                             <div><h2><?php echo esc_html( $label ); ?></h2><code><?php echo esc_html( $role ); ?></code></div>
-                            <?php if ( $is_admin ) : ?><span class="cw-editor-access-role__fixed"><?php esc_html_e( 'Always full access', 'cinderwell' ); ?></span><?php endif; ?>
+                            <?php if ( $is_admin ) : ?><span class="cw-editor-access-role__fixed"><?php esc_html_e( 'Full design access', 'cinderwell' ); ?></span><?php endif; ?>
                         </div>
                         <label class="cw-editor-access-field">
                             <span><?php esc_html_e( 'Access level', 'cinderwell' ); ?></span>

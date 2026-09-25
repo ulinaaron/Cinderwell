@@ -1,0 +1,1 @@
+Select an image and choose **Replace**. Use a suitably sized image rather than uploading an unnecessarily large original. Describe meaningful images in the alt-text field; leave alt text empty for images that are purely decorative.

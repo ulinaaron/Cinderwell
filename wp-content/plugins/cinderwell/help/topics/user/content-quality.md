@@ -1,0 +1,5 @@
+- Use descriptive headings in a logical order.
+- Write link text that makes sense out of context.
+- Add alt text when an image communicates information.
+- Do not communicate meaning with color alone.
+- Preview the page and test every changed link.

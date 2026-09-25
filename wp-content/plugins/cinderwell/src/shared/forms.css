@@ -1,0 +1,158 @@
+/*
+ * Shared form-control recipe.
+ *
+ * This capability is intentionally scoped. A Cinderwell block or third-party
+ * adapter opts in by rendering controls inside `.cinderwell-form` and attaching
+ * the `cinderwell-forms` style handle to its block type.
+ */
+.cinderwell-form {
+	--cw-form-control-height: 3rem;
+	--cw-form-control-padding-block: 0.6875rem;
+	--cw-form-control-padding-inline: 0.875rem;
+	--cw-form-control-font-size: var(--cw-font-size-md);
+	--cw-form-control-background: color-mix(in srgb, var(--cw-color-surface) 55%, var(--cw-color-light));
+	--cw-form-control-foreground: var(--cw-color-text);
+	--cw-form-control-border: var(--cw-color-border);
+	--cw-form-control-border-hover: color-mix(in srgb, var(--cw-color-text) 55%, var(--cw-color-border));
+	--cw-form-control-border-focus: var(--cw-color-focus);
+	--cw-form-control-placeholder: var(--cw-color-muted);
+	--cw-form-control-radius: var(--cw-radius-sm);
+	--cw-form-field-gap: 0.5rem;
+	--cw-form-row-gap: var(--cw-gap-md);
+	--cw-form-help-color: color-mix(in srgb, currentcolor 72%, transparent);
+	--cw-form-info-surface: color-mix(in srgb, var(--cw-color-info) 7%, var(--cw-color-surface));
+	--cw-form-success-surface: color-mix(in srgb, var(--cw-color-success) 7%, var(--cw-color-surface));
+	--cw-form-danger-surface: color-mix(in srgb, var(--cw-color-danger) 7%, var(--cw-color-surface));
+
+	font-family: var(--cw-font-body);
+}
+
+.cinderwell-form :where(input, textarea, select, button) {
+	font: inherit;
+}
+
+.cinderwell-form :where(
+input:not([type="button"]):not([type="checkbox"]):not([type="color"]):not([type="file"]):not([type="hidden"]):not([type="image"]):not([type="radio"]):not([type="range"]):not([type="reset"]):not([type="submit"]),
+textarea,
+select
+) {
+	box-sizing: border-box;
+	width: 100%;
+	min-height: var(--cw-form-control-height);
+	padding: var(--cw-form-control-padding-block) var(--cw-form-control-padding-inline);
+	border: 1px solid var(--cw-form-control-border);
+	border-radius: var(--cw-form-control-radius);
+	background-color: var(--cw-form-control-background);
+	color: var(--cw-form-control-foreground);
+	font-size: var(--cw-form-control-font-size);
+	line-height: 1.4;
+	transition: border-color var(--cw-duration-fast) var(--cw-ease-standard), box-shadow var(--cw-duration-fast) var(--cw-ease-standard), background-color var(--cw-duration-fast) var(--cw-ease-standard);
+}
+
+.cinderwell-form :where(
+input:not([type="button"]):not([type="checkbox"]):not([type="color"]):not([type="file"]):not([type="hidden"]):not([type="image"]):not([type="radio"]):not([type="range"]):not([type="reset"]):not([type="submit"]),
+textarea,
+select
+):hover:not(:disabled):not([readonly]) {
+	border-color: var(--cw-form-control-border-hover);
+}
+
+.cinderwell-form :where(
+input:not([type="button"]):not([type="checkbox"]):not([type="color"]):not([type="file"]):not([type="hidden"]):not([type="image"]):not([type="radio"]):not([type="range"]):not([type="reset"]):not([type="submit"]),
+textarea,
+select
+):focus {
+	border-color: var(--cw-form-control-border-focus);
+	outline: 2px solid var(--cw-form-control-border-focus);
+	outline-offset: 1px;
+	box-shadow: none;
+}
+
+.cinderwell-form :where(input, textarea)::placeholder {
+	color: var(--cw-form-control-placeholder);
+	opacity: 1;
+}
+
+.cinderwell-form textarea {
+	min-height: 9rem;
+	resize: vertical;
+}
+
+.cinderwell-form select[multiple] {
+	min-height: 9rem;
+}
+
+.cinderwell-form :where(input, textarea, select):disabled {
+	cursor: not-allowed;
+	opacity: 0.6;
+}
+
+.cinderwell-form :where(input, textarea)[readonly] {
+	background: color-mix(in srgb, var(--cw-form-control-background) 92%, var(--cw-color-muted));
+}
+
+.cinderwell-form :where(input[type="checkbox"], input[type="radio"]) {
+	width: 1.125rem;
+	height: 1.125rem;
+	margin: 0;
+	accent-color: var(--cw-color-brand);
+}
+
+.cinderwell-form :where(input[type="checkbox"], input[type="radio"]):focus-visible {
+	outline: 2px solid var(--cw-color-focus);
+	outline-offset: 2px;
+}
+
+.cinderwell-form :where(label, legend, .cinderwell-form__label) {
+	color: inherit;
+	font-size: var(--cw-font-size-md);
+	font-weight: 600;
+	line-height: 1.4;
+}
+
+.cinderwell-form :where(.cinderwell-form__sublabel) {
+	color: var(--cw-form-help-color);
+	font-size: var(--cw-font-size-sm);
+	font-weight: 500;
+}
+
+.cinderwell-form :where(.cinderwell-form__field) {
+	display: grid;
+	gap: var(--cw-form-field-gap);
+}
+
+.cinderwell-form :where(.cinderwell-form__help, small) {
+	color: var(--cw-form-help-color);
+	font-size: var(--cw-font-size-xs);
+	line-height: 1.5;
+}
+
+.cinderwell-form :where([aria-invalid="true"]) {
+	border-color: var(--cw-color-danger);
+}
+
+.cinderwell-form :where([aria-invalid="true"]):focus {
+	border-color: var(--cw-color-danger);
+	outline-color: var(--cw-color-danger);
+}
+
+.cinderwell-form :where(.cinderwell-form__message) {
+	padding: var(--cw-gap-sm);
+	border: 1px solid currentcolor;
+	border-radius: var(--cw-radius-sm);
+}
+
+.cinderwell-form :where(.cinderwell-form__message--info) {
+	background: var(--cw-form-info-surface);
+	color: var(--cw-color-info);
+}
+
+.cinderwell-form :where(.cinderwell-form__message--success) {
+	background: var(--cw-form-success-surface);
+	color: var(--cw-color-success);
+}
+
+.cinderwell-form :where(.cinderwell-form__message--danger) {
+	background: var(--cw-form-danger-surface);
+	color: var(--cw-color-danger);
+}

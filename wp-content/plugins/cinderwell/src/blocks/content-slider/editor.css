@@ -1,0 +1,24 @@
+.editor-styles-wrapper .cinderwell-content-slider__editor-slides {
+	display: grid;
+	gap: 1.5rem;
+	margin-block: 1.5rem;
+}
+
+.editor-styles-wrapper .cinderwell-content-slider__slide {
+	border: 1px solid color-mix(in srgb, currentcolor 18%, transparent);
+}
+
+.editor-styles-wrapper .cinderwell-content-slider__media {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	justify-content: center;
+	padding: 1rem;
+}
+
+.editor-styles-wrapper .cinderwell-content-slider__editor-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 1rem;
+}

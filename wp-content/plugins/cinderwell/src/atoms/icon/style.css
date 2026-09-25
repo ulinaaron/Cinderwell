@@ -1,53 +1,113 @@
 .cinderwell-atom-icon {
-    display: flex;
-    align-items: center;
-    width: 100%;
+	display: flex;
+	align-items: center;
+	width: 100%;
 }
 
 .cinderwell-atom-icon__glyph {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--cw-radius-pill);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: var(--cw-radius-pill);
 }
 
 .cinderwell-atom-icon svg {
-    display: block;
+	display: block;
 }
 
-.cinderwell-atom-icon--size-sm svg { width: 2rem; height: 2rem; }
-.cinderwell-atom-icon--size-md svg { width: 3rem; height: 3rem; }
-.cinderwell-atom-icon--size-lg svg { width: 4rem; height: 4rem; }
+.cinderwell-atom-icon--size-sm svg {
+	width: 2rem;
+	height: 2rem;
+}
 
-.cinderwell-atom-icon--color-brand { color: var(--cw-color-brand); }
-.cinderwell-atom-icon--color-text { color: var(--cw-color-text); }
-.cinderwell-atom-icon--color-muted { color: var(--cw-color-muted); }
-.cinderwell-atom-icon--color-brand-light { color: var(--cw-color-brand-light); }
-.cinderwell-atom-icon--color-brand-dark { color: var(--cw-color-brand-dark); }
-.cinderwell-atom-icon--color-info { color: var(--cw-color-info); }
-.cinderwell-atom-icon--color-success { color: var(--cw-color-success); }
-.cinderwell-atom-icon--color-danger { color: var(--cw-color-danger); }
-.cinderwell-atom-icon--color-accent-1 { color: var(--cw-color-accent-1); }
-.cinderwell-atom-icon--color-accent-2 { color: var(--cw-color-accent-2); }
-.cinderwell-atom-icon--color-accent-3 { color: var(--cw-color-accent-3); }
-.cinderwell-atom-icon--color-dark { color: var(--cw-color-dark); }
-.cinderwell-atom-icon--color-light { color: var(--cw-color-light); }
-.cinderwell-atom-icon--color-white { color: var(--cw-color-white); }
+.cinderwell-atom-icon--size-md svg {
+	width: 3rem;
+	height: 3rem;
+}
+
+.cinderwell-atom-icon--size-lg svg {
+	width: 4rem;
+	height: 4rem;
+}
+
+.cinderwell-atom-icon--color-brand {
+	color: var(--cw-color-brand);
+}
+
+.cinderwell-atom-icon--color-text {
+	color: var(--cw-color-text);
+}
+
+.cinderwell-atom-icon--color-muted {
+	color: var(--cw-color-muted);
+}
+
+.cinderwell-atom-icon--color-brand-light {
+	color: var(--cw-color-brand-light);
+}
+
+.cinderwell-atom-icon--color-brand-dark {
+	color: var(--cw-color-brand-dark);
+}
+
+.cinderwell-atom-icon--color-info {
+	color: var(--cw-color-info);
+}
+
+.cinderwell-atom-icon--color-success {
+	color: var(--cw-color-success);
+}
+
+.cinderwell-atom-icon--color-danger {
+	color: var(--cw-color-danger);
+}
+
+.cinderwell-atom-icon--color-accent-1 {
+	color: var(--cw-color-accent-1);
+}
+
+.cinderwell-atom-icon--color-accent-2 {
+	color: var(--cw-color-accent-2);
+}
+
+.cinderwell-atom-icon--color-accent-3 {
+	color: var(--cw-color-accent-3);
+}
+
+.cinderwell-atom-icon--color-dark {
+	color: var(--cw-color-dark);
+}
+
+.cinderwell-atom-icon--color-light {
+	color: var(--cw-color-light);
+}
+
+.cinderwell-atom-icon--color-white {
+	color: var(--cw-color-white);
+}
 
 .cinderwell-atom-icon--treatment-soft .cinderwell-atom-icon__glyph {
-    padding: 0.75rem;
-    background: color-mix(in srgb, currentColor 12%, transparent);
+	padding: 0.75rem;
+	background: color-mix(in srgb, currentcolor 12%, transparent);
 }
 
 .cinderwell-atom-icon--treatment-solid .cinderwell-atom-icon__glyph {
-    padding: 0.75rem;
-    background: currentColor;
+	padding: 0.75rem;
+	background: currentcolor;
 }
 
 .cinderwell-atom-icon--treatment-solid .cinderwell-atom-icon__glyph svg {
-    color: var(--cw-color-white);
+	color: var(--cw-color-white);
 }
 
-.cinderwell-atom-icon--align-left { justify-content: flex-start; }
-.cinderwell-atom-icon--align-center { justify-content: center; }
-.cinderwell-atom-icon--align-right { justify-content: flex-end; }
+.cinderwell-atom-icon--align-left {
+	justify-content: flex-start;
+}
+
+.cinderwell-atom-icon--align-center {
+	justify-content: center;
+}
+
+.cinderwell-atom-icon--align-right {
+	justify-content: flex-end;
+}

@@ -1,0 +1,167 @@
+.cinderwell-company-details {
+	padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+}
+
+.cinderwell-company-details--bg-white {
+	background: var(--cw-color-white);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-company-details--bg-light {
+	background: var(--cw-color-light);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-company-details--bg-dark {
+	background: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+.cinderwell-company-details--bg-brand {
+	background: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
+
+.cinderwell-company-details__inner {
+	box-sizing: border-box;
+	margin-inline: auto;
+}
+
+.cinderwell-company-details--layout-card .cinderwell-company-details__inner {
+	background: var(--cw-color-white);
+	border: 1px solid color-mix(in srgb, currentcolor 14%, transparent);
+	border-radius: var(--cw-radius-lg);
+	box-shadow: var(--cw-shadow-sm);
+	color: var(--cw-color-text);
+	padding: clamp(var(--cw-spacing-sm), 4vw, var(--cw-spacing-md));
+}
+
+.cinderwell-company-details__heading {
+	margin: 0 0 var(--cw-spacing-xs);
+}
+
+.cinderwell-company-details__description {
+	margin: 0 0 var(--cw-spacing-sm);
+}
+
+.cinderwell-company-details__content {
+	display: grid;
+	gap: var(--cw-spacing-sm);
+}
+
+.cinderwell-company-details--layout-split .cinderwell-company-details__content {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cinderwell-company-details__contact {
+	display: grid;
+	gap: 0.55rem;
+}
+
+.cinderwell-company-details__contact address {
+	font-style: normal;
+}
+
+.cinderwell-company-details__contact a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+}
+
+.cinderwell-company-details__status {
+	display: inline-flex;
+	font-size: var(--cw-font-size-sm);
+	font-weight: 700;
+	gap: 0.45rem;
+	margin: 0 0 var(--cw-spacing-xs);
+}
+
+.cinderwell-company-details__status::before {
+	background: currentcolor;
+	border-radius: 50%;
+	content: "";
+	height: 0.55em;
+	margin-top: 0.4em;
+	width: 0.55em;
+}
+
+.cinderwell-company-details__status.is-open::before {
+	background: var(--cw-color-success);
+}
+
+.cinderwell-company-details__hours {
+	display: grid;
+	gap: 0;
+	margin: 0;
+}
+
+.cinderwell-company-details__hours-row {
+	border-bottom: 1px solid color-mix(in srgb, currentcolor 14%, transparent);
+	display: grid;
+	gap: 1rem;
+	grid-template-columns: minmax(7rem, 0.75fr) minmax(0, 1.25fr);
+	padding: 0.65rem 0;
+}
+
+.cinderwell-company-details__hours-row:first-child {
+	padding-top: 0;
+}
+
+.cinderwell-company-details__hours-row:last-child {
+	border-bottom: 0;
+	padding-bottom: 0;
+}
+
+.cinderwell-company-details__hours dt {
+	font-weight: 700;
+}
+
+.cinderwell-company-details__hours dd {
+	margin: 0;
+	text-align: right;
+}
+
+.cinderwell-company-details__hours small {
+	display: block;
+	opacity: 0.75;
+}
+
+.cinderwell-company-details__actions {
+	margin-top: var(--cw-spacing-sm);
+}
+
+.cinderwell-company-details--align-center {
+	text-align: center;
+}
+
+.cinderwell-company-details--align-center .cinderwell-company-details__actions {
+	justify-content: center;
+}
+
+.cinderwell-company-details--align-right {
+	text-align: right;
+}
+
+.cinderwell-company-details--align-right .cinderwell-company-details__actions {
+	justify-content: flex-end;
+}
+
+[dir="rtl"] .cinderwell-company-details__hours dd {
+	text-align: left;
+}
+
+@media (max-width: 700px) {
+
+	.cinderwell-company-details--layout-split .cinderwell-company-details__content {
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-company-details__hours-row {
+		gap: 0.25rem;
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-company-details__hours dd {
+		text-align: inherit;
+	}
+}

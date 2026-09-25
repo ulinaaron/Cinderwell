@@ -3,7 +3,7 @@ import { useBlockProps, InspectorControls, RichText } from '@wordpress/block-edi
 import { PanelBody } from '@wordpress/components';
 import { useSelect } from '@wordpress/data';
 import { __ } from '@wordpress/i18n';
-import { BlockIdentity, SectionToggles, LayoutControls, BackgroundControls, TypographyControls, getSpacingClassName, getTypographyClassName, getTextStyleClassName, getHeadingTagName, SegmentedControl, ButtonRepeater, ButtonSave } from '../../shared/inspector-controls';
+import { BlockIdentity, SectionToggles, LayoutControls, BackgroundControls, TypographyControls, getSpacingClassName, getTypographyClassName, getTextStyleClassName, getHeadingTagName, getCopyMeasureClassName, SegmentedControl, ButtonRepeater, ButtonSave } from '../../shared/inspector-controls';
 import { ImageOverlayControls, ImageSettingsControl } from '../../shared/image-controls';
 import { getImageClassName, getMediaUrl } from '../../shared/media';
 import { ALLOWED_INLINE_FORMATS } from '../../shared/rich-text';
@@ -11,8 +11,13 @@ import { canEditControl, filterEditorAccessChanges } from '../../shared/editor-a
 import { VariationPicker, resolveBlockVariation } from '../../shared/variation-picker';
 import metadata from './block.json';
 
+const backgroundPositions = { top: 'center top', bottom: 'center bottom', left: 'left center', right: 'right center', 'top-left': 'left top', 'top-right': 'right top', 'bottom-left': 'left bottom', 'bottom-right': 'right bottom' };
+const contentWidthFallbacks = { narrow: '600px', standard: '960px', wide: '1200px', full: '100%' };
+
 const saveHero = ( attributes, includeResponsiveSpacing = true, useContentLayout = true, includeImageSide = true, includeSplitGap = true ) => {
-    const hasBg = attributes.showBgImage && attributes.bgImage > 0;
+    const hasBgImage = attributes.showBgImage && attributes.bgImage > 0;
+    const hasBgVideo = Boolean( attributes.bgVideoUrl );
+    const hasBg = hasBgImage || hasBgVideo;
     const hasImage = attributes.showImage && attributes.image > 0;
     const backgroundOverlay = attributes.bgOverlay ? ( attributes.bgOverlayPreset || 'medium' ) : 'none';
     const backgroundOverlayClass = backgroundOverlay !== 'medium' ? ` cinderwell-hero__overlay--${ backgroundOverlay }` : '';
@@ -21,7 +26,7 @@ const saveHero = ( attributes, includeResponsiveSpacing = true, useContentLayout
     const splitGapClassName = hasImage && includeSplitGap ? ` cinderwell-hero--split-gap-${ attributes.splitGap || 'md' }` : '';
     const layoutClassName = useContentLayout ? ` cinderwell-hero--align-${ attributes.alignment || 'center' }${ hasImage ? ` cinderwell-hero--split${ imageSideClassName }${ splitGapClassName }` : '' }` : '';
     const blockProps = useBlockProps.save( {
-        className: `cinderwell-hero cinderwell-hero--bg-${ attributes.background }${ layoutClassName }${ getTypographyClassName( attributes ) }${ spacingClassName }${ hasBg ? ' cinderwell-hero--has-bg' : '' }`,
+        className: `cinderwell-hero cinderwell-hero--bg-${ attributes.background }${ layoutClassName }${ getCopyMeasureClassName( attributes ) }${ getTypographyClassName( attributes ) }${ spacingClassName }${ hasBg ? ' cinderwell-hero--has-bg' : '' }`,
     } );
 
     const primaryTextContent = (
@@ -47,13 +52,15 @@ const saveHero = ( attributes, includeResponsiveSpacing = true, useContentLayout
     );
 
     return (
-        <section { ...blockProps }>
-            { hasBg && (
+        <section { ...blockProps } data-cinderwell-background-video={ hasBgVideo ? 'true' : undefined }>
+            { hasBgVideo && <video className="cinderwell-hero__bg-image cinderwell-background-video" src={ attributes.bgVideoUrl } poster={ attributes.bgVideoPosterUrl || undefined } style={ { objectFit: attributes.bgVideoFit || 'cover', objectPosition: backgroundPositions[ attributes.bgVideoPosition ] || 'center center' } } autoPlay muted loop playsInline aria-hidden="true" tabIndex="-1" /> }
+            { hasBgImage && ! hasBgVideo && (
                 <>
                     <img className={ `cinderwell-hero__bg-image${ getImageClassName( attributes.bgImageFit, attributes.bgImagePosition ) }` } src={ attributes.bgImageUrl || `wp-content/uploads/${ attributes.bgImage }` } alt="" aria-hidden="true" />
-                    { attributes.bgOverlay && <div className={ `cinderwell-hero__overlay${ backgroundOverlayClass }` } /> }
                 </>
             ) }
+            { hasBg && attributes.bgOverlay && <div className={ `cinderwell-hero__overlay${ backgroundOverlayClass }` } /> }
+            { hasBgVideo && <button type="button" className="cinderwell-background-video__toggle" data-play-label={ __( 'Play background video', 'cinderwell' ) } data-pause-label={ __( 'Pause background video', 'cinderwell' ) } aria-label={ __( 'Pause background video', 'cinderwell' ) } aria-pressed="true"><span className="cinderwell-background-video__toggle-icon" aria-hidden="true">Ⅱ</span><span className="screen-reader-text">{ __( 'Pause background video', 'cinderwell' ) }</span></button> }
             <div className="cinderwell-hero__inner" style={ { maxWidth: `var(--cw-width-${ attributes.width })` } }>
                 { useContentLayout ? (
                     <>
@@ -76,19 +83,22 @@ registerBlockType( metadata.name, {
     edit: ( { attributes, setAttributes } ) => {
         const resolvedLayout = resolveBlockVariation( metadata.name, attributes.layout, 'split' );
         const activeLayout = resolvedLayout?.slug || 'split';
+        const contentWidth = attributes.width || 'standard';
+        const contentWidthValue = `var(--cw-width-${ contentWidth }, ${ contentWidthFallbacks[ contentWidth ] || contentWidthFallbacks.standard })`;
         const isStatementLayout = activeLayout === 'statement';
-        const hasBg = attributes.showBgImage && attributes.bgImage > 0;
+        const hasBgImage = attributes.showBgImage && attributes.bgImage > 0;
+        const hasBgVideo = Boolean( attributes.bgVideoUrl );
+        const hasBg = hasBgImage || hasBgVideo;
         const imageMedia = useSelect( ( select ) => attributes.image > 0 ? select( 'core' ).getMedia( attributes.image ) : null, [ attributes.image ] );
         const backgroundMedia = useSelect( ( select ) => attributes.bgImage > 0 ? select( 'core' ).getMedia( attributes.bgImage ) : null, [ attributes.bgImage ] );
         const imageUrl = attributes.imageUrl || getMediaUrl( imageMedia );
         const backgroundImageUrl = attributes.bgImageUrl || getMediaUrl( backgroundMedia );
         const backgroundOverlay = attributes.bgOverlay ? ( attributes.bgOverlayPreset || 'medium' ) : 'none';
         const backgroundOverlayClass = backgroundOverlay !== 'medium' ? ` cinderwell-hero__overlay--${ backgroundOverlay }` : '';
-        const backgroundPositions = { top: 'center top', bottom: 'center bottom', left: 'left center', right: 'right center', 'top-left': 'left top', 'top-right': 'right top', 'bottom-left': 'left bottom', 'bottom-right': 'right bottom' };
         const hasImage = attributes.showImage && attributes.image > 0;
         const blockProps = useBlockProps( {
-            className: `cinderwell-hero cinderwell-hero--bg-${ attributes.background } cinderwell-hero--layout-${ activeLayout } cinderwell-hero--align-${ attributes.alignment || 'center' }${ attributes.showImage ? ` cinderwell-hero--split cinderwell-hero--image-${ attributes.imageSide || 'right' } cinderwell-hero--split-gap-${ attributes.splitGap || 'md' }` : '' }${ getTypographyClassName( attributes ) }${ getSpacingClassName( attributes ) }${ hasBg ? ' cinderwell-hero--has-bg cw-image-control-host' : '' }`,
-            style: hasBg && backgroundImageUrl ? {
+            className: `cinderwell-hero cinderwell-hero--bg-${ attributes.background } cinderwell-hero--layout-${ activeLayout } cinderwell-hero--width-${ contentWidth } cinderwell-hero--align-${ attributes.alignment || 'center' }${ attributes.showImage ? ` cinderwell-hero--split cinderwell-hero--image-${ attributes.imageSide || 'right' } cinderwell-hero--split-gap-${ attributes.splitGap || 'md' }` : '' }${ getCopyMeasureClassName( attributes ) }${ getTypographyClassName( attributes ) }${ getSpacingClassName( attributes ) }${ hasBg ? ' cinderwell-hero--has-bg cw-image-control-host' : '' }`,
+            style: hasBgImage && ! hasBgVideo && backgroundImageUrl ? {
                 backgroundImage: `url(${ backgroundImageUrl })`,
                 backgroundSize: attributes.bgImageFit && attributes.bgImageFit !== 'auto' ? attributes.bgImageFit : undefined,
                 backgroundPosition: backgroundPositions[ attributes.bgImagePosition ] || undefined,
@@ -173,6 +183,7 @@ registerBlockType( metadata.name, {
                         attributes={ attributes }
                         setAttributes={ setAttributes }
                         showAlignment={ true }
+                        controlled={ resolvedLayout?.controlled || {} }
                     >
                         { attributes.showImage && (
                             <SegmentedControl
@@ -188,7 +199,7 @@ registerBlockType( metadata.name, {
                             />
                         ) }
                     </LayoutControls>
-                    <BackgroundControls value={ attributes.background } onChange={ ( v ) => setAttributes( { background: v } ) } media={ {
+                    <BackgroundControls controlled={ resolvedLayout?.controlled || {} } value={ attributes.background } onChange={ ( v ) => setAttributes( { background: v } ) } media={ {
                         imageId: attributes.bgImage,
                         imageUrl: backgroundImageUrl,
                         fit: attributes.bgImageFit === 'contain' ? 'contain' : 'cover',
@@ -197,12 +208,31 @@ registerBlockType( metadata.name, {
                         onChange: ( changes ) => setAttributes( {
                             ...( Object.prototype.hasOwnProperty.call( changes, 'imageId' ) ? { bgImage: changes.imageId, showBgImage: changes.imageId > 0 } : {} ),
                             ...( Object.prototype.hasOwnProperty.call( changes, 'imageUrl' ) ? { bgImageUrl: changes.imageUrl } : {} ),
+                            ...( changes.imageId > 0 ? { bgVideo: 0, bgVideoUrl: '', bgVideoPoster: 0, bgVideoPosterUrl: '' } : {} ),
                             ...( changes.fit ? { bgImageFit: changes.fit } : {} ),
                             ...( changes.position ? { bgImagePosition: changes.position } : {} ),
                             ...( changes.overlay ? { bgOverlay: changes.overlay !== 'none', bgOverlayPreset: changes.overlay } : {} ),
                         } ),
+                    } } video={ {
+                        videoId: attributes.bgVideo,
+                        videoUrl: attributes.bgVideoUrl,
+                        posterId: attributes.bgVideoPoster,
+                        posterUrl: attributes.bgVideoPosterUrl,
+                        fit: attributes.bgVideoFit || 'cover',
+                        position: attributes.bgVideoPosition || 'center',
+                        overlay: backgroundOverlay,
+                        onChange: ( changes ) => setAttributes( {
+                            ...( Object.prototype.hasOwnProperty.call( changes, 'videoId' ) ? { bgVideo: changes.videoId } : {} ),
+                            ...( Object.prototype.hasOwnProperty.call( changes, 'videoUrl' ) ? { bgVideoUrl: changes.videoUrl } : {} ),
+                            ...( changes.videoId > 0 || changes.videoUrl ? { bgImage: 0, bgImageUrl: '', showBgImage: false } : {} ),
+                            ...( Object.prototype.hasOwnProperty.call( changes, 'posterId' ) ? { bgVideoPoster: changes.posterId } : {} ),
+                            ...( Object.prototype.hasOwnProperty.call( changes, 'posterUrl' ) ? { bgVideoPosterUrl: changes.posterUrl } : {} ),
+                            ...( changes.fit ? { bgVideoFit: changes.fit } : {} ),
+                            ...( changes.position ? { bgVideoPosition: changes.position } : {} ),
+                            ...( changes.overlay ? { bgOverlay: changes.overlay !== 'none', bgOverlayPreset: changes.overlay } : {} ),
+                        } ),
                     } } />
-                    <TypographyControls attributes={ attributes } setAttributes={ setAttributes } sections={ [
+                    <TypographyControls controlled={ resolvedLayout?.controlled || {} } attributes={ attributes } setAttributes={ setAttributes } sections={ [
                         { key: 'eyebrow', label: __( 'Eyebrow', 'cinderwell' ), enabled: attributes.showEyebrow },
                         { key: 'heading', label: __( 'Heading', 'cinderwell' ), enabled: attributes.showHeading },
                         { key: 'subheading', label: __( 'Subheading', 'cinderwell' ), enabled: attributes.showSubheading },
@@ -210,9 +240,10 @@ registerBlockType( metadata.name, {
                         { key: 'footnote', label: __( 'Footnote', 'cinderwell' ), enabled: attributes.showFootnote },
                     ] } />
                 </InspectorControls>
-                <section { ...blockProps }>
+                <section { ...blockProps } data-cinderwell-background-video={ attributes.bgVideoUrl ? 'true' : undefined }>
+                    { hasBgVideo && <video className="cinderwell-hero__bg-image cinderwell-background-video" src={ attributes.bgVideoUrl } poster={ attributes.bgVideoPosterUrl || undefined } style={ { objectFit: attributes.bgVideoFit || 'cover', objectPosition: backgroundPositions[ attributes.bgVideoPosition ] || 'center center' } } muted loop playsInline aria-hidden="true" tabIndex="-1" /> }
                     { hasBg && attributes.bgOverlay && <div className={ `cinderwell-hero__overlay${ backgroundOverlayClass }` } /> }
-                    { hasBg && (
+                    { hasBgImage && ! hasBgVideo && (
                         <ImageOverlayControls
                             imageId={ attributes.bgImage }
                             label={ __( 'background image', 'cinderwell' ) }
@@ -220,7 +251,7 @@ registerBlockType( metadata.name, {
                             onRemove={ () => setAttributes( { bgImage: 0, bgImageUrl: '', showBgImage: false } ) }
                         />
                     ) }
-                    <div className="cinderwell-hero__inner" style={ { maxWidth: `var(--cw-width-${ attributes.width })` } }>
+                    <div className="cinderwell-hero__inner" style={ { width: `min(100%, ${ contentWidthValue })`, maxWidth: contentWidthValue } }>
                         <div className="cinderwell-hero__content">
                             { attributes.showEyebrow && (
                                 <RichText tagName="span" identifier="eyebrow" className={ `cinderwell-eyebrow${ getTextStyleClassName( attributes, 'eyebrow' ) }` } value={ attributes.eyebrow } onChange={ ( v ) => setAttributes( { eyebrow: v } ) } placeholder={ __( 'Eyebrow…', 'cinderwell' ) } allowedFormats={ ALLOWED_INLINE_FORMATS } />

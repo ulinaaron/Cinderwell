@@ -3,10 +3,10 @@
 /* Make all Cinderwell blocks full-width in the editor */
 [class*="wp-block-cinderwell"],
 [data-type^="cinderwell/"] {
-    max-width: 100% !important;
-    width: 100% !important;
-    margin-left: 0 !important;
-    margin-right: 0 !important;
+	max-width: 100% !important;
+	width: 100% !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
 }
 
 /* Block backgrounds go edge-to-edge */
@@ -18,11 +18,10 @@
 .cinderwell-faq,
 .cinderwell-body,
 .cinderwell-image-text,
-.cinderwell-two-column,
 .cinderwell-quote,
 .cinderwell-gallery {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }
 
 /* Inner content respects design token widths */
@@ -31,15 +30,23 @@
 .cinderwell-body__inner,
 .cinderwell-image-text__inner,
 .cinderwell-faq__inner,
-.cinderwell-two-column__inner,
 .cinderwell-quote__inner,
 .cinderwell-card-grid__inner,
 .cinderwell-loop__inner,
 .cinderwell-gallery__inner,
 .cinderwell-section__inner {
-    max-width: var(--cw-width-standard, 800px);
-    margin-inline: auto;
-    padding-inline: 1.5rem;
+	max-width: var(--cw-width-standard, 800px);
+	margin-inline: auto;
+	padding-inline: 1.5rem;
+}
+
+/* Explicit width states mirror the inline block contract in the editor. */
+.cinderwell-hero--width-narrow .cinderwell-hero__inner,
+.cinderwell-section--width-narrow .cinderwell-section__inner,
+.cinderwell-card-grid--width-narrow .cinderwell-card-grid__inner,
+.cinderwell-loop--width-narrow .cinderwell-loop__inner,
+.cinderwell-gallery--width-narrow .cinderwell-gallery__inner {
+	max-width: var(--cw-width-narrow, 600px);
 }
 
 /* Wide-width blocks */
@@ -48,22 +55,22 @@
 .cinderwell-card-grid--width-wide .cinderwell-card-grid__inner,
 .cinderwell-loop--width-wide .cinderwell-loop__inner,
 .cinderwell-gallery--width-wide .cinderwell-gallery__inner {
-    max-width: var(--cw-width-wide, 1100px);
+	max-width: var(--cw-width-wide, 1100px);
 }
 
 /* Full-width blocks */
 .cinderwell-hero--width-full .cinderwell-hero__inner,
 .cinderwell-section--width-full .cinderwell-section__inner {
-    max-width: var(--cw-width-full, 100%);
+	max-width: var(--cw-width-full, 100%);
 }
 
-/* Narrow-width blocks */
+/* Legacy narrow-width blocks without editor width classes. */
 .cinderwell-quote--width-narrow .cinderwell-quote__inner,
 .cinderwell-faq--width-narrow .cinderwell-faq__inner {
-    max-width: var(--cw-width-narrow, 600px);
+	max-width: var(--cw-width-narrow, 600px);
 }
 
 /* Buttons in editor — no underlines */
 .btn {
-    text-decoration: none !important;
+	text-decoration: none !important;
 }

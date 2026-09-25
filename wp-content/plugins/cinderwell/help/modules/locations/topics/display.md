@@ -1,0 +1,1 @@
+Add a Cinderwell Loop block and choose Locations as its content type. Keep addresses and contact details on the location entry so every listing stays synchronized. Individual links work only when public location pages are enabled.

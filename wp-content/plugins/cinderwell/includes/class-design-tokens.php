@@ -15,6 +15,7 @@ class Design_Tokens {
         add_action( 'wp_head', [ $this, 'output_tokens_css' ] );
         add_action( 'admin_head', [ $this, 'output_tokens_css' ] );
         add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
+        add_filter( 'wp_theme_json_data_theme', [ $this, 'sync_theme_json' ], 20 );
     }
 
     /**
@@ -279,25 +280,25 @@ class Design_Tokens {
             'cw_font_size_xl'   => [
                 'label'       => __( 'Extra Large Type', 'cinderwell' ),
                 'type'        => 'text',
-                'default'     => 'clamp(1.5rem, 1.2rem + 1.2vw, 2rem)',
+                'default'     => 'clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem)',
                 'description' => __( 'Fluid small-heading type size', 'cinderwell' ),
             ],
             'cw_font_size_2xl'  => [
                 'label'       => __( '2X Large Type', 'cinderwell' ),
                 'type'        => 'text',
-                'default'     => 'clamp(2rem, 1.45rem + 2.3vw, 3rem)',
+                'default'     => 'clamp(1.75rem, 1.45rem + 1.35vw, 2.5rem)',
                 'description' => __( 'Fluid heading type size', 'cinderwell' ),
             ],
             'cw_font_size_3xl'  => [
                 'label'       => __( '3X Large Type', 'cinderwell' ),
                 'type'        => 'text',
-                'default'     => 'clamp(2.5rem, 1.7rem + 3.4vw, 4rem)',
+                'default'     => 'clamp(2.25rem, 1.75rem + 2.1vw, 3.25rem)',
                 'description' => __( 'Fluid display type size', 'cinderwell' ),
             ],
             'cw_font_size_4xl'  => [
                 'label'       => __( '4X Large Type', 'cinderwell' ),
                 'type'        => 'text',
-                'default'     => 'clamp(3rem, 1.9rem + 4.5vw, 5rem)',
+                'default'     => 'clamp(2.75rem, 2rem + 3vw, 4rem)',
                 'description' => __( 'Fluid large-display type size', 'cinderwell' ),
             ],
             'cw_spacing_none'    => [
@@ -586,6 +587,79 @@ class Design_Tokens {
         }
 
         return array_values( $colors );
+    }
+
+    /**
+     * Build the core WordPress palette from Cinderwell's registered colors.
+     *
+     * Palette values intentionally reference the public CSS custom properties
+     * instead of copying resolved hex values. Saved token changes can therefore
+     * update core and Cinderwell controls without regenerating theme.json data.
+     *
+     * @return array<int,array{name:string,slug:string,color:string}>
+     */
+    public static function get_theme_json_palette() {
+        $palette = [];
+
+        foreach ( self::get_color_registry() as $color ) {
+            $palette[] = [
+                'name'  => $color['label'],
+                'slug'  => $color['slug'],
+                'color' => 'var(' . $color['cssVariable'] . ')',
+            ];
+        }
+
+        return $palette;
+    }
+
+    /**
+     * Keep WordPress global styles on the same token source as Cinderwell.
+     *
+     * The starter theme opts into this bridge with theme support. Child themes
+     * then customize values, labels, and palette exposure exclusively through
+     * `cinderwell_token_manifest` rather than maintaining duplicate JSON.
+     *
+     * @param \WP_Theme_JSON_Data $theme_json Theme-origin global styles data.
+     * @return \WP_Theme_JSON_Data
+     */
+    public function sync_theme_json( $theme_json ) {
+        $enabled = current_theme_supports( 'cinderwell-design-tokens' );
+
+        /**
+         * Filter whether Cinderwell should synchronize its tokens into theme.json.
+         *
+         * @param bool                $enabled    Whether synchronization is enabled.
+         * @param \WP_Theme_JSON_Data $theme_json Theme-origin global styles data.
+         */
+        if ( ! apply_filters( 'cinderwell_sync_theme_json_tokens', $enabled, $theme_json ) ) {
+            return $theme_json;
+        }
+
+        return $theme_json->update_with( [
+            'version'  => 3,
+            'settings' => [
+                'layout' => [
+                    'contentSize' => 'var(--cw-width-standard)',
+                    'wideSize'    => 'var(--cw-width-wide)',
+                ],
+                'color'  => [
+                    'palette' => self::get_theme_json_palette(),
+                ],
+            ],
+            'styles'   => [
+                'color'    => [
+                    'background' => 'var(--cw-color-bg)',
+                    'text'       => 'var(--cw-color-text)',
+                ],
+                'elements' => [
+                    'link' => [
+                        'color' => [
+                            'text' => 'var(--cw-color-link)',
+                        ],
+                    ],
+                ],
+            ],
+        ] );
     }
 
     /**
@@ -959,36 +1033,41 @@ class Design_Tokens {
      * Output CSS custom properties in wp_head.
      */
     public function output_tokens_css() {
-        $locale  = get_locale();
-        $tokens  = self::get_resolved_tokens( $locale );
-        $defaults = self::get_defaults();
-        $tokens   = array_filter(
-            $tokens,
-            static function ( $value, $key ) use ( $defaults ) {
-                return ! array_key_exists( $key, $defaults ) || $value !== $defaults[ $key ];
-            },
-            ARRAY_FILTER_USE_BOTH
-        );
-
+        $tokens_css  = self::get_custom_properties_css();
         $palette_css = self::get_palette_css();
-        if ( empty( $tokens ) && '' === $palette_css ) {
+        if ( '' === $tokens_css && '' === $palette_css ) {
             return;
         }
 
         echo '<style id="cinderwell-tokens">';
-        if ( ! empty( $tokens ) ) {
-            echo ':root {';
-            foreach ( $tokens as $key => $value ) {
-                if ( ! preg_match( '/^cw_[a-z0-9_]+$/', $key ) ) {
-                    continue;
-                }
-                $css_key = str_replace( '_', '-', $key );
-                echo '--' . esc_attr( $css_key ) . ': ' . esc_attr( $value ) . ';';
-            }
-            echo '}';
-        }
+        echo $tokens_css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Generated exclusively from sanitized token keys and values.
         echo $palette_css; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Generated exclusively from validated token keys and sanitized slugs.
         echo '</style>' . "\n";
+    }
+
+    /**
+     * Generate the resolved custom-property overrides for both frontend and editor canvases.
+     *
+     * Client themes register their defaults through `cinderwell_token_manifest`.
+     * Saved token values and locale-aware overrides are then resolved through the
+     * same pipeline before this CSS is emitted.
+     */
+    public static function get_custom_properties_css() {
+        $tokens = self::get_resolved_tokens();
+
+        if ( empty( $tokens ) ) {
+            return '';
+        }
+
+        $css = ':root{';
+        foreach ( $tokens as $key => $value ) {
+            if ( ! preg_match( '/^cw_[a-z0-9_]+$/', $key ) ) {
+                continue;
+            }
+            $css .= '--' . esc_attr( str_replace( '_', '-', $key ) ) . ':' . esc_attr( $value ) . ';';
+        }
+
+        return $css . '}';
     }
 
     /**

@@ -1,0 +1,9 @@
+.cinderwell-company-details__empty {
+	font-style: italic;
+	opacity: 0.75;
+}
+
+.cinderwell-company-details .block-editor-rich-text__editable:empty::before {
+	color: currentcolor;
+	opacity: 0.65;
+}

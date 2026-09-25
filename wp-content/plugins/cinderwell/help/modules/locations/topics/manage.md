@@ -1,0 +1,1 @@
+Open **Locations** to add or edit an entry. Use the title for the public location name, the editor for descriptive content, the featured image for its primary visual, and the location fields for address and contact details.

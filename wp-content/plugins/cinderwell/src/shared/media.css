@@ -1,10 +1,12 @@
 /* Shared block background image and controlled dark-overlay presets. */
-.cw-has-background-image {
+.cw-has-background-image,
+.cw-has-background-video {
 	position: relative;
 	isolation: isolate;
 }
 
-.cw-has-background-image::before {
+.cw-has-background-image::before,
+.cw-has-background-video::before {
 	content: "";
 	position: absolute;
 	inset: 0;
@@ -14,9 +16,61 @@
 	pointer-events: none;
 }
 
-.cw-has-background-image > * {
+.cw-has-background-image > *,
+.cw-has-background-video > * {
 	position: relative;
 	z-index: 1;
+}
+
+.cw-has-background-video::before {
+	z-index: 1;
+}
+
+.cw-has-background-video > * {
+	z-index: 2;
+}
+
+.cinderwell-background-video {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	pointer-events: none;
+}
+
+.cinderwell-background-video__toggle {
+	position: absolute;
+	right: var(--cw-layout-gutter, 1.5rem);
+	bottom: var(--cw-gap-sm, 1rem);
+	z-index: 3 !important;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2.75rem;
+	min-height: 2.75rem;
+	padding: 0.5rem;
+	border: 1px solid currentcolor;
+	border-radius: 999px;
+	background: color-mix(in srgb, var(--cw-color-dark, #1a1a1a) 78%, transparent);
+	color: var(--cw-color-white, #fff);
+	cursor: pointer;
+}
+
+.cinderwell-background-video__toggle:hover {
+	background: var(--cw-color-dark, #1a1a1a);
+}
+
+.cinderwell-background-video__toggle:focus-visible {
+	outline: 3px solid var(--cw-color-focus, currentcolor);
+	outline-offset: 3px;
+}
+
+.cinderwell-background-video__toggle-icon {
+	font-size: 0.9rem;
+	line-height: 1;
 }
 
 .cw-background-overlay-soft::before {
@@ -31,7 +85,8 @@
 	opacity: 0.68;
 }
 
-.cw-has-background-image:not(.cw-background-overlay-none) {
+.cw-has-background-image:not(.cw-background-overlay-none),
+.cw-has-background-video:not(.cw-background-overlay-none) {
 	color: var(--cw-color-white, #fff);
 }
 
@@ -107,8 +162,7 @@
 .cinderwell-image-text__media img,
 .cinderwell-card-grid__card-image img,
 .cinderwell-gallery__item img,
-.cinderwell-image-carousel__slide img,
-.cinderwell-slot-layout__image
+.cinderwell-image-carousel__slide img
 ) {
 	border-radius: var(--cw-image-radius, 0);
 }

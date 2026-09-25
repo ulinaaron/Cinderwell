@@ -5,7 +5,16 @@ import { __ } from '@wordpress/i18n';
 import { BlockIdentity } from '../../shared/inspector-controls';
 import metadata from './block.json';
 
-const TEMPLATE = [ [ 'core/paragraph', { placeholder: 'Add tab content…' } ] ];
+const TEMPLATE = [ [ 'cinderwell/body', {
+    showEyebrow: false,
+    showHeading: false,
+    showBody: true,
+    body: '',
+    width: 'full',
+    spacingResponsive: {
+        desktop: { linked: true, top: 'none', bottom: 'none' },
+    },
+} ] ];
 
 registerBlockType( metadata.name, {
     edit: ( { clientId } ) => {

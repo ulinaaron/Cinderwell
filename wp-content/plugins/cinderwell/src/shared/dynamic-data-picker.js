@@ -25,6 +25,7 @@ export const getPreviewValue = ( source, field = '', fallback = '', sourceLabel 
     else if ( source === 'site_tagline' ) value = settings.siteTagline;
     else if ( source === 'current_user_name' ) value = settings.previewValues?.current_user_name;
     else if ( source === 'acf_field' ) value = settings.acfValues?.[ field ];
+	else if ( source === 'content_field' ) value = settings.previewValues?.[ `content_field:${ field }` ];
     else if ( Object.prototype.hasOwnProperty.call( settings.previewValues || {}, source ) ) value = settings.previewValues[ source ];
     const preview = formatPreviewValue( value ) || fallback;
     return preview || sprintf( __( 'Dynamic: %s', 'cinderwell' ), sourceLabel || source );
@@ -34,6 +35,7 @@ export const DynamicDataPicker = ( { slots, initialSlot = '', value = {}, slotVa
     const settings = window.cinderwellEditorSettings || {};
     const groups = settings.dataSources || {};
     const acfFields = settings.acfFields || [];
+	const contentFields = settings.contentFields?.fields || [];
     const [ slot, setSlot ] = useState( slots.some( ( item ) => item.value === initialSlot ) ? initialSlot : ( Object.keys( value )[ 0 ] || slots[ 0 ]?.value || '' ) );
     const [ source, setSource ] = useState( value[ slot ]?.source || 'static' );
     const [ field, setField ] = useState( value[ slot ]?.field || '' );
@@ -44,6 +46,7 @@ export const DynamicDataPicker = ( { slots, initialSlot = '', value = {}, slotVa
     const sourceIsAllowed = ( sourceItem ) => ! allowedSourceKeys || allowedSourceKeys.includes( sourceItem.key );
     const visibleGroups = Object.entries( groups ).map( ( item ) => ( { group: item[ 0 ], items: item[ 1 ].filter( ( sourceItem ) => sourceIsAllowed( sourceItem ) && ( ! needle || sourceItem.label.toLowerCase().includes( needle ) ) ) } ) ).filter( ( item ) => item.items.length );
     const visibleAcf = ( ! allowedSourceKeys || allowedSourceKeys.includes( 'acf_field' ) ) ? acfFields.filter( ( item ) => ! needle || ( item.label + ' ' + item.name + ' ' + item.group ).toLowerCase().includes( needle ) ) : [];
+	const visibleContentFields = ( ! allowedSourceKeys || allowedSourceKeys.includes( 'content_field' ) ) ? contentFields.filter( ( item ) => ! needle || ( item.label + ' ' + item.name + ' ' + item.group ).toLowerCase().includes( needle ) ) : [];
     const chooseSlot = ( nextSlot ) => { setSlot( nextSlot ); setSource( value[ nextSlot ]?.source || 'static' ); setField( value[ nextSlot ]?.field || '' ); setFallback( value[ nextSlot ]?.fallback || '' ); };
     const activeBinding = value[ slot ];
     const hasDynamicBinding = activeBinding?.source && activeBinding.source !== 'static';
@@ -81,8 +84,9 @@ export const DynamicDataPicker = ( { slots, initialSlot = '', value = {}, slotVa
         <div className="cw-dynamic-data-modal__sources">
             { visibleGroups.map( ( item ) => <section key={ item.group }><h3>{ titleCase( item.group ) }</h3><div>{ item.items.map( ( sourceItem ) => <Button key={ sourceItem.key } variant={ source === sourceItem.key ? 'primary' : 'secondary' } onClick={ () => setSource( sourceItem.key ) }>{ sourceItem.label }</Button> ) }</div></section> ) }
             { visibleAcf.length > 0 && <section><h3>ACF</h3><div>{ visibleAcf.map( ( acf ) => <Button key={ acf.name } variant={ source === 'acf_field' && field === acf.name ? 'primary' : 'secondary' } onClick={ () => { setSource( 'acf_field' ); setField( acf.name ); } }>{ acf.label }</Button> ) }</div></section> }
+			{ visibleContentFields.length > 0 && <section><h3>{ __( 'Content Fields', 'cinderwell' ) }</h3><div>{ visibleContentFields.map( ( item ) => <Button key={ item.name } variant={ source === 'content_field' && field === item.name ? 'primary' : 'secondary' } onClick={ () => { setSource( 'content_field' ); setField( item.name ); } }>{ item.label }</Button> ) }</div></section> }
         </div>
-        { sourceConfig?.requiresFieldName && <TextControl label={ __( 'ACF field name', 'cinderwell' ) } value={ field } onChange={ setField } placeholder="hero_subheading" help={ __( 'Choose a field above or enter its field name.', 'cinderwell' ) } /> }
+		{ sourceConfig?.requiresFieldName && <TextControl label={ source === 'acf_field' ? __( 'ACF field name', 'cinderwell' ) : __( 'Content field', 'cinderwell' ) } value={ field } onChange={ setField } placeholder={ source === 'acf_field' ? 'hero_subheading' : 'client/property_details:subtitle' } help={ __( 'Choose a field above or enter its registered field identifier.', 'cinderwell' ) } /> }
         { source !== 'static' && <TextControl label={ __( 'Fallback text', 'cinderwell' ) } value={ fallback } onChange={ setFallback } help={ __( 'Shown if the source has no value.', 'cinderwell' ) } /> }
         <div className="cw-dynamic-data-modal__footer">{ hasDynamicBinding && <Button className="cw-dynamic-data-modal__clear" variant="tertiary" onClick={ clear }>{ __( 'Clear dynamic data', 'cinderwell' ) }</Button> }<Button variant="tertiary" onClick={ onClose }>{ __( 'Cancel', 'cinderwell' ) }</Button><Button variant="primary" onClick={ apply } disabled={ sourceConfig?.requiresFieldName && ! field }>{ sprintf( __( 'Apply to %s', 'cinderwell' ), slots.find( ( item ) => item.value === slot )?.label || __( 'slot', 'cinderwell' ) ) }</Button></div>
     </Modal>;

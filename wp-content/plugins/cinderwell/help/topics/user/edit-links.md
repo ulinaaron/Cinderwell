@@ -1,0 +1,1 @@
+Select the linked text or button and use the link control in its toolbar. Confirm the destination in the link editor. Link labels should describe where the link goes; avoid labels such as “click here.”

@@ -1,0 +1,69 @@
+.cinderwell-number {
+	display: flex;
+	flex-direction: column;
+	gap: 0.65rem;
+	min-width: 0;
+	color: inherit;
+}
+
+.cinderwell-number__value {
+	display: inline-flex;
+	align-items: baseline;
+	font-family: var(--cw-font-heading);
+	font-variant-numeric: tabular-nums lining-nums;
+	font-weight: 800;
+	letter-spacing: -0.055em;
+	line-height: 0.95;
+}
+
+.cinderwell-number--size-sm .cinderwell-number__value {
+	font-size: var(--cw-font-size-2xl);
+}
+
+.cinderwell-number--size-md .cinderwell-number__value {
+	font-size: var(--cw-font-size-3xl);
+}
+
+.cinderwell-number--size-lg .cinderwell-number__value {
+	font-size: var(--cw-font-size-4xl);
+}
+
+.cinderwell-number--size-xl .cinderwell-number__value {
+	font-size: clamp(3.25rem, 2.15rem + 4.4vw, 5.5rem);
+}
+
+.cinderwell-number__prefix,
+.cinderwell-number__suffix {
+	font-size: 0.52em;
+	letter-spacing: -0.02em;
+}
+
+.cinderwell-number__label {
+	display: block;
+	max-width: 18rem;
+	font-size: var(--cw-font-size-xs);
+	font-weight: 750;
+	letter-spacing: 0.1em;
+	line-height: 1.45;
+	text-transform: uppercase;
+}
+
+.cinderwell-number--align-center {
+	align-items: center;
+	text-align: center;
+}
+
+.cinderwell-number--align-right {
+	align-items: flex-end;
+	text-align: right;
+}
+
+[dir="rtl"] .cinderwell-number--align-left {
+	align-items: flex-end;
+	text-align: right;
+}
+
+[dir="rtl"] .cinderwell-number--align-right {
+	align-items: flex-start;
+	text-align: left;
+}

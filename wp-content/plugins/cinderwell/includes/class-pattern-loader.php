@@ -76,10 +76,10 @@ class Pattern_Loader {
             [
                 'slug'        => 'testimonial-row',
                 'title'       => __( 'Testimonial Row', 'cinderwell' ),
-                'description' => __( 'Section with 3 quotes for social proof.', 'cinderwell' ),
+                'description' => __( 'Three client testimonials in a responsive presentation.', 'cinderwell' ),
                 'categories'  => [ 'cinderwell' ],
                 'keywords'    => [ 'testimonials', 'quotes', 'reviews' ],
-                'content'     => '<!-- wp:cinderwell/section {"background":"light"} --><div class="wp-block-cinderwell-section__inner"><!-- wp:cinderwell/quote {"quote":"This product changed our business for the better.","attribution":"John Smith","showByline":true,"showContext":false,"byline":"Acme Corp"} /--><!-- wp:cinderwell/quote {"quote":"Exceptional quality and outstanding service every time.","attribution":"Jane Doe","showByline":true,"showContext":false,"byline":"Widget Co"} /--><!-- wp:cinderwell/quote {"quote":"Highly recommend to anyone looking for reliability.","attribution":"Bob Wilson","showByline":true,"showContext":false,"byline":"Gadget Inc"} /--></div><!-- /wp:cinderwell/section -->',
+                'content'     => '<!-- wp:cinderwell/testimonials {"showEyebrow":true,"eyebrow":"Client Stories","heading":"What clients say","background":"light","testimonials":[{"id":"testimonial-1","quote":"This product changed our business for the better.","name":"John Smith","role":"Director","organization":"Acme Corp","image":0,"imageUrl":"","imageAlt":"","imageWidth":0,"imageHeight":0},{"id":"testimonial-2","quote":"Exceptional quality and outstanding service every time.","name":"Jane Doe","role":"Founder","organization":"Widget Co","image":0,"imageUrl":"","imageAlt":"","imageWidth":0,"imageHeight":0},{"id":"testimonial-3","quote":"Highly recommend to anyone looking for reliability.","name":"Bob Wilson","role":"Operations Lead","organization":"Gadget Inc","image":0,"imageUrl":"","imageAlt":"","imageWidth":0,"imageHeight":0}]} /-->',
             ],
         ];
     }

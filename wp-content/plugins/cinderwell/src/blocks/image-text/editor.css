@@ -1,4 +1,6 @@
-.cinderwell-image-text__inner { padding: 1rem; }
+.cinderwell-image-text__inner {
+	padding: 1rem;
+}
 
 /* Editor-only sizing: keeps the canvas image selector easy to work with. */
 .editor-styles-wrapper .wp-block-cinderwell-image-text .cinderwell-image-text__media img {

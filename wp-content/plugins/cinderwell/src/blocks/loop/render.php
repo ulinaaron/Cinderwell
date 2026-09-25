@@ -14,12 +14,32 @@ $post_type_object    = get_post_type_object( $requested_post_type );
 $post_type_allowed   = $post_type_object && $post_type_object->public;
 $post_type_allowed   = apply_filters( 'cinderwell_loop_post_type_allowed', $post_type_allowed, $post_type_object, $attributes );
 $post_type           = $inherited_query ? 'any' : ( $post_type_allowed ? $post_type_object->name : '__cinderwell_unavailable' );
+$facets_enabled      = ! $inherited_query && ! empty( $attributes['filtersEnabled'] ) && class_exists( '\\Cinderwell\\Facets' );
+$facet_id            = $facets_enabled ? \Cinderwell\Facets::normalize_id( $attributes['facetId'] ?? '' ) : '';
+$facets_enabled      = $facets_enabled && (bool) $facet_id;
+$facet_config        = $facets_enabled && is_array( $attributes['facets'] ?? null ) ? $attributes['facets'] : [];
+$facet_state         = $facets_enabled ? \Cinderwell\Facets::get_state( $facet_id ) : [];
 $posts_per_page   = min( 24, max( 1, absint( $attributes['postsPerPage'] ?? 6 ) ) );
 $order            = 'asc' === strtolower( $attributes['order'] ?? '' ) ? 'ASC' : 'DESC';
 $allowed_orderby  = [ 'date', 'modified', 'title', 'menu_order' ];
 $order_by         = in_array( $attributes['orderBy'] ?? '', $allowed_orderby, true ) ? $attributes['orderBy'] : 'date';
 $show_pagination  = ! empty( $attributes['showPagination'] );
-$current_page     = max( 1, absint( get_query_var( 'paged' ) ), absint( get_query_var( 'page' ) ) );
+$current_page     = $facets_enabled
+    ? \Cinderwell\Facets::get_page( $facet_id )
+    : max( 1, absint( get_query_var( 'paged' ) ), absint( get_query_var( 'page' ) ) );
+
+if ( $facets_enabled && ! empty( $facet_config['sort']['enabled'] ) ) {
+    $sort_map = [
+        'newest'    => [ 'date', 'DESC' ],
+        'oldest'    => [ 'date', 'ASC' ],
+        'title_asc' => [ 'title', 'ASC' ],
+        'title_desc'=> [ 'title', 'DESC' ],
+        'updated'   => [ 'modified', 'DESC' ],
+    ];
+    if ( isset( $sort_map[ $facet_state['sort'] ?? '' ] ) ) {
+        [ $order_by, $order ] = $sort_map[ $facet_state['sort'] ];
+    }
+}
 
 $query_args = [
     'post_type'           => $post_type,
@@ -29,8 +49,12 @@ $query_args = [
     'orderby'             => $order_by,
     'paged'               => $show_pagination ? $current_page : 1,
     'ignore_sticky_posts' => true,
-    'no_found_rows'       => ! $show_pagination,
+    'no_found_rows'       => ! $show_pagination && ! $facets_enabled,
 ];
+
+if ( $facets_enabled && ! empty( $facet_config['search']['enabled'] ) && ! empty( $facet_state['search'] ) ) {
+    $query_args['s'] = $facet_state['search'];
+}
 
 $taxonomy = $inherited_query ? '' : sanitize_key( $attributes['taxonomy'] ?? '' );
 $term_id  = absint( $attributes['termId'] ?? 0 );
@@ -40,12 +64,32 @@ if ( $taxonomy && ! $term_id && is_tax( $taxonomy ) ) {
 }
 if ( $taxonomy && $term_id && taxonomy_exists( $taxonomy ) && is_object_in_taxonomy( $post_type, $taxonomy ) ) {
     $query_args['tax_query'] = [
+        'relation' => 'AND',
         [
             'taxonomy' => $taxonomy,
             'field'    => 'term_id',
             'terms'    => [ $term_id ],
         ],
     ];
+}
+
+if ( $facets_enabled ) {
+    foreach ( (array) ( $facet_config['taxonomies'] ?? [] ) as $facet_taxonomy => $settings ) {
+        $facet_taxonomy = sanitize_key( $facet_taxonomy );
+        $selected_terms = array_values( array_filter( array_map( 'absint', (array) ( $facet_state['tax'][ $facet_taxonomy ] ?? [] ) ) ) );
+        if ( empty( $settings['enabled'] ) || ! $selected_terms || ! taxonomy_exists( $facet_taxonomy ) || ! is_object_in_taxonomy( $post_type, $facet_taxonomy ) ) {
+            continue;
+        }
+        if ( empty( $query_args['tax_query'] ) ) {
+            $query_args['tax_query'] = [ 'relation' => 'AND' ];
+        }
+        $query_args['tax_query'][] = [
+            'taxonomy' => $facet_taxonomy,
+            'field'    => 'term_id',
+            'terms'    => $selected_terms,
+            'operator' => 'IN',
+        ];
+    }
 }
 
 /**
@@ -66,7 +110,7 @@ $background        = sanitize_key( $attributes['background'] ?? 'white' );
 $allowed_surfaces  = \Cinderwell\Design_Tokens::get_color_slugs( 'background' );
 $background        = in_array( $background, $allowed_surfaces, true ) ? $background : 'white';
 $columns           = min( 4, max( 1, absint( $attributes['columns'] ?? 3 ) ) );
-$link_behavior     = in_array( $attributes['linkBehavior'] ?? 'page', [ 'page', 'none' ], true ) ? $attributes['linkBehavior'] : 'page';
+$link_behavior     = in_array( $attributes['linkBehavior'] ?? 'page', [ 'page', 'modal', 'none' ], true ) ? $attributes['linkBehavior'] : 'page';
 $link_behavior     = apply_filters( 'cinderwell_loop_link_behavior', $link_behavior, $post_type, $attributes );
 $variation         = sanitize_key( $attributes['variation'] ?? '' );
 $requested_layout  = sanitize_key( $attributes['layout'] ?? 'cards' ) ?: 'cards';
@@ -79,7 +123,7 @@ if ( is_array( $layout_definition ) && $layout_definition['style_handle'] && wp_
     wp_enqueue_style( $layout_definition['style_handle'] );
 }
 
-$link_class        = 'none' === $link_behavior ? 'none' : 'page';
+$link_class        = $link_behavior;
 $wrapper_classes   = "cinderwell-loop cinderwell-loop--bg-{$background} cinderwell-loop--cols-{$columns} cinderwell-loop--links-{$link_class}";
 $wrapper_classes  .= $variation ? " cinderwell-loop--{$variation}" : '';
 $wrapper_classes  .= " cinderwell-loop--layout-{$resolved_layout}";
@@ -136,7 +180,22 @@ if ( $background_url ) {
     $wrapper_options['style']  = sprintf( 'background-image:url(%s);background-size:%s;background-position:%s;background-repeat:no-repeat', esc_url( $background_url ), $fit, $position );
 }
 
+if ( $facets_enabled ) {
+    $wrapper_options['data-cw-facet-region'] = $facet_id;
+}
 $wrapper_attributes = get_block_wrapper_attributes( $wrapper_options );
+
+if ( 'modal' === $link_behavior ) {
+    $view_asset_path = CINDERWELL_BUILD_DIR . 'blocks/loop/view.asset.php';
+    $view_asset      = file_exists( $view_asset_path ) ? require $view_asset_path : [ 'dependencies' => [], 'version' => CINDERWELL_VERSION ];
+    wp_enqueue_script(
+        'cinderwell-loop-modal',
+        CINDERWELL_BUILD_URL . 'blocks/loop/view.js',
+        $view_asset['dependencies'] ?? [],
+        $view_asset['version'] ?? CINDERWELL_VERSION,
+        true
+    );
+}
 $width               = sanitize_key( $attributes['width'] ?? 'wide' );
 $width               = in_array( $width, [ 'narrow', 'standard', 'wide', 'full' ], true ) ? $width : 'wide';
 $image_aspect        = sanitize_key( $attributes['imageAspect'] ?? 'landscape' );
@@ -160,6 +219,44 @@ $text_style_class = static function ( $part ) use ( $attributes ) {
 };
 $heading_level      = min( 6, max( 1, absint( $attributes['headingLevel'] ?? 2 ) ) );
 $item_heading_level = min( 6, max( 2, absint( $attributes['itemHeadingLevel'] ?? 3 ) ) );
+$facet_fields       = [];
+if ( $facets_enabled ) {
+    if ( ! empty( $facet_config['search']['enabled'] ) ) {
+        $facet_fields[] = [
+            'type'  => 'search',
+            'label' => sanitize_text_field( $facet_config['search']['label'] ?? '' ) ?: __( 'Search', 'cinderwell' ),
+        ];
+    }
+    foreach ( (array) ( $facet_config['taxonomies'] ?? [] ) as $facet_taxonomy => $settings ) {
+        $facet_taxonomy = sanitize_key( $facet_taxonomy );
+        if ( empty( $settings['enabled'] ) || ! taxonomy_exists( $facet_taxonomy ) || ! is_object_in_taxonomy( $post_type, $facet_taxonomy ) ) {
+            continue;
+        }
+        $facet_fields[] = [
+            'type'      => 'taxonomy',
+            'taxonomy'  => $facet_taxonomy,
+            'label'     => sanitize_text_field( $settings['label'] ?? '' ),
+            'display'   => sanitize_key( $settings['display'] ?? 'select' ),
+            'hideEmpty' => ! isset( $settings['hideEmpty'] ) || (bool) $settings['hideEmpty'],
+            'include'   => array_map( 'absint', (array) ( $settings['include'] ?? [] ) ),
+            'exclude'   => array_map( 'absint', (array) ( $settings['exclude'] ?? [] ) ),
+        ];
+    }
+    if ( ! empty( $facet_config['sort']['enabled'] ) ) {
+        $facet_fields[] = [
+            'type'    => 'sort',
+            'label'   => sanitize_text_field( $facet_config['sort']['label'] ?? '' ) ?: __( 'Sort by', 'cinderwell' ),
+            'options' => [
+                ''           => __( 'Default order', 'cinderwell' ),
+                'newest'     => __( 'Newest first', 'cinderwell' ),
+                'oldest'     => __( 'Oldest first', 'cinderwell' ),
+                'title_asc'  => __( 'Title A–Z', 'cinderwell' ),
+                'title_desc' => __( 'Title Z–A', 'cinderwell' ),
+                'updated'    => __( 'Recently updated', 'cinderwell' ),
+            ],
+        ];
+    }
+}
 ?>
 <section <?php echo $wrapper_attributes; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
     <div class="cinderwell-loop__inner" style="max-width:var(--cw-width-<?php echo esc_attr( $width ); ?>)">
@@ -170,6 +267,19 @@ $item_heading_level = min( 6, max( 2, absint( $attributes['itemHeadingLevel'] ??
             <<?php echo esc_attr( "h{$heading_level}" ); ?> class="cinderwell-heading<?php echo esc_attr( $text_style_class( 'heading' ) ); ?>"><?php echo wp_kses_post( $attributes['heading'] ); ?></<?php echo esc_attr( "h{$heading_level}" ); ?>>
         <?php endif; ?>
 
+        <?php if ( $facets_enabled && $facet_fields ) : ?>
+            <?php echo \Cinderwell\Facets::render( [
+                'id'     => $facet_id,
+                'fields' => $facet_fields,
+                'state'  => $facet_state,
+                'total'  => $loop_query->found_posts,
+                'live'   => ! empty( $attributes['liveFiltering'] ),
+                'provider' => 'loop',
+                'attributes' => $attributes,
+            ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by renderer. ?>
+        <?php endif; ?>
+
+        <div class="cinderwell-loop__results"<?php if ( $facets_enabled ) : ?> id="<?php echo esc_attr( 'cinderwell-facet-results-' . $facet_id ); ?>" data-cw-facet-results aria-busy="false"<?php endif; ?>>
         <?php if ( $loop_query->have_posts() ) : ?>
             <div class="cinderwell-loop__grid">
                 <?php $item_index = 0; ?>
@@ -180,10 +290,12 @@ $item_heading_level = min( 6, max( 2, absint( $attributes['itemHeadingLevel'] ??
                     $title      = get_the_title( $post_id );
                     $item_post_type = get_post_type( $post_id );
                     $item_taxonomy  = $display_taxonomy ?: ( $inherited_query && is_object_in_taxonomy( $item_post_type, 'category' ) ? 'category' : '' );
-                    $item_terms     = $item_taxonomy ? get_the_term_list( $post_id, $item_taxonomy, '', ', ' ) : '';
+                    $item_terms     = $item_taxonomy ? get_the_term_list( $post_id, $item_taxonomy, '', '' ) : '';
                     $type_object    = get_post_type_object( $item_post_type );
                     $type_label     = $type_object ? $type_object->labels->singular_name : '';
                     $excerpt_text   = wp_trim_words( get_the_excerpt( $post_id ), $excerpt_length );
+					$modal_id       = 'cinderwell-loop-profile-' . $post_id . '-' . wp_unique_id();
+					$modal_title_id = $modal_id . '-title';
                     $item_class = 'cinderwell-loop__item';
                     if ( 'featured-lead' === $resolved_layout && 0 === $item_index ) {
                         $item_class .= ' cinderwell-loop__item--featured';
@@ -217,6 +329,8 @@ $item_heading_level = min( 6, max( 2, absint( $attributes['itemHeadingLevel'] ??
                             <<?php echo esc_attr( "h{$item_heading_level}" ); ?> class="cinderwell-loop__title<?php echo esc_attr( $text_style_class( 'itemTitle' ) ); ?>">
                                 <?php if ( 'page' === $link_behavior ) : ?>
                                     <a href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $title ); ?></a>
+								<?php elseif ( 'modal' === $link_behavior ) : ?>
+									<button type="button" class="cinderwell-loop__modal-trigger" data-cw-loop-modal-open="<?php echo esc_attr( $modal_id ); ?>" aria-haspopup="dialog" aria-controls="<?php echo esc_attr( $modal_id ); ?>"><?php echo esc_html( $title ); ?></button>
                                 <?php else : ?>
                                     <?php echo esc_html( $title ); ?>
                                 <?php endif; ?>
@@ -227,8 +341,33 @@ $item_heading_level = min( 6, max( 2, absint( $attributes['itemHeadingLevel'] ??
                             <?php endif; ?>
                             <?php if ( 'page' === $link_behavior && ! empty( $attributes['showReadMore'] ) && $read_more_label ) : ?>
                                 <a class="cinderwell-loop__read-more" href="<?php echo esc_url( $permalink ); ?>"><?php echo esc_html( $read_more_label ); ?><span class="screen-reader-text"><?php echo esc_html( ': ' . $title ); ?></span></a>
+							<?php elseif ( 'modal' === $link_behavior && ! empty( $attributes['showReadMore'] ) && $read_more_label ) : ?>
+								<button type="button" class="cinderwell-loop__read-more" data-cw-loop-modal-open="<?php echo esc_attr( $modal_id ); ?>" aria-haspopup="dialog" aria-controls="<?php echo esc_attr( $modal_id ); ?>"><?php echo esc_html( $read_more_label ); ?><span class="screen-reader-text"><?php echo esc_html( ': ' . $title ); ?></span></button>
                             <?php endif; ?>
                         </div>
+					<?php if ( 'modal' === $link_behavior ) : ?>
+						<?php
+						$profile_content = (string) get_post_field( 'post_content', $post_id );
+						$profile_content = has_blocks( $profile_content ) ? do_blocks( $profile_content ) : wpautop( $profile_content );
+						$profile_content = apply_filters( 'cinderwell_loop_modal_content', $profile_content, get_post( $post_id ), $attributes );
+						?>
+						<dialog class="cinderwell-loop__modal" id="<?php echo esc_attr( $modal_id ); ?>" aria-labelledby="<?php echo esc_attr( $modal_title_id ); ?>">
+							<div class="cinderwell-loop__modal-panel">
+								<button type="button" class="cinderwell-loop__modal-close" data-cw-loop-modal-close aria-label="<?php echo esc_attr( sprintf( __( 'Close %s profile', 'cinderwell' ), $title ) ); ?>"><span aria-hidden="true">&times;</span></button>
+								<div class="cinderwell-loop__modal-header">
+									<?php if ( has_post_thumbnail( $post_id ) ) : ?>
+										<div class="cinderwell-loop__modal-photo"><?php echo get_the_post_thumbnail( $post_id, 'medium_large', [ 'loading' => 'lazy', 'alt' => get_post_meta( get_post_thumbnail_id( $post_id ), '_wp_attachment_image_alt', true ) ] ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+									<?php endif; ?>
+									<div>
+										<h2 id="<?php echo esc_attr( $modal_title_id ); ?>" class="cinderwell-loop__modal-title"><?php echo esc_html( $title ); ?></h2>
+										<?php do_action( 'cinderwell_loop_item_after_title', $post_id, $attributes ); ?>
+									</div>
+								</div>
+								<div class="cinderwell-loop__modal-content"><?php echo wp_kses_post( $profile_content ); ?></div>
+							</div>
+						</dialog>
+						<noscript><div class="cinderwell-loop__modal-fallback"><h4><?php echo esc_html( $title ); ?></h4><?php echo wp_kses_post( $profile_content ); ?></div></noscript>
+					<?php endif; ?>
                     </article>
                     <?php
                     $item_html = ob_get_clean();
@@ -279,19 +418,34 @@ $item_heading_level = min( 6, max( 2, absint( $attributes['itemHeadingLevel'] ??
             <?php if ( $show_pagination && $loop_query->max_num_pages > 1 ) : ?>
                 <nav class="cinderwell-loop__pagination" aria-label="<?php echo esc_attr( $inherited_query ? __( 'Search results pagination', 'cinderwell' ) : __( 'Loop pagination', 'cinderwell' ) ); ?>">
                     <?php
-                    echo wp_kses_post( paginate_links( [
+                    $pagination_args = [
                         'current'   => $current_page,
                         'total'     => $loop_query->max_num_pages,
                         'type'      => 'list',
                         'prev_text' => __( 'Previous', 'cinderwell' ),
                         'next_text' => __( 'Next', 'cinderwell' ),
-                    ] ) );
+                    ];
+                    if ( $facets_enabled ) {
+                        $path = strtok( wp_unslash( $_SERVER['REQUEST_URI'] ?? '/' ), '?' );
+                        $big  = 999999999;
+                        $pagination_args['base'] = str_replace(
+                            (string) $big,
+                            '%#%',
+                            add_query_arg(
+                                \Cinderwell\Facets::query_args( $facet_id, $facet_state, $big ),
+                                home_url( $path )
+                            )
+                        );
+                        $pagination_args['format'] = '';
+                    }
+                    echo wp_kses_post( paginate_links( $pagination_args ) );
                     ?>
                 </nav>
             <?php endif; ?>
         <?php else : ?>
             <p class="cinderwell-loop__empty"><?php echo esc_html( $attributes['emptyMessage'] ?? __( 'No items found.', 'cinderwell' ) ); ?></p>
         <?php endif; ?>
+        </div>
     </div>
 </section>
 <?php wp_reset_postdata(); ?>

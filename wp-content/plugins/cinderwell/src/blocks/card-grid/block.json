@@ -59,6 +59,11 @@
         "headingLevel": { "type": "integer", "default": 2 },
         "itemHeadingLevel": { "type": "integer", "default": 3 },
         "layout": { "type": "string", "default": "raised" },
+        "imageBoxAspect": { "type": "string", "default": "landscape" },
+        "imageBoxOverlay": { "type": "string", "default": "medium" },
+        "imageBoxContentPosition": { "type": "string", "default": "bottom" },
+        "imageBoxContentVisibility": { "type": "string", "default": "always" },
+        "imageBoxLinkStyle": { "type": "string", "default": "button" },
         "cards": {
             "type": "array",
             "default": []

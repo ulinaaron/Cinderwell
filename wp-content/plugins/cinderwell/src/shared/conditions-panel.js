@@ -3,7 +3,7 @@ import { useMemo, useState } from '@wordpress/element';
 import { __, sprintf } from '@wordpress/i18n';
 import { DynamicDataPicker } from './dynamic-data-picker';
 
-const labels = { eyebrow: 'Eyebrow', heading: 'Heading', subheading: 'Subheading', bodyContent: 'Body', caption: 'Caption', footnote: 'Footnote', byline: 'Byline', pullquote: 'Pullquote', quote: 'Quote', attribution: 'Attribution', context: 'Context', leftContent: 'Left column', rightContent: 'Right column', content: 'Content', text: 'Text' };
+const labels = { eyebrow: 'Eyebrow', heading: 'Heading', subheading: 'Subheading', bodyContent: 'Body', caption: 'Caption', footnote: 'Footnote', byline: 'Byline', pullquote: 'Pullquote', quote: 'Quote', attribution: 'Attribution', context: 'Context', content: 'Content', text: 'Text' };
 const group = () => ( { relation: 'and', rules: [] } );
 const rule = () => ( { type: 'homepage_only', config: {} } );
 

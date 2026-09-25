@@ -13,12 +13,15 @@ class Locations {
 
     const OPTION      = 'cinderwell_locations_settings';
     const POST_TYPE   = 'cw_location';
+    const TAXONOMY    = 'cw_location_category';
     const META_PREFIX = '_cw_location_';
 
     public function __construct() {
-        add_filter( 'cinderwell_help_sections', [ $this, 'add_help_section' ] );
-        add_filter( 'cinderwell_help_topics', [ $this, 'add_help_topics' ] );
+        add_action( 'cinderwell_register_documentation', [ $this, 'register_documentation' ] );
         add_action( 'init', [ $this, 'register_post_type' ] );
+		add_action( 'cinderwell_register_fields', [ $this, 'register_content_fields' ] );
+        add_action( 'rest_api_init', [ $this, 'register_rest_routes' ] );
+        add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_location_editor_assets' ] );
         add_filter( 'cinderwell_settings_tabs', [ $this, 'add_settings_tab' ], 9 );
         add_action( 'admin_post_cinderwell_save_locations', [ $this, 'save_settings' ] );
         add_action( 'add_meta_boxes_' . self::POST_TYPE, [ $this, 'add_meta_box' ] );
@@ -28,6 +31,7 @@ class Locations {
         add_filter( 'cinderwell_editor_preview_values', [ $this, 'add_editor_preview_values' ] );
         add_filter( 'cinderwell_loop_post_type_allowed', [ $this, 'allow_location_loop' ], 10, 3 );
         add_filter( 'cinderwell_loop_link_behavior', [ $this, 'filter_loop_link_behavior' ], 10, 3 );
+        add_filter( 'cinderwell_map_locations', [ $this, 'provide_map_locations' ], 10, 2 );
 
         $template_dir = CINDERWELL_DIR . 'templates/locations/';
         new Module_Templates( 'cinderwell', [
@@ -45,36 +49,8 @@ class Locations {
         ] );
     }
 
-    public function add_help_section( $sections ) {
-        $sections['locations'] = [
-            'title'       => __( 'Locations', 'cinderwell' ),
-            'description' => __( 'Maintain offices, branches, campuses, and service areas.', 'cinderwell' ),
-            'order'       => 100,
-        ];
-        return $sections;
-    }
-
-    public function add_help_topics( $topics ) {
-        $topics['locations-manage'] = [
-            'section' => 'locations',
-            'title'   => __( 'Add and update locations', 'cinderwell' ),
-            'summary' => __( 'Maintain each location’s content and structured details.', 'cinderwell' ),
-            'icon'    => 'dashicons-location-alt',
-            'order'   => 10,
-            'content' => sprintf(
-                wp_kses_post( __( '<p>Open <a href="%s"><strong>Locations</strong></a> to add or edit an entry. Use the title for the public location name, the editor for descriptive content, the featured image for its primary visual, and the location fields for address and contact details.</p>', 'cinderwell' ) ),
-                esc_url( admin_url( 'edit.php?post_type=' . self::POST_TYPE ) )
-            ),
-        ];
-        $topics['locations-display'] = [
-            'section' => 'locations',
-            'title'   => __( 'Display locations', 'cinderwell' ),
-            'summary' => __( 'Build a location listing from the shared source entries.', 'cinderwell' ),
-            'icon'    => 'dashicons-grid-view',
-            'order'   => 20,
-            'content' => __( '<p>Add a Cinderwell Loop block and choose Locations as its content type. Keep addresses and contact details on the location entry so every listing stays synchronized. Individual links work only when public location pages are enabled.</p>', 'cinderwell' ),
-        ];
-        return $topics;
+    public function register_documentation( $registry ) {
+        $registry->register_directory( 'cinderwell-locations', CINDERWELL_DIR . 'help/modules/locations' );
     }
 
     public static function get_defaults() {
@@ -93,10 +69,19 @@ class Locations {
 
     public static function get_editor_settings() {
         $settings = self::get_settings();
+        $terms    = get_terms( [
+            'taxonomy'   => self::TAXONOMY,
+            'hide_empty' => false,
+        ] );
         return [
             'enabled'         => true,
             'locationsPublic' => $settings['public_locations'],
             'postType'        => self::POST_TYPE,
+            'taxonomy'        => self::TAXONOMY,
+            'mapEndpoint'     => '/cinderwell/v1/locations/map',
+            'categories'      => is_wp_error( $terms ) ? [] : array_map( static function ( $term ) {
+                return [ 'value' => (int) $term->term_id, 'label' => $term->name ];
+            }, $terms ),
         ];
     }
 
@@ -112,12 +97,38 @@ class Locations {
             'country' => [ 'label' => __( 'Country', 'cinderwell' ) ],
             'hours' => [ 'label' => __( 'Hours', 'cinderwell' ), 'type' => 'textarea' ],
             'directions_url' => [ 'label' => __( 'Directions URL', 'cinderwell' ), 'type' => 'url' ],
+            'latitude' => [
+                'label'             => __( 'Latitude', 'cinderwell' ),
+                'description'       => __( 'Used to place this location on Cinderwell maps.', 'cinderwell' ),
+                'sanitize_callback' => [ self::class, 'sanitize_latitude' ],
+            ],
+            'longitude' => [
+                'label'             => __( 'Longitude', 'cinderwell' ),
+                'description'       => __( 'Used to place this location on Cinderwell maps.', 'cinderwell' ),
+                'sanitize_callback' => [ self::class, 'sanitize_longitude' ],
+            ],
         ] ) );
     }
 
+	/** Expose existing location meta through the shared field registry. */
+	public function register_content_fields( $registry ) {
+		$fields = self::get_field_definitions();
+		foreach ( $fields as $key => &$field ) {
+			$field['storage_key'] = self::META_PREFIX . $key;
+		}
+		unset( $field );
+		$registry->register_group( 'cinderwell/location_details', [
+			'label'           => __( 'Location Details', 'cinderwell' ),
+			'object_type'     => 'post',
+			'object_subtypes' => [ self::POST_TYPE ],
+			'fields'          => $fields,
+			'ui'              => false,
+		] );
+	}
+
     public function register_post_type() {
         $settings = self::get_settings();
-        register_post_type( self::POST_TYPE, [
+        $post_type_args = [
             'labels' => [
                 'name'               => __( 'Locations', 'cinderwell' ),
                 'singular_name'      => __( 'Location', 'cinderwell' ),
@@ -139,14 +150,36 @@ class Locations {
             'query_var'           => $settings['public_locations'],
             'menu_icon'           => 'dashicons-location-alt',
             'supports'            => [ 'title', 'editor', 'thumbnail', 'excerpt', 'page-attributes', 'revisions', 'custom-fields' ],
-        ] );
+        ];
+
+        register_post_type( self::POST_TYPE, apply_filters( 'cinderwell_location_post_type_args', $post_type_args, $settings ) );
+
+        $taxonomy_args = [
+            'labels' => [
+                'name'          => __( 'Location Categories', 'cinderwell' ),
+                'singular_name' => __( 'Location Category', 'cinderwell' ),
+                'search_items'  => __( 'Search location categories', 'cinderwell' ),
+                'all_items'     => __( 'All location categories', 'cinderwell' ),
+                'edit_item'     => __( 'Edit location category', 'cinderwell' ),
+                'add_new_item'  => __( 'Add location category', 'cinderwell' ),
+            ],
+            'public'            => false,
+            'show_ui'           => true,
+            'show_admin_column' => true,
+            'show_in_rest'      => true,
+            'hierarchical'      => true,
+            'rewrite'           => false,
+            'query_var'         => false,
+        ];
+
+        register_taxonomy( self::TAXONOMY, [ self::POST_TYPE ], apply_filters( 'cinderwell_location_taxonomy_args', $taxonomy_args, $settings ) );
 
         foreach ( self::get_field_definitions() as $key => $field ) {
             register_post_meta( self::POST_TYPE, self::META_PREFIX . $key, [
                 'type'              => 'string',
                 'single'            => true,
                 'show_in_rest'      => true,
-                'sanitize_callback' => $this->get_meta_sanitizer( $field['type'] ),
+                'sanitize_callback' => is_callable( $field['sanitize_callback'] ?? null ) ? $field['sanitize_callback'] : $this->get_meta_sanitizer( $field['type'] ),
                 'auth_callback'     => static function ( $allowed, $meta_key, $post_id ) {
                     return current_user_can( 'edit_post', $post_id );
                 },
@@ -165,6 +198,124 @@ class Locations {
             $values[ $key ] = get_post_meta( $post->ID, self::META_PREFIX . $key, true );
         }
         Admin_Fields::render_table( self::get_field_definitions(), $values, 'cinderwell_location', 'cw-location' );
+        echo '<div class="cw-location-pin-tool" data-cw-location-pin-tool>';
+        echo '<button type="button" class="button button-secondary" data-cw-location-geocode>' . esc_html__( 'Place pin from address', 'cinderwell' ) . '</button>';
+        echo '<p class="description">' . esc_html__( 'Uses the structured address above to fill the map coordinates. Confirm the result before updating the location.', 'cinderwell' ) . '</p>';
+        echo '<p class="cw-location-pin-tool__status" data-cw-location-geocode-status role="status" aria-live="polite"></p>';
+        echo '</div>';
+    }
+
+    public function enqueue_location_editor_assets( $hook ) {
+        if ( ! in_array( $hook, [ 'post.php', 'post-new.php' ], true ) || self::POST_TYPE !== get_current_screen()->post_type ) {
+            return;
+        }
+        $asset_path = CINDERWELL_BUILD_DIR . 'admin/location-map.asset.php';
+        if ( ! file_exists( $asset_path ) ) {
+            return;
+        }
+        $asset = include $asset_path;
+        wp_enqueue_script( 'cinderwell-location-map-admin', CINDERWELL_BUILD_URL . 'admin/location-map.js', $asset['dependencies'], $asset['version'], true );
+    }
+
+    public function register_rest_routes() {
+        register_rest_route( 'cinderwell/v1', '/locations/map', [
+            'methods'             => \WP_REST_Server::READABLE,
+            'permission_callback' => static function () {
+                return current_user_can( 'edit_posts' );
+            },
+            'args'                => [
+                'term' => [
+                    'type'              => 'integer',
+                    'default'           => 0,
+                    'sanitize_callback' => 'absint',
+                ],
+            ],
+            'callback'            => function ( \WP_REST_Request $request ) {
+                $attributes = [
+                    'source'       => 'locations',
+                    'locationTerm' => (int) $request->get_param( 'term' ),
+                ];
+                return rest_ensure_response( Map::resolve_records( [], $attributes ) );
+            },
+        ] );
+    }
+
+    public function provide_map_locations( $locations, $attributes ) {
+        if ( 'locations' !== ( $attributes['source'] ?? 'manual' ) ) {
+            return $locations;
+        }
+        return self::get_map_locations( absint( $attributes['locationTerm'] ?? 0 ) );
+    }
+
+    public static function get_map_locations( $term_id = 0 ) {
+        $query_args = [
+            'post_type'              => self::POST_TYPE,
+            'post_status'            => 'publish',
+            'posts_per_page'         => 100,
+            'orderby'                => [ 'menu_order' => 'ASC', 'title' => 'ASC' ],
+            'no_found_rows'          => true,
+            'update_post_term_cache' => true,
+        ];
+        if ( $term_id ) {
+            $query_args['tax_query'] = [ [
+                'taxonomy' => self::TAXONOMY,
+                'field'    => 'term_id',
+                'terms'    => [ $term_id ],
+            ] ];
+        }
+
+        $query_args = (array) apply_filters( 'cinderwell_location_map_query_args', $query_args, $term_id );
+
+        $settings = self::get_settings();
+        $records  = [];
+        foreach ( get_posts( $query_args ) as $location ) {
+            $values    = self::get_data_source_values( $location->ID );
+            $latitude  = $values['location_latitude'] ?? '';
+            $longitude = $values['location_longitude'] ?? '';
+            if ( ! is_numeric( $latitude ) || ! is_numeric( $longitude ) ) {
+                continue;
+            }
+            $address    = $values['location_address'] ?? '';
+            $directions = $values['location_directions_url'] ?? '';
+            $terms      = wp_get_post_terms( $location->ID, self::TAXONOMY );
+            $record = [
+                'id'            => 'location-' . $location->ID,
+                'postId'        => (int) $location->ID,
+                'name'          => get_the_title( $location ),
+                'address'       => $address,
+                'phone'         => $values['location_phone'] ?? '',
+                'latitude'      => (float) $latitude,
+                'longitude'     => (float) $longitude,
+                'directionsUrl' => $directions ?: ( $address ? 'https://www.google.com/maps/dir/?api=1&destination=' . rawurlencode( $address ) : '' ),
+                'url'           => $settings['public_locations'] ? get_permalink( $location ) : '',
+                'termIds'       => is_wp_error( $terms ) ? [] : array_map( static function ( $term ) { return (int) $term->term_id; }, $terms ),
+                'terms'         => is_wp_error( $terms ) ? [] : array_map( static function ( $term ) {
+                    return [ 'id' => (int) $term->term_id, 'name' => $term->name ];
+                }, $terms ),
+            ];
+
+            $record = apply_filters( 'cinderwell_location_map_record', $record, $location, $term_id );
+            if ( is_array( $record ) ) {
+                $records[] = $record;
+            }
+        }
+        return array_values( (array) apply_filters( 'cinderwell_location_map_records', $records, $term_id, $query_args ) );
+    }
+
+    public static function sanitize_latitude( $value ) {
+        return self::sanitize_coordinate( $value, -90, 90 );
+    }
+
+    public static function sanitize_longitude( $value ) {
+        return self::sanitize_coordinate( $value, -180, 180 );
+    }
+
+    private static function sanitize_coordinate( $value, $minimum, $maximum ) {
+        if ( '' === trim( (string) $value ) || ! is_numeric( $value ) ) {
+            return '';
+        }
+        $number = (float) $value;
+        return $number >= $minimum && $number <= $maximum ? (string) $number : '';
     }
 
     public function save_location( $post_id ) {

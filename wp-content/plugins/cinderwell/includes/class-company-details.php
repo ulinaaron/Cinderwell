@@ -14,9 +14,9 @@ class Company_Details {
     const OPTION = 'cinderwell_company_details';
 
     public function __construct() {
-        add_filter( 'cinderwell_help_sections', [ $this, 'add_help_section' ] );
-        add_filter( 'cinderwell_help_topics', [ $this, 'add_help_topics' ] );
+        add_action( 'cinderwell_register_documentation', [ $this, 'register_documentation' ] );
         add_filter( 'cinderwell_settings_tabs', [ $this, 'add_settings_tab' ], 8 );
+		add_action( 'cinderwell_register_fields', [ $this, 'register_content_fields' ] );
         add_action( 'admin_post_cinderwell_save_company_details', [ $this, 'save_settings' ] );
         add_filter( 'cinderwell_data_sources', [ $this, 'register_data_sources' ] );
         add_filter( 'cinderwell_resolve_data_source', [ $this, 'resolve_data_source' ], 10, 3 );
@@ -24,41 +24,8 @@ class Company_Details {
         add_action( 'wp_head', [ $this, 'output_schema' ], 2 );
     }
 
-    public function add_help_section( $sections ) {
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return $sections;
-        }
-        $sections['company-details'] = [
-            'title'       => __( 'Company details', 'cinderwell' ),
-            'description' => __( 'Maintain shared organization and contact information.', 'cinderwell' ),
-            'order'       => 90,
-        ];
-        return $sections;
-    }
-
-    public function add_help_topics( $topics ) {
-        $topics['company-details-manage'] = [
-            'section'    => 'company-details',
-            'title'      => __( 'Update shared company information', 'cinderwell' ),
-            'summary'    => __( 'Change contact details once and reuse them throughout the site.', 'cinderwell' ),
-            'icon'       => 'dashicons-building',
-            'order'      => 10,
-            'capability' => 'manage_options',
-            'content'    => sprintf(
-                wp_kses_post( __( '<p>Open <a href="%s"><strong>Cinderwell → Company Details</strong></a> to maintain the organization name, contact information, address, hours, logos, and social profiles.</p><p>Blocks using dynamic company data update automatically when these values change. Avoid typing the same details directly into several pages.</p>', 'cinderwell' ) ),
-                esc_url( admin_url( 'admin.php?page=cinderwell&tab=company-details' ) )
-            ),
-        ];
-        $topics['company-details-schema'] = [
-            'section'    => 'company-details',
-            'title'      => __( 'Manage organization schema', 'cinderwell' ),
-            'summary'    => __( 'Avoid duplicate structured organization data.', 'cinderwell' ),
-            'icon'       => 'dashicons-media-code',
-            'order'      => 20,
-            'capability' => 'manage_options',
-            'content'    => __( '<p>Enable Organization schema only when Cinderwell should own that structured data. Leave it disabled when an SEO plugin already outputs organization schema. Keep the selected organization type, name, URL, logo, address, and contact information accurate.</p>', 'cinderwell' ),
-        ];
-        return $topics;
+    public function register_documentation( $registry ) {
+        $registry->register_directory( 'cinderwell-company-details', CINDERWELL_DIR . 'help/modules/company-details' );
     }
 
     public static function get_defaults() {
@@ -167,9 +134,17 @@ class Company_Details {
                 'label' => __( 'Country', 'cinderwell' ),
             ],
             'hours' => [
-                'label'       => __( 'Business hours', 'cinderwell' ),
+                'label'       => __( 'Hours note', 'cinderwell' ),
                 'type'        => 'textarea',
-                'description' => __( 'Use one line per day or group of days.', 'cinderwell' ),
+                'description' => __( 'Optional supporting text, such as seasonal availability. Existing free-form hours remain here as a fallback until a weekly schedule is configured.', 'cinderwell' ),
+            ],
+            'hours_schedule' => [
+                'label'             => __( 'Weekly hours', 'cinderwell' ),
+                'type'              => 'business_hours',
+                'default'           => [],
+                'dynamic'           => false,
+                'description'       => __( 'Choose Open, Closed, or 24 hours for each configured day. Use Split hours for lunch breaks or multiple service periods.', 'cinderwell' ),
+                'sanitize_callback' => [ self::class, 'sanitize_hours_schedule' ],
             ],
             'facebook' => [
                 'label' => __( 'Facebook URL', 'cinderwell' ),
@@ -209,6 +184,130 @@ class Company_Details {
 
     public static function get_settings() {
         return wp_parse_args( (array) get_option( self::OPTION, [] ), self::get_defaults() );
+    }
+
+	/** Register Company Details as a site-scoped field model without replacing its tailored UI. */
+	public function register_content_fields( $registry ) {
+		$registry->register_group( 'cinderwell/company_details', [
+			'label'       => __( 'Company Details', 'cinderwell' ),
+			'object_type' => 'site',
+			'option_name' => self::OPTION,
+			'fields'      => self::get_field_definitions(),
+			'ui'          => false,
+		] );
+	}
+
+    /** Normalize the weekly schedule into authoritative day/session records. */
+    public static function sanitize_hours_schedule( $value ) {
+        $value    = is_array( $value ) ? $value : [];
+        $schedule = [];
+
+        foreach ( array_keys( self::get_weekdays() ) as $day ) {
+            $submitted = is_array( $value[ $day ] ?? null ) ? $value[ $day ] : [];
+            $status    = sanitize_key( $submitted['status'] ?? 'not_set' );
+            if ( ! in_array( $status, [ 'open', 'closed', 'all_day' ], true ) ) {
+                continue;
+            }
+
+            $periods = [];
+            if ( 'open' === $status ) {
+                foreach ( array_slice( (array) ( $submitted['periods'] ?? [] ), 0, 2 ) as $period ) {
+                    $opens  = self::sanitize_time( $period['opens'] ?? '' );
+                    $closes = self::sanitize_time( $period['closes'] ?? '' );
+                    if ( $opens && $closes ) {
+                        $periods[] = [ 'opens' => $opens, 'closes' => $closes ];
+                    }
+                }
+                if ( ! $periods ) {
+                    continue;
+                }
+            }
+
+            $schedule[ $day ] = [
+                'status'  => $status,
+                'periods' => $periods,
+                'note'    => sanitize_text_field( $submitted['note'] ?? '' ),
+            ];
+        }
+
+        return $schedule;
+    }
+
+    public static function get_weekdays() {
+        return [
+            'monday'    => __( 'Monday', 'cinderwell' ),
+            'tuesday'   => __( 'Tuesday', 'cinderwell' ),
+            'wednesday' => __( 'Wednesday', 'cinderwell' ),
+            'thursday'  => __( 'Thursday', 'cinderwell' ),
+            'friday'    => __( 'Friday', 'cinderwell' ),
+            'saturday'  => __( 'Saturday', 'cinderwell' ),
+            'sunday'    => __( 'Sunday', 'cinderwell' ),
+        ];
+    }
+
+    public static function get_hours_schedule( $settings = null ) {
+        $settings = is_array( $settings ) ? $settings : self::get_settings();
+        return self::sanitize_hours_schedule( $settings['hours_schedule'] ?? [] );
+    }
+
+    public static function format_business_time( $time ) {
+        $time = self::sanitize_time( $time );
+        if ( ! $time ) {
+            return '';
+        }
+        $date = \DateTimeImmutable::createFromFormat( '!H:i', $time, wp_timezone() );
+        return $date ? wp_date( get_option( 'time_format' ), $date->getTimestamp(), wp_timezone() ) : $time;
+    }
+
+    /** Determine the current open/closed state in the site's timezone. */
+    public static function is_open_now( $schedule = null, $now = null ) {
+        $schedule = null === $schedule ? self::get_hours_schedule() : self::sanitize_hours_schedule( $schedule );
+        if ( ! $schedule ) {
+            return null;
+        }
+
+        $now = $now instanceof \DateTimeInterface ? \DateTimeImmutable::createFromInterface( $now ) : new \DateTimeImmutable( 'now', wp_timezone() );
+        $now = $now->setTimezone( wp_timezone() );
+        $days = array_keys( self::get_weekdays() );
+        $day_index = (int) $now->format( 'N' ) - 1;
+        $minutes   = ( (int) $now->format( 'G' ) * 60 ) + (int) $now->format( 'i' );
+
+        $today = $schedule[ $days[ $day_index ] ] ?? [];
+        if ( 'all_day' === ( $today['status'] ?? '' ) ) {
+            return true;
+        }
+        foreach ( (array) ( $today['periods'] ?? [] ) as $period ) {
+            $opens  = self::time_to_minutes( $period['opens'] ?? '' );
+            $closes = self::time_to_minutes( $period['closes'] ?? '' );
+            if ( null !== $opens && null !== $closes && ( $opens < $closes ? $minutes >= $opens && $minutes < $closes : $minutes >= $opens ) ) {
+                return true;
+            }
+        }
+
+        $previous = $schedule[ $days[ ( $day_index + 6 ) % 7 ] ] ?? [];
+        foreach ( (array) ( $previous['periods'] ?? [] ) as $period ) {
+            $opens  = self::time_to_minutes( $period['opens'] ?? '' );
+            $closes = self::time_to_minutes( $period['closes'] ?? '' );
+            if ( null !== $opens && null !== $closes && $opens >= $closes && $minutes < $closes ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static function sanitize_time( $value ) {
+        $value = is_scalar( $value ) ? trim( (string) $value ) : '';
+        return preg_match( '/^(?:[01][0-9]|2[0-3]):[0-5][0-9]$/', $value ) ? $value : '';
+    }
+
+    private static function time_to_minutes( $value ) {
+        $value = self::sanitize_time( $value );
+        if ( ! $value ) {
+            return null;
+        }
+        [ $hour, $minute ] = array_map( 'intval', explode( ':', $value ) );
+        return ( $hour * 60 ) + $minute;
     }
 
     /**
@@ -279,7 +378,12 @@ class Company_Details {
     }
 
     public function add_editor_preview_values( $values ) {
-        return array_merge( $values, self::get_data_source_values() );
+        $settings = self::get_settings();
+        return array_merge( $values, self::get_data_source_values(), [
+            'company_hours_schedule' => self::get_hours_schedule( $settings ),
+            'company_hours_note'     => $settings['hours'] ?? '',
+            'company_timezone'       => wp_timezone_string(),
+        ] );
     }
 
     public static function get_health() {
@@ -381,7 +485,7 @@ class Company_Details {
             ],
             'contact' => [
                 'title'  => __( 'Contact', 'cinderwell' ),
-                'fields' => [ 'phone', 'email', 'website', 'contact_url', 'directions_url', 'hours' ],
+                'fields' => [ 'phone', 'email', 'website', 'contact_url', 'directions_url', 'hours_schedule', 'hours' ],
             ],
             'address' => [
                 'title'  => __( 'Address', 'cinderwell' ),
@@ -400,7 +504,7 @@ class Company_Details {
         <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
             <input type="hidden" name="action" value="cinderwell_save_company_details">
             <?php wp_nonce_field( 'cinderwell_save_company_details' ); ?>
-            <div class="cw-settings-card-grid">
+            <div class="cw-settings-card-grid cw-settings-card-grid--single">
                 <?php
                 $rendered = [];
                 foreach ( $sections as $section ) :

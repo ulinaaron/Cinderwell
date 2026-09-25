@@ -1,0 +1,27 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "cinderwell/column",
+  "title": "Column",
+  "category": "cinderwell",
+  "icon": "column",
+  "description": "A column that accepts Cinderwell blocks.",
+  "parent": ["cinderwell/columns"],
+  "supports": {
+    "align": false,
+    "color": false,
+    "typography": false,
+    "spacing": false,
+    "border": false,
+    "anchor": false,
+    "customClassName": false,
+    "html": false,
+    "reusable": false
+  },
+  "attributes": {
+    "proportion": { "type": "string", "default": "1" }
+  },
+  "editorScript": "file:./index.js",
+  "style": "file:./style.css",
+  "editorStyle": "file:./editor.css"
+}

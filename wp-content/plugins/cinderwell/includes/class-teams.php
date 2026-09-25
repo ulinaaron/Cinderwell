@@ -43,9 +43,9 @@ class Teams {
     }
 
     public function __construct() {
-        add_filter( 'cinderwell_help_sections', [ $this, 'add_help_section' ] );
-        add_filter( 'cinderwell_help_topics', [ $this, 'add_help_topics' ] );
+        add_action( 'cinderwell_register_documentation', [ $this, 'register_documentation' ] );
         add_action( 'init', [ $this, 'register_content_types' ] );
+		add_action( 'cinderwell_register_fields', [ $this, 'register_content_fields' ] );
         add_filter( 'cinderwell_settings_tabs', [ $this, 'add_settings_tab' ], 6 );
         add_action( 'admin_post_cinderwell_save_teams', [ $this, 'save_settings' ] );
         add_action( 'add_meta_boxes_' . self::POST_TYPE, [ $this, 'add_meta_box' ] );
@@ -59,41 +59,8 @@ class Teams {
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_styles' ] );
     }
 
-    public function add_help_section( $sections ) {
-        $settings = self::get_settings();
-        $label    = 'people' === $settings['terminology'] ? __( 'People', 'cinderwell' ) : __( 'Team', 'cinderwell' );
-        $sections['teams'] = [
-            'title'       => $label,
-            'description' => __( 'Maintain profiles, categories, and people listings.', 'cinderwell' ),
-            'order'       => 70,
-        ];
-        return $sections;
-    }
-
-    public function add_help_topics( $topics ) {
-        $settings = self::get_settings();
-        $plural   = 'people' === $settings['terminology'] ? __( 'people', 'cinderwell' ) : __( 'team members', 'cinderwell' );
-        $topics['teams-manage'] = [
-            'section' => 'teams',
-            'title'   => sprintf( __( 'Add and update %s', 'cinderwell' ), $plural ),
-            'summary' => __( 'Maintain names, positions, photos, biographies, and contact details.', 'cinderwell' ),
-            'icon'    => 'dashicons-groups',
-            'order'   => 10,
-            'content' => sprintf(
-                wp_kses_post( __( '<p>Open <a href="%1$s"><strong>People</strong></a> to add or update a profile. Use the title for the person’s display name, the featured image for their photo, and the editor for their biography. Complete the enabled profile fields below the editor.</p><p>Use <a href="%2$s">categories</a> to organize people into departments, leadership groups, boards, or other useful collections.</p>', 'cinderwell' ) ),
-                esc_url( admin_url( 'edit.php?post_type=' . self::POST_TYPE ) ),
-                esc_url( admin_url( 'edit-tags.php?taxonomy=' . self::TAXONOMY . '&post_type=' . self::POST_TYPE ) )
-            ),
-        ];
-        $topics['teams-display'] = [
-            'section' => 'teams',
-            'title'   => __( 'Display a people listing', 'cinderwell' ),
-            'summary' => __( 'Use a focused Loop and optionally filter it by category.', 'cinderwell' ),
-            'icon'    => 'dashicons-grid-view',
-            'order'   => 20,
-            'content' => __( '<p>Add a Cinderwell Loop block and choose the People or Team Member content type. You can narrow the results to a category and control whether names and photos link to individual profiles.</p><p>Profile links work only when public profile pages are enabled in the Teams settings.</p>', 'cinderwell' ),
-        ];
-        return $topics;
+    public function register_documentation( $registry ) {
+        $registry->register_directory( 'cinderwell-teams', CINDERWELL_DIR . 'help/modules/teams' );
     }
 
     public static function get_defaults() {
@@ -136,6 +103,24 @@ class Teams {
             ? [ 'status' => 'good', 'message' => sprintf( _n( '%d published person.', '%d published people.', $count, 'cinderwell' ), $count ) ]
             : [ 'status' => 'warning', 'message' => __( 'No published people yet.', 'cinderwell' ) ];
     }
+
+	/** Expose the existing people model through the shared field registry. */
+	public function register_content_fields( $registry ) {
+		$settings = self::get_settings();
+		$allowed  = array_merge( [ 'first_name', 'last_name', 'position' ], $settings['fields'] );
+		$fields   = array_intersect_key( self::get_person_fields(), array_flip( $allowed ) );
+		foreach ( $fields as $key => &$field ) {
+			$field['storage_key'] = '_cw_person_' . $key;
+		}
+		unset( $field );
+		$registry->register_group( 'cinderwell/person_details', [
+			'label'           => __( 'Person Details', 'cinderwell' ),
+			'object_type'     => 'post',
+			'object_subtypes' => [ self::POST_TYPE ],
+			'fields'          => $fields,
+			'ui'              => false,
+		] );
+	}
 
     public function enqueue_styles() {
         if ( ! is_singular( self::POST_TYPE ) ) {
@@ -334,9 +319,9 @@ class Teams {
             echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Teams settings saved.', 'cinderwell' ) . '</p></div>';
         }
         ?>
-        <div class="card" style="max-width:760px;">
+        <div class="card cw-settings-card">
             <h2><?php esc_html_e( 'Teams', 'cinderwell' ); ?></h2>
-            <p><?php esc_html_e( 'Create a structured directory for people. Profile pages can remain private while People loops continue to display published entries.', 'cinderwell' ); ?></p>
+            <p><?php esc_html_e( 'Create a structured directory for people. Choose here whether individual profile URLs exist; each People Loop controls how it presents profile details.', 'cinderwell' ); ?></p>
             <form method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>">
                 <input type="hidden" name="action" value="cinderwell_save_teams">
                 <?php wp_nonce_field( 'cinderwell_save_teams' ); ?>
@@ -362,7 +347,7 @@ class Teams {
                 'label'          => __( 'Individual profiles', 'cinderwell' ),
                 'type'           => 'checkbox',
                 'checkbox_label' => __( 'Enable public profile pages', 'cinderwell' ),
-                'description'    => __( 'When disabled, people remain available to loops but direct profile URLs return 404.', 'cinderwell' ),
+                'description'    => __( 'Controls only direct profile URLs. People Loops can still show biographies in a modal when pages are disabled.', 'cinderwell' ),
             ],
             'profile_slug' => [
                 'label'       => __( 'Profile URL base', 'cinderwell' ),
@@ -395,7 +380,11 @@ class Teams {
             return $behavior;
         }
 
-        return self::get_settings()['public_profiles'] ? $behavior : 'none';
+        if ( 'page' === $behavior && ! self::get_settings()['public_profiles'] ) {
+            return 'none';
+        }
+
+        return $behavior;
     }
 
     public function protect_private_rest_profiles( $result, $server, $request ) {

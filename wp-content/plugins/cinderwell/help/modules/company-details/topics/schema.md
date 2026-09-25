@@ -1,0 +1,1 @@
+Enable Organization schema only when Cinderwell should own that structured data. Leave it disabled when an SEO plugin already outputs organization schema. Keep the selected organization type, name, URL, logo, address, and contact information accurate.

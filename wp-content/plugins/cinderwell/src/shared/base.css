@@ -41,10 +41,10 @@
 	--cw-font-size-sm: clamp(0.875rem, 0.82rem + 0.22vw, 1rem);
 	--cw-font-size-md: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
 	--cw-font-size-lg: clamp(1.125rem, 1rem + 0.55vw, 1.375rem);
-	--cw-font-size-xl: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
-	--cw-font-size-2xl: clamp(2rem, 1.45rem + 2.3vw, 3rem);
-	--cw-font-size-3xl: clamp(2.5rem, 1.7rem + 3.4vw, 4rem);
-	--cw-font-size-4xl: clamp(3rem, 1.9rem + 4.5vw, 5rem);
+	--cw-font-size-xl: clamp(1.375rem, 1.2rem + 0.7vw, 1.75rem);
+	--cw-font-size-2xl: clamp(1.75rem, 1.45rem + 1.35vw, 2.5rem);
+	--cw-font-size-3xl: clamp(2.25rem, 1.75rem + 2.1vw, 3.25rem);
+	--cw-font-size-4xl: clamp(2.75rem, 2rem + 3vw, 4rem);
 	--cw-type-body: var(--cw-font-size-md);
 	--cw-type-lead: var(--cw-font-size-lg);
 	--cw-type-heading: var(--cw-font-size-2xl);
@@ -65,6 +65,7 @@
 	--cw-width-standard: 900px;
 	--cw-width-wide: 1200px;
 	--cw-width-full: 100%;
+	--cw-copy-measure: var(--cw-width-narrow);
 	--cw-radius-sm: 4px;
 	--cw-radius-md: 8px;
 	--cw-radius-pill: 999px;
@@ -197,6 +198,26 @@
 	line-height: var(--cw-line-height-relaxed);
 }
 
+/* Supporting copy follows a readable section-heading measure by default.
+ * Blocks emit the opt-out class only when an author disables the setting. */
+.cinderwell-cta--align-center:not(.cinderwell-copy-unconstrained) .cinderwell-cta__body,
+.cinderwell-hero--align-center:not(.cinderwell-copy-unconstrained) .cinderwell-subheading {
+	margin-inline: auto;
+}
+
+.cinderwell-cta--align-right:not(.cinderwell-copy-unconstrained) .cinderwell-cta__body,
+.cinderwell-hero--align-right:not(.cinderwell-copy-unconstrained) .cinderwell-subheading {
+	margin-inline-start: auto;
+}
+
+.cinderwell-body:not(.cinderwell-copy-unconstrained) > .cinderwell-body__inner > .cinderwell-body__content,
+.cinderwell-cta:not(.cinderwell-copy-unconstrained) > .cinderwell-cta__inner > .cinderwell-cta__body,
+.cinderwell-image-text:not(.cinderwell-copy-unconstrained) .cinderwell-image-text__content > .cinderwell-image-text__body,
+.cinderwell-hero:not(.cinderwell-copy-unconstrained) > .cinderwell-hero__inner > .cinderwell-subheading,
+.cinderwell-hero:not(.cinderwell-copy-unconstrained) > .cinderwell-hero__inner > .cinderwell-hero__content > .cinderwell-subheading {
+	max-width: min(100%, var(--cw-copy-measure));
+}
+
 .cinderwell-caption {
 	font-size: var(--cw-font-size-sm);
 	font-style: italic;
@@ -323,6 +344,27 @@
 	font-size: var(--cw-type-body);
 }
 
+/* Per-part typography controls keep their semantic scale. These selectors
+ * intentionally follow the generic size utility above so a heading-specific
+ * choice cannot be flattened to body text by the shared utility class. */
+.cinderwell-heading.cinderwell-text-size-sm,
+.cinderwell-heading.cinderwell-text-size-md,
+.cinderwell-heading.cinderwell-text-size-lg {
+	font-size: var(--cw-type-heading);
+}
+
+.cinderwell-hero .cinderwell-heading.cinderwell-text-size-sm,
+.cinderwell-hero .cinderwell-heading.cinderwell-text-size-md,
+.cinderwell-hero .cinderwell-heading.cinderwell-text-size-lg {
+	font-size: var(--cw-type-display);
+}
+
+.cinderwell-subheading.cinderwell-text-size-sm,
+.cinderwell-subheading.cinderwell-text-size-md,
+.cinderwell-subheading.cinderwell-text-size-lg {
+	font-size: var(--cw-type-lead);
+}
+
 .cinderwell-hero .cinderwell-heading {
 	font-size: var(--cw-type-display);
 }
@@ -332,7 +374,6 @@
 .wp-block-cinderwell-body,
 .wp-block-cinderwell-cta,
 .wp-block-cinderwell-image-text,
-.wp-block-cinderwell-two-column,
 .wp-block-cinderwell-quote,
 .wp-block-cinderwell-gallery,
 .wp-block-cinderwell-image-carousel,
@@ -340,8 +381,7 @@
 .wp-block-cinderwell-card-grid,
 .wp-block-cinderwell-loop,
 .wp-block-cinderwell-accordion,
-.wp-block-cinderwell-tabs,
-.wp-block-cinderwell-slot-layout
+.wp-block-cinderwell-tabs
 ) {
 	font-size: var(--cw-type-body);
 }
@@ -351,7 +391,6 @@
 .wp-block-cinderwell-body,
 .wp-block-cinderwell-cta,
 .wp-block-cinderwell-image-text,
-.wp-block-cinderwell-two-column,
 .wp-block-cinderwell-quote,
 .wp-block-cinderwell-gallery,
 .wp-block-cinderwell-image-carousel,
@@ -359,8 +398,7 @@
 .wp-block-cinderwell-card-grid,
 .wp-block-cinderwell-loop,
 .wp-block-cinderwell-accordion,
-.wp-block-cinderwell-tabs,
-.wp-block-cinderwell-slot-layout
+.wp-block-cinderwell-tabs
 ) :where(
 .cinderwell-eyebrow,
 .cinderwell-heading,
@@ -368,7 +406,6 @@
 .cinderwell-body__content,
 .cinderwell-cta__body,
 .cinderwell-image-text__body,
-.cinderwell-two-column__content,
 .cinderwell-quote__text,
 .cinderwell-quote__attribution,
 .cinderwell-quote__byline,
@@ -379,7 +416,6 @@
 .cinderwell-accordion__content,
 .cinderwell-tabs__label,
 .cinderwell-tabs__panel,
-.cinderwell-slot-layout__text,
 .cinderwell-card-grid__card-title,
 .cinderwell-card-grid__card-description,
 .cinderwell-loop__title,
@@ -412,7 +448,6 @@
 .cinderwell-body__content,
 .cinderwell-cta__body,
 .cinderwell-image-text__body,
-.cinderwell-two-column__content,
 .cinderwell-quote__text,
 .cinderwell-quote__attribution,
 .cinderwell-quote__byline,
@@ -423,7 +458,6 @@
 .cinderwell-accordion__content,
 .cinderwell-tabs__label,
 .cinderwell-tabs__panel,
-.cinderwell-slot-layout__text,
 .cinderwell-card-grid__card-title,
 .cinderwell-card-grid__card-description,
 .cinderwell-loop__title,
@@ -438,6 +472,7 @@
 /* Full-width block layout — blocks control their own width */
 .wp-block-cinderwell-hero,
 .wp-block-cinderwell-section,
+.wp-block-cinderwell-columns,
 .wp-block-cinderwell-cta,
 .wp-block-cinderwell-card-grid,
 .wp-block-cinderwell-loop,
@@ -446,7 +481,6 @@
 .wp-block-cinderwell-faq,
 .wp-block-cinderwell-body,
 .wp-block-cinderwell-image-text,
-.wp-block-cinderwell-two-column,
 .wp-block-cinderwell-quote {
 	max-width: 100% !important;
 	width: 100% !important;
@@ -456,40 +490,38 @@
  * Gutenberg's normal block gap still applies to ordinary content such as a
  * Heading followed by a Button. */
 :where(
-	.wp-block-post-content,
-	.editor-styles-wrapper .is-root-container
+.wp-block-post-content,
+.editor-styles-wrapper .is-root-container
 ) > :is(
-	.wp-block-cinderwell-hero,
-	.wp-block-cinderwell-section,
-	.wp-block-cinderwell-cta,
-	.wp-block-cinderwell-card-grid,
-	.wp-block-cinderwell-loop,
-	.wp-block-cinderwell-gallery,
-	.wp-block-cinderwell-image-carousel,
-	.wp-block-cinderwell-faq,
-	.wp-block-cinderwell-body,
-	.wp-block-cinderwell-image-text,
-	.wp-block-cinderwell-two-column,
-	.wp-block-cinderwell-quote,
-	.wp-block-cinderwell-accordion,
-	.wp-block-cinderwell-tabs,
-	.wp-block-cinderwell-slot-layout
+.wp-block-cinderwell-hero,
+.wp-block-cinderwell-section,
+.wp-block-cinderwell-columns,
+.wp-block-cinderwell-cta,
+.wp-block-cinderwell-card-grid,
+.wp-block-cinderwell-loop,
+.wp-block-cinderwell-gallery,
+.wp-block-cinderwell-image-carousel,
+.wp-block-cinderwell-faq,
+.wp-block-cinderwell-body,
+.wp-block-cinderwell-image-text,
+.wp-block-cinderwell-quote,
+.wp-block-cinderwell-accordion,
+.wp-block-cinderwell-tabs
 ) + :is(
-	.wp-block-cinderwell-hero,
-	.wp-block-cinderwell-section,
-	.wp-block-cinderwell-cta,
-	.wp-block-cinderwell-card-grid,
-	.wp-block-cinderwell-loop,
-	.wp-block-cinderwell-gallery,
-	.wp-block-cinderwell-image-carousel,
-	.wp-block-cinderwell-faq,
-	.wp-block-cinderwell-body,
-	.wp-block-cinderwell-image-text,
-	.wp-block-cinderwell-two-column,
-	.wp-block-cinderwell-quote,
-	.wp-block-cinderwell-accordion,
-	.wp-block-cinderwell-tabs,
-	.wp-block-cinderwell-slot-layout
+.wp-block-cinderwell-hero,
+.wp-block-cinderwell-section,
+.wp-block-cinderwell-columns,
+.wp-block-cinderwell-cta,
+.wp-block-cinderwell-card-grid,
+.wp-block-cinderwell-loop,
+.wp-block-cinderwell-gallery,
+.wp-block-cinderwell-image-carousel,
+.wp-block-cinderwell-faq,
+.wp-block-cinderwell-body,
+.wp-block-cinderwell-image-text,
+.wp-block-cinderwell-quote,
+.wp-block-cinderwell-accordion,
+.wp-block-cinderwell-tabs
 ) {
 	margin-block-start: var(--cw-spacing-none);
 }
@@ -500,7 +532,6 @@
 .cinderwell-body__inner,
 .cinderwell-image-text__inner,
 .cinderwell-faq__inner,
-.cinderwell-two-column__inner,
 .cinderwell-quote__inner,
 .cinderwell-card-grid__inner,
 .cinderwell-loop__inner,

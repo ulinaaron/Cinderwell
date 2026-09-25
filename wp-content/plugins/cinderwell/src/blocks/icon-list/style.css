@@ -137,3 +137,107 @@
 	text-decoration-thickness: 0.08em;
 	text-underline-offset: 0.16em;
 }
+
+.cinderwell-icon-list--section {
+	position: relative;
+	padding: var(--cw-spacing-lg) var(--cw-layout-gutter);
+	background-color: var(--cw-color-bg);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-icon-list--bg-white {
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-icon-list--bg-light {
+	background-color: var(--cw-color-light);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-icon-list--bg-dark {
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+.cinderwell-icon-list--bg-brand {
+	background-color: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
+
+.cinderwell-icon-list__inner {
+	position: relative;
+	z-index: 1;
+	margin-inline: auto;
+}
+
+.cinderwell-icon-list__intro > :first-child {
+	margin-top: 0;
+}
+
+.cinderwell-icon-list__intro > :last-child {
+	margin-bottom: 0;
+}
+
+.cinderwell-icon-list__description {
+	max-width: var(--cw-copy-measure, 42rem);
+	font-size: var(--cw-font-size-body);
+	line-height: var(--cw-line-height-relaxed);
+}
+
+.cinderwell-icon-list__description > :first-child {
+	margin-top: 0;
+}
+
+.cinderwell-icon-list__description > :last-child {
+	margin-bottom: 0;
+}
+
+.cinderwell-icon-list__intro .cinderwell-footnote {
+	margin-top: var(--cw-spacing-md);
+}
+
+.cinderwell-icon-list--layout-split-introduction .cinderwell-icon-list__inner {
+	display: grid;
+	grid-template-columns: minmax(0, 0.85fr) minmax(20rem, 1fr);
+	gap: clamp(2.5rem, 8vw, 8rem);
+	align-items: start;
+	box-sizing: border-box;
+	padding-inline: var(--cw-layout-gutter);
+}
+
+.cinderwell-icon-list--layout-split-introduction .cinderwell-icon-list__intro {
+	position: sticky;
+	top: calc(var(--cw-spacing-lg) + 1rem);
+}
+
+.cinderwell-icon-list--layout-split-introduction .cinderwell-heading {
+	max-width: 14ch;
+	margin-bottom: 0.75rem;
+	font-size: var(--cw-type-display);
+}
+
+.cinderwell-icon-list--layout-split-introduction .cinderwell-icon-list__items {
+	gap: var(--cw-spacing-md);
+}
+
+.cinderwell-icon-list--layout-split-introduction .cinderwell-icon-list__item {
+	align-items: center;
+}
+
+@media (max-width: 781px) {
+
+	.cinderwell-icon-list--section {
+		padding-inline: max(1.25rem, var(--cw-layout-gutter));
+	}
+
+	.cinderwell-icon-list--layout-split-introduction .cinderwell-icon-list__inner {
+		grid-template-columns: minmax(0, 1fr);
+		gap: var(--cw-spacing-lg);
+		padding-inline: 0;
+	}
+
+	.cinderwell-icon-list--layout-split-introduction .cinderwell-icon-list__intro {
+		position: static;
+	}
+}

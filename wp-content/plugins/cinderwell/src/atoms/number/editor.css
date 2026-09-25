@@ -1,0 +1,13 @@
+.cinderwell-number {
+	min-height: 5rem;
+}
+
+.cinderwell-number__output[contenteditable="true"],
+.cinderwell-number__label[contenteditable="true"] {
+	min-width: 1ch;
+}
+
+.cinderwell-number__label[contenteditable="true"]:empty::before {
+	color: currentcolor;
+	opacity: 0.55;
+}

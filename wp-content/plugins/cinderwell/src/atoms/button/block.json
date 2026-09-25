@@ -33,6 +33,11 @@
         "url": { "type": "string", "default": "" },
         "urlDynamic": { "type": "object", "default": {} },
         "opensInNewTab": { "type": "boolean", "default": false },
+        "destinationType": { "type": "string", "default": "link" },
+        "phoneNumber": { "type": "string", "default": "" },
+        "emailAddress": { "type": "string", "default": "" },
+        "icon": { "type": "string", "default": "" },
+        "iconPosition": { "type": "string", "default": "before" },
         "variant": { "type": "string", "default": "primary" },
         "size": { "type": "string", "default": "md" }
     },

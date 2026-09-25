@@ -3,8 +3,8 @@
  * Plugin Name: Cinderwell
  * Plugin URI: https://github.com/ulinaaron/Cinderwell
  * Update URI: https://cinderwell-updates.surge.sh/cinderwell/
- * Description: A curated Gutenberg block library with design system constraints.
- * Version: 0.1.61
+ * Description: A governed WordPress foundation with a curated block kit, design system, client theme layer, and focused add-on ecosystem.
+ * Version: 0.1.102
  * Requires at least: 6.3
  * Requires PHP: 7.4
  * Author: Stevens Inc.
@@ -19,7 +19,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CINDERWELL_VERSION', '0.1.61' );
+define( 'CINDERWELL_VERSION', '0.1.102' );
 define( 'CINDERWELL_FILE', __FILE__ );
 define( 'CINDERWELL_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CINDERWELL_URL', plugin_dir_url( __FILE__ ) );

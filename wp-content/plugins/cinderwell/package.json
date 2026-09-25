@@ -1,6 +1,6 @@
 {
     "name": "cinderwell",
-    "version": "0.1.0",
+  "version": "0.1.100",
     "description": "A curated Gutenberg block library with design system constraints.",
     "scripts": {
         "build": "wp-scripts build",
@@ -11,5 +11,8 @@
     "devDependencies": {
         "@wordpress/scripts": "^26.0.0",
         "copy-webpack-plugin": "^14.0.0"
+    },
+    "dependencies": {
+        "leaflet": "^1.9.4"
     }
 }

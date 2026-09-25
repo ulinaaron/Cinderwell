@@ -191,15 +191,15 @@ class Responsive_Images {
                 }
                 return $carousel_images;
 
-            case 'cinderwell/slot-layout':
-                return array_values( array_map(
-                    static function ( $slot ) {
-                        return [ 'id' => $slot['imageId'], 'size' => 'large' ];
-                    },
-                    array_filter( $attributes['slots'] ?? [], static function ( $slot ) {
-                        return 'image' === ( $slot['type'] ?? '' ) && ! empty( $slot['imageId'] );
-                    } )
-                ) );
+			case 'cinderwell/content-slider':
+				return array_values( array_map(
+					static function ( $slide ) {
+						return [ 'id' => $slide['imageId'], 'size' => 'large' ];
+					},
+					array_filter( $attributes['slides'] ?? [], static function ( $slide ) {
+						return ! empty( $slide['imageId'] );
+					} )
+				) );
 
             case 'cinderwell/image':
                 return ! empty( $attributes['imageId'] ) ? [ [ 'id' => $attributes['imageId'], 'size' => 'large' ] ] : [];

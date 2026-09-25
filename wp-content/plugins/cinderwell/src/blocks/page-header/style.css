@@ -68,6 +68,56 @@
 	line-height: var(--cw-line-height-tight);
 }
 
+.cinderwell-page-header__meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: var(--cw-gap-sm);
+	margin-block-start: var(--cw-gap-sm);
+	color: color-mix(in srgb, currentcolor 76%, transparent);
+	font-size: var(--cw-font-size-sm);
+}
+
+.cinderwell-page-header--align-center .cinderwell-page-header__meta {
+	justify-content: center;
+}
+
+.cinderwell-page-header--align-right .cinderwell-page-header__meta {
+	justify-content: flex-end;
+}
+
+.cinderwell-page-header__terms {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--cw-gap-xs);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.cinderwell-page-header__terms a,
+.cinderwell-page-header__terms span {
+	display: inline-flex;
+	align-items: center;
+	padding: 0.25em 0.65em;
+	border: 1px solid color-mix(in srgb, currentcolor 28%, transparent);
+	border-radius: 999px;
+	color: inherit;
+	font-size: 0.875em;
+	font-weight: 600;
+	line-height: 1.25;
+	text-decoration: none;
+}
+
+.cinderwell-page-header__terms a:hover {
+	background: color-mix(in srgb, currentcolor 10%, transparent);
+}
+
+.cinderwell-page-header__terms a:focus-visible {
+	outline: 2px solid currentcolor;
+	outline-offset: 2px;
+}
+
 .cinderwell-page-header__description {
 	max-width: var(--cw-width-standard);
 	margin-block-start: var(--cw-gap-md);

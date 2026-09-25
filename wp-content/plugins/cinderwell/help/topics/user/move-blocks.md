@@ -1,0 +1,1 @@
+Open List View, select the block, and use its options menu to duplicate or remove it. Dragging in List View is usually the clearest way to reorder content. Some structures are locked to protect the design.

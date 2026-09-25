@@ -1,0 +1,1 @@
+Use animation to clarify hierarchy, not decorate every element. Avoid animating essential controls late or applying competing directions in one view. Cinderwell automatically removes movement when a visitor requests reduced motion.

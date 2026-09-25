@@ -456,6 +456,150 @@
 	color: currentcolor;
 }
 
+/* Image Boxes use the stable Card Grid markup. Runtime classes carry the
+ * curated presentation settings so existing saved blocks stay valid. */
+.cinderwell-card-grid--layout-image-box {
+	--cw-image-box-shade: 78%;
+	--cw-image-box-center-shade: 55%;
+	--cw-image-box-overlay-start: transparent;
+	--cw-image-box-overlay-end: color-mix(in srgb, var(--cw-color-dark) var(--cw-image-box-shade), transparent);
+}
+
+.cinderwell-card-grid--image-box-overlay-soft {
+	--cw-image-box-shade: 62%;
+	--cw-image-box-center-shade: 44%;
+}
+
+.cinderwell-card-grid--image-box-overlay-strong {
+	--cw-image-box-shade: 92%;
+	--cw-image-box-center-shade: 70%;
+}
+
+.cinderwell-card-grid--layout-image-box .cinderwell-card-grid__card {
+	position: relative;
+	min-height: 18rem;
+	isolation: isolate;
+	overflow: hidden;
+	justify-content: flex-end;
+	background: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+.cinderwell-card-grid--image-box-aspect-square .cinderwell-card-grid__card {
+	aspect-ratio: 1;
+}
+
+.cinderwell-card-grid--image-box-aspect-landscape .cinderwell-card-grid__card {
+	aspect-ratio: 4 / 3;
+}
+
+.cinderwell-card-grid--image-box-aspect-portrait .cinderwell-card-grid__card {
+	aspect-ratio: 3 / 4;
+}
+
+.cinderwell-card-grid--image-box-aspect-tall .cinderwell-card-grid__card {
+	aspect-ratio: 2 / 3;
+}
+
+.cinderwell-card-grid--layout-image-box .cinderwell-card-grid__card::after {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	content: "";
+	background: linear-gradient(to bottom, var(--cw-image-box-overlay-start) 24%, var(--cw-image-box-overlay-end) 100%);
+	pointer-events: none;
+}
+
+.cinderwell-card-grid--image-box-position-top {
+	--cw-image-box-overlay-start: color-mix(in srgb, var(--cw-color-dark) var(--cw-image-box-shade), transparent);
+	--cw-image-box-overlay-end: transparent;
+}
+
+.cinderwell-card-grid--image-box-position-center {
+	--cw-image-box-overlay-start: color-mix(in srgb, var(--cw-color-dark) var(--cw-image-box-center-shade), transparent);
+	--cw-image-box-overlay-end: color-mix(in srgb, var(--cw-color-dark) var(--cw-image-box-center-shade), transparent);
+}
+
+.cinderwell-card-grid--layout-image-box .cinderwell-card-grid__card-image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	aspect-ratio: auto;
+}
+
+.cinderwell-card-grid--layout-image-box .cw-image-control-overlay {
+	top: 8px;
+	right: 8px;
+	bottom: auto;
+	z-index: 5;
+}
+
+.cinderwell-card-grid--layout-image-box .cinderwell-card-grid__card-content {
+	position: relative;
+	z-index: 2;
+	flex: 0 0 auto;
+	width: 100%;
+	padding: clamp(var(--cw-spacing-md), 3vw, var(--cw-spacing-lg));
+}
+
+.cinderwell-card-grid--image-box-position-top .cinderwell-card-grid__card {
+	justify-content: flex-start;
+}
+
+.cinderwell-card-grid--image-box-position-center .cinderwell-card-grid__card {
+	justify-content: center;
+}
+
+.cinderwell-card-grid--layout-image-box .cinderwell-card-grid__card-label {
+	color: currentcolor;
+}
+
+.cinderwell-card-grid--layout-image-box .cinderwell-card-grid__card-description,
+.cinderwell-card-grid--layout-image-box .cinderwell-card-grid__card-content .btn {
+	transition: opacity 180ms ease, transform 180ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+
+	.cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card:has(.btn) .cinderwell-card-grid__card-description,
+	.cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card:has(.btn) .cinderwell-card-grid__card-content .btn {
+		opacity: 0;
+		transform: translateY(0.5rem);
+	}
+
+	.cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card:has(.btn):hover .cinderwell-card-grid__card-description,
+	.cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card:has(.btn):hover .cinderwell-card-grid__card-content .btn,
+	.cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card:has(.btn):focus-within .cinderwell-card-grid__card-description,
+	.cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card:has(.btn):focus-within .cinderwell-card-grid__card-content .btn {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.cinderwell-card-grid--image-box-links-card .cinderwell-card-grid__card:has(.btn):focus-within {
+	outline: 3px solid var(--cw-color-focus, currentcolor);
+	outline-offset: 3px;
+}
+
+.cinderwell-card-grid--image-box-links-card .cinderwell-card-grid__card-content .btn::after {
+	position: absolute;
+	inset: 0;
+	z-index: 3;
+	content: "";
+}
+
+/* Gutenberg needs direct access to text and media controls while editing. */
+.editor-styles-wrapper .cinderwell-card-grid--image-box-links-card .cinderwell-card-grid__card-content .btn::after {
+	display: none;
+}
+
+.editor-styles-wrapper .cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card .cinderwell-card-grid__card-description,
+.editor-styles-wrapper .cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card .cinderwell-card-grid__card-content .btn {
+	opacity: 1;
+	transform: none;
+}
+
 .cinderwell-card-grid--layout-directory .cinderwell-card-grid__grid {
 	grid-template-columns: 1fr;
 	gap: 0;
@@ -606,8 +750,16 @@
 @media (prefers-reduced-motion: reduce) {
 
 	.cinderwell-card-grid__card,
-	.cinderwell-card-grid__card-image img {
+	.cinderwell-card-grid__card-image img,
+	.cinderwell-card-grid--layout-image-box .cinderwell-card-grid__card-description,
+	.cinderwell-card-grid--layout-image-box .cinderwell-card-grid__card-content .btn {
 		transition: none;
+	}
+
+	.cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card:has(.btn) .cinderwell-card-grid__card-description,
+	.cinderwell-card-grid--image-box-content-reveal .cinderwell-card-grid__card:has(.btn) .cinderwell-card-grid__card-content .btn {
+		opacity: 1;
+		transform: none;
 	}
 
 	.cinderwell-card-grid__card:hover,

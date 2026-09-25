@@ -105,7 +105,7 @@ export const VariationPicker = ({
               key={variation.slug}
               className={`cw-variation-picker__option${
                 selected ? " is-active" : ""
-              }`}
+              }${variation.custom ? " is-custom" : ""}`}
               aria-pressed={selected}
               onClick={() => onChange(variation)}
             >
@@ -122,6 +122,11 @@ export const VariationPicker = ({
               <span className="cw-variation-picker__label">
                 {variation.label}
               </span>
+              {variation.custom && (
+                <span className="cw-variation-picker__badge">
+                  {__("Custom", "cinderwell")}
+                </span>
+              )}
               <span className="screen-reader-text">
                 {variation.description}
               </span>

@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 class Data_Sources {
 
 	public static function get_sources() {
-		return apply_filters( 'cinderwell_data_sources', [
+		$sources = [
 			'static' => [ 'label' => __( 'Static text', 'cinderwell' ), 'group' => 'basic', 'context' => null ],
 			'post_title' => [ 'label' => __( 'Post title', 'cinderwell' ), 'group' => 'post', 'context' => 'post' ],
 			'post_permalink' => [ 'label' => __( 'Post permalink', 'cinderwell' ), 'group' => 'post', 'context' => 'post' ],
@@ -23,8 +23,11 @@ class Data_Sources {
 			'site_tagline' => [ 'label' => __( 'Site tagline', 'cinderwell' ), 'group' => 'site', 'context' => 'site' ],
 			'current_year' => [ 'label' => __( 'Current year', 'cinderwell' ), 'group' => 'site', 'context' => 'site' ],
 			'current_user_name' => [ 'label' => __( 'Current user name', 'cinderwell' ), 'group' => 'user', 'context' => 'user' ],
-			'acf_field' => [ 'label' => __( 'Advanced Custom Fields field…', 'cinderwell' ), 'group' => 'advanced_custom_fields', 'context' => 'post', 'requires_field_name' => true ],
-		] );
+		];
+		if ( function_exists( 'acf_get_field_groups' ) ) {
+			$sources['acf_field'] = [ 'label' => __( 'Advanced Custom Fields field…', 'cinderwell' ), 'group' => 'advanced_custom_fields', 'context' => 'post', 'requires_field_name' => true ];
+		}
+		return apply_filters( 'cinderwell_data_sources', $sources );
 	}
 
 	public static function get_groups() {

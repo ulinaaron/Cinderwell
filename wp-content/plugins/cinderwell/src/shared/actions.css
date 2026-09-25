@@ -25,6 +25,33 @@
 	user-select: none;
 }
 
+.btn--has-icon {
+	column-gap: 0.55em;
+}
+
+.btn--has-icon::before,
+.btn--has-icon::after {
+	display: block;
+	flex: 0 0 auto;
+	width: 1em;
+	height: 1em;
+	background-color: currentcolor;
+	content: "";
+	-webkit-mask-image: var(--cw-button-icon);
+	mask-image: var(--cw-button-icon);
+	-webkit-mask-position: center;
+	mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-size: contain;
+}
+
+.btn--icon-before::after,
+.btn--icon-after::before {
+	display: none;
+}
+
 .btn:focus-visible {
 	outline: 2px solid var(--cw-color-focus);
 	outline-offset: 2px;

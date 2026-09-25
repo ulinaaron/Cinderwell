@@ -312,9 +312,17 @@ class Addons {
             <?php wp_nonce_field( 'cinderwell_save_addons' ); ?>
             <div class="cw-addon-grid">
                 <?php foreach ( $catalog as $slug => $addon ) : ?>
-                    <?php $is_enabled = in_array( $slug, $enabled, true ); ?>
+                    <?php
+                    $is_enabled = in_array( $slug, $enabled, true );
+                    if ( 'plugin' === $addon['distribution'] && ! empty( $addon['plugin_file'] ) ) {
+                        if ( ! function_exists( 'is_plugin_active' ) ) {
+                            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+                        }
+                        $is_enabled = is_plugin_active( $addon['plugin_file'] );
+                    }
+                    ?>
                     <?php $display_name = self::get_display_name( $addon['name'] ?? $slug ); ?>
-                    <div class="card cw-addon-card">
+                    <div class="card cw-addon-card<?php echo $is_enabled ? ' is-enabled' : ''; ?>" data-cw-addon-card>
                         <div class="cw-addon-card__heading">
                             <?php if ( ! empty( $addon['icon'] ) ) : ?>
                                 <span class="dashicons <?php echo esc_attr( sanitize_html_class( $addon['icon'] ) ); ?>" aria-hidden="true"></span>
@@ -336,16 +344,17 @@ class Addons {
                         <p style="flex:1;"><?php echo esc_html( $addon['description'] ); ?></p>
                         <?php if ( 'bundled' === $addon['distribution'] ) : ?>
                             <?php $required_by = $this->get_required_by( $slug, $enabled ); ?>
-                            <label>
-                                <input type="checkbox" name="addons[]" value="<?php echo esc_attr( $slug ); ?>" <?php checked( $is_enabled ); ?>>
-                                <?php esc_html_e( 'Enabled', 'cinderwell' ); ?>
-                            </label>
                             <?php if ( $required_by ) : ?>
                                 <p class="description cw-addon-card__dependency">
                                     <?php printf( esc_html__( 'Required by: %s', 'cinderwell' ), esc_html( implode( ', ', $required_by ) ) ); ?>
                                 </p>
                             <?php endif; ?>
                             <?php $this->render_bundled_status( $addon, $is_enabled ); ?>
+                            <label class="cw-addon-toggle">
+                                <span data-cw-addon-status><?php echo $is_enabled ? esc_html__( 'Enabled', 'cinderwell' ) : esc_html__( 'Disabled', 'cinderwell' ); ?></span>
+                                <input class="cw-settings-switch-input" type="checkbox" name="addons[]" value="<?php echo esc_attr( $slug ); ?>" <?php checked( $is_enabled ); ?>>
+                                <span class="cw-settings-switch" aria-hidden="true"><span></span></span>
+                            </label>
                         <?php else : ?>
                             <?php $this->render_plugin_action( $addon ); ?>
                         <?php endif; ?>

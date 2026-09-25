@@ -19,8 +19,7 @@ class Animations {
         add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_assets' ] );
         add_filter( 'cinderwell_settings_tabs', [ $this, 'add_settings_tab' ], 11 );
         add_action( 'admin_post_cinderwell_save_animations', [ $this, 'save_settings' ] );
-        add_filter( 'cinderwell_help_sections', [ $this, 'add_help_section' ] );
-        add_filter( 'cinderwell_help_topics', [ $this, 'add_help_topics' ] );
+        add_action( 'cinderwell_register_documentation', [ $this, 'register_documentation' ] );
     }
 
     public static function get_defaults() {
@@ -82,6 +81,7 @@ class Animations {
             'cinderwell/body',
             'cinderwell/button',
             'cinderwell/card-grid',
+            'cinderwell/columns',
             'cinderwell/cta',
             'cinderwell/divider',
             'cinderwell/faq',
@@ -99,9 +99,7 @@ class Animations {
             'cinderwell/note',
             'cinderwell/quote',
             'cinderwell/section',
-            'cinderwell/slot-layout',
             'cinderwell/tabs',
-            'cinderwell/two-column',
         ] );
     }
 
@@ -109,12 +107,12 @@ class Animations {
         return (array) apply_filters( 'cinderwell_animation_section_selectors', [
             'cinderwell/accordion'      => '.cinderwell-accordion__items > *',
             'cinderwell/card-grid'      => '.cinderwell-card-grid__grid > *',
+            'cinderwell/columns'        => '.cinderwell-columns__grid > .cinderwell-column',
             'cinderwell/faq'            => '.cinderwell-faq__items > *',
             'cinderwell/gallery'        => '.cinderwell-gallery__grid > *',
             'cinderwell/icon-list'      => '.cinderwell-icon-list__items > *',
             'cinderwell/image-carousel' => '.cinderwell-image-carousel__track > *',
             'cinderwell/loop'           => '.cinderwell-loop__grid > *',
-            'cinderwell/slot-layout'    => '.cinderwell-slot-layout__grid > *',
         ] );
     }
 
@@ -259,32 +257,7 @@ class Animations {
         return [ 'status' => 'good', 'message' => __( 'Token-based animation presets are ready.', 'cinderwell' ) ];
     }
 
-    public function add_help_section( $sections ) {
-        $sections['animations'] = [
-            'title'       => __( 'Animations', 'cinderwell' ),
-            'description' => __( 'Add restrained entrance motion to blocks and content sections.', 'cinderwell' ),
-            'order'       => 110,
-        ];
-        return $sections;
-    }
-
-    public function add_help_topics( $topics ) {
-        $topics['animations-use'] = [
-            'section' => 'animations',
-            'title'   => __( 'Animate a block', 'cinderwell' ),
-            'summary' => __( 'Choose a preset, target, duration, and delay.', 'cinderwell' ),
-            'icon'    => 'dashicons-controls-play',
-            'order'   => 10,
-            'content' => __( '<p>Select a supported Cinderwell block and open its <strong>Animation</strong> panel. Enable animation, choose a restrained entrance preset, then animate either the whole block or its content sections.</p><p>Section animation staggers semantic items such as cards, FAQ rows, gallery images, and Loop results. Other blocks animate their immediate inner content in order.</p>', 'cinderwell' ),
-        ];
-        $topics['animations-accessibility'] = [
-            'section' => 'animations',
-            'title'   => __( 'Use motion responsibly', 'cinderwell' ),
-            'summary' => __( 'Keep movement purposeful and verify reduced-motion behavior.', 'cinderwell' ),
-            'icon'    => 'dashicons-universal-access-alt',
-            'order'   => 20,
-            'content' => __( '<p>Use animation to clarify hierarchy, not decorate every element. Avoid animating essential controls late or applying competing directions in one view. Cinderwell automatically removes movement when a visitor requests reduced motion.</p>', 'cinderwell' ),
-        ];
-        return $topics;
+    public function register_documentation( $registry ) {
+        $registry->register_directory( 'cinderwell-animations', CINDERWELL_DIR . 'help/modules/animations' );
     }
 }

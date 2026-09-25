@@ -1,0 +1,175 @@
+.cinderwell-facets {
+	display: grid;
+	gap: var(--cw-spacing-sm);
+	margin-block-end: var(--cw-spacing-md);
+}
+
+.cinderwell-facets__fields {
+	display: grid;
+	grid-template-columns: repeat(12, minmax(0, 1fr));
+	align-items: end;
+	gap: var(--cw-spacing-sm);
+}
+
+.cinderwell-facets__field {
+	display: grid;
+	min-width: min(100%, 12rem);
+	gap: var(--cw-spacing-xs);
+	margin: 0;
+	padding: 0;
+	border: 0;
+}
+
+.cinderwell-facets__field > span,
+.cinderwell-facets__field > legend,
+.cinderwell-facets__date-range label > span {
+	font-size: var(--cw-font-size-sm);
+	font-weight: 650;
+}
+
+.cinderwell-facets__field--search {
+	grid-column: span 3;
+}
+
+.cinderwell-facets__field--taxonomy {
+	grid-column: span 4;
+}
+
+.cinderwell-facets__field--date {
+	grid-column: span 5;
+}
+
+.cinderwell-facets__field--sort {
+	grid-column: span 3;
+}
+
+.cinderwell-facets__date-range {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: var(--cw-spacing-xs);
+}
+
+.cinderwell-facets__date-range label {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.cinderwell-facets__choices {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--cw-spacing-xs);
+}
+
+.cinderwell-facets__choices label {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.45rem;
+	cursor: pointer;
+}
+
+.cinderwell-facets__field--pills input {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	clip-path: inset(50%);
+}
+
+.cinderwell-facets__field--pills label span {
+	display: inline-flex;
+	min-height: 2.5rem;
+	align-items: center;
+	padding: 0.45rem 0.8rem;
+	border: 1px solid color-mix(in srgb, currentcolor 28%, transparent);
+	border-radius: 999px;
+	background: var(--cw-color-surface, var(--cw-color-white));
+	transition: border-color var(--cw-duration-fast) var(--cw-ease-standard), background var(--cw-duration-fast) var(--cw-ease-standard);
+}
+
+.cinderwell-facets__field--pills input:checked + span {
+	border-color: var(--cw-color-brand);
+	background: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
+
+.cinderwell-facets__field--pills input:focus-visible + span {
+	outline: 2px solid var(--cw-color-focus, var(--cw-color-brand));
+	outline-offset: 2px;
+}
+
+.cinderwell-facets__actions {
+	display: flex;
+	grid-column: span 3;
+	align-items: center;
+	gap: var(--cw-spacing-xs);
+}
+
+.cinderwell-facets__submit {
+	min-height: 2.75rem;
+	padding-inline: 1rem;
+	border: 1px solid var(--cw-button-primary-background, var(--cw-color-brand));
+	border-radius: var(--cw-radius-sm);
+	background: var(--cw-button-primary-background, var(--cw-color-brand));
+	color: var(--cw-button-primary-foreground, var(--cw-color-brand-contrast));
+	font: inherit;
+	font-weight: 650;
+	cursor: pointer;
+}
+
+.cinderwell-facets.is-enhanced .cinderwell-facets__submit {
+	display: none;
+}
+
+.cinderwell-facets__clear {
+	padding: 0.6rem;
+}
+
+.cinderwell-facets__summary {
+	min-height: 1lh;
+	margin: 0;
+	color: var(--cw-color-muted);
+	font-size: var(--cw-font-size-sm);
+}
+
+[data-cw-facet-results][aria-busy="true"] {
+	opacity: 0.6;
+	pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+	.cinderwell-facets__field--pills label span {
+		transition: none;
+	}
+}
+
+@media (forced-colors: active) {
+
+	.cinderwell-facets__field--pills input:checked + span {
+		border-color: Highlight;
+		background: Highlight;
+		color: HighlightText;
+	}
+
+	.cinderwell-facets__field--pills input:focus-visible + span {
+		outline-color: Highlight;
+	}
+}
+
+@media (max-width: 600px) {
+
+	.cinderwell-facets__fields {
+		grid-template-columns: 1fr;
+	}
+
+	.cinderwell-facets__field,
+	.cinderwell-facets__actions {
+		width: 100%;
+		grid-column: 1;
+	}
+
+	.cinderwell-facets__date-range {
+		grid-template-columns: 1fr;
+	}
+}

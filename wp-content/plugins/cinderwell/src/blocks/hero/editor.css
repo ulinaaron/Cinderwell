@@ -1,27 +1,28 @@
 .cinderwell-hero {
-    min-height: 200px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	min-height: 200px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .cinderwell-hero__inner {
-    width: 100%;
-    padding-inline: 2rem;
+	width: 100%;
+	padding-inline: 2rem;
 }
 
 .cinderwell-hero--split .cinderwell-hero__inner {
-    padding-inline: 0;
+	padding-inline: 0;
 }
 
 .cinderwell-hero__figure.is-empty {
-    align-self: auto;
-    margin-top: var(--cw-gap-md);
+	align-self: auto;
+	margin-top: var(--cw-gap-md);
 }
 
 @media (min-width: 769px) {
-    .cinderwell-hero--split .cinderwell-hero__figure.is-empty {
-        min-height: 100%;
-        margin-top: 0;
-    }
+
+	.cinderwell-hero--split .cinderwell-hero__figure.is-empty {
+		min-height: 100%;
+		margin-top: 0;
+	}
 }

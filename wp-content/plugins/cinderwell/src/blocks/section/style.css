@@ -1,45 +1,64 @@
 .cinderwell-section {
-    padding: var(--cw-spacing-md) var(--cw-layout-gutter);
-    background-color: var(--cw-color-bg);
-    color: var(--cw-color-text);
+	padding: var(--cw-spacing-md) var(--cw-layout-gutter);
+	background-color: var(--cw-color-bg);
+	color: var(--cw-color-text);
 }
-.cinderwell-section--bg-white { background-color: var(--cw-color-white); color: var(--cw-color-text); }
-.cinderwell-section--bg-light { background-color: var(--cw-color-light); color: var(--cw-color-text); }
-.cinderwell-section--bg-dark { background-color: var(--cw-color-dark); color: var(--cw-color-white); }
-.cinderwell-section--bg-brand { background-color: var(--cw-color-brand); color: var(--cw-color-brand-contrast); }
+
+.cinderwell-section--bg-white {
+	background-color: var(--cw-color-white);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-section--bg-light {
+	background-color: var(--cw-color-light);
+	color: var(--cw-color-text);
+}
+
+.cinderwell-section--bg-dark {
+	background-color: var(--cw-color-dark);
+	color: var(--cw-color-white);
+}
+
+.cinderwell-section--bg-brand {
+	background-color: var(--cw-color-brand);
+	color: var(--cw-color-brand-contrast);
+}
+
 .cinderwell-section__inner {
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    gap: var(--cw-gap-lg);
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: var(--cw-gap-lg);
 }
 
 /* A section owns the visual surface unless its children are explicitly
  * allowed to keep their individual block backgrounds. */
 .cinderwell-section:not(.cinderwell-section--children-own-backgrounds) > .cinderwell-section__inner > [class*="wp-block-cinderwell-"][class*="--bg-"],
 .cinderwell-section:not(.cinderwell-section--children-own-backgrounds) > .cinderwell-section__inner > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type^="cinderwell/"][class*="--bg-"] {
-    background-color: transparent !important;
-    background-image: none !important;
-    color: inherit !important;
-    padding-inline: 0 !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	color: inherit !important;
+	padding-inline: 0 !important;
 }
 
 .cinderwell-section:not(.cinderwell-section--children-own-backgrounds) > .cinderwell-section__inner > [class*="wp-block-cinderwell-"] > [class*="cinderwell-"][class*="__inner"],
 .cinderwell-section:not(.cinderwell-section--children-own-backgrounds) > .cinderwell-section__inner > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type^="cinderwell/"] > [class*="cinderwell-"][class*="__inner"],
 .cinderwell-section:not(.cinderwell-section--children-own-backgrounds) > .cinderwell-section__inner > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type^="cinderwell/"] > [class*="cinderwell-"] > [class*="cinderwell-"][class*="__inner"] {
-    padding-inline: 0 !important;
+	padding-inline: 0 !important;
 }
 
 .cinderwell-section:not(.cinderwell-section--children-own-backgrounds) > .cinderwell-section__inner > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type^="cinderwell/"] > [class*="cinderwell-"][class*="--bg-"] {
-    background-color: transparent !important;
-    background-image: none !important;
-    color: inherit !important;
-    padding-inline: 0 !important;
+	background-color: transparent !important;
+	background-image: none !important;
+	color: inherit !important;
+	padding-inline: 0 !important;
 }
 
 .cinderwell-section:not(.cinderwell-section--children-own-backgrounds) > .cinderwell-section__inner > [class*="wp-block-cinderwell-"].cw-has-background-image::before,
 .cinderwell-section:not(.cinderwell-section--children-own-backgrounds) > .cinderwell-section__inner > .block-editor-inner-blocks > .block-editor-block-list__layout > [data-type^="cinderwell/"].cw-has-background-image::before {
-    content: none !important;
+	content: none !important;
 }
 
-[dir="rtl"] .cinderwell-section { text-align: right; }
+[dir="rtl"] .cinderwell-section {
+	text-align: right;
+}
