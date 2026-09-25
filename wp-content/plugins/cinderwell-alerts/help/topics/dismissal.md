@@ -1,0 +1,1 @@
+Enable dismissal when visitors do not need to see the message on every visit. The expiry determines how long that browser remembers the choice. Critical or rapidly changing information may be better left non-dismissible.

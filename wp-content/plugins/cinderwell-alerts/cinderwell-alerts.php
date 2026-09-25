@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/ulinaaron/Cinderwell/tree/main/wp-content/plugins/cinderwell-alerts
  * Update URI: https://cinderwell-updates.surge.sh/cinderwell-alerts/
  * Description: Scheduled, condition-aware alerts composed with Cinderwell blocks.
- * Version: 0.1.6
+ * Version: 0.1.7
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Requires Plugins: cinderwell
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CINDERWELL_ALERTS_VERSION', '0.1.6' );
+define( 'CINDERWELL_ALERTS_VERSION', '0.1.7' );
 define( 'CINDERWELL_ALERTS_FILE', __FILE__ );
 define( 'CINDERWELL_ALERTS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CINDERWELL_ALERTS_URL', plugin_dir_url( __FILE__ ) );
