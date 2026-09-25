@@ -1,0 +1,9 @@
+{
+  "name": "cinderwell-snippets",
+  "version": "0.1.3",
+  "private": true,
+  "description": "Safe snippet management add-on for Cinderwell",
+  "scripts": {
+    "build": "echo 'No build step — plain JS/CSS assets.'"
+  }
+}
