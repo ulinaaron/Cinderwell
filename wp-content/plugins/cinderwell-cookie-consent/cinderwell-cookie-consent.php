@@ -4,7 +4,7 @@
  * Plugin URI: https://github.com/ulinaaron/Cinderwell/tree/main/wp-content/plugins/cinderwell-cookie-consent
  * Update URI: https://cinderwell-updates.surge.sh/cinderwell-cookie-consent/
  * Description: Accessible, category-based consent controls and prior blocking for optional site technologies.
- * Version: 0.1.1
+ * Version: 0.1.3
  * Requires at least: 6.5
  * Requires PHP: 7.4
  * Requires Plugins: cinderwell
@@ -17,7 +17,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'CINDERWELL_COOKIE_CONSENT_VERSION', '0.1.1' );
+define( 'CINDERWELL_COOKIE_CONSENT_VERSION', '0.1.3' );
 define( 'CINDERWELL_COOKIE_CONSENT_FILE', __FILE__ );
 define( 'CINDERWELL_COOKIE_CONSENT_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CINDERWELL_COOKIE_CONSENT_URL', plugin_dir_url( __FILE__ ) );

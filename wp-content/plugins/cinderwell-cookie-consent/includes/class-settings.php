@@ -117,7 +117,7 @@ class Settings {
         if ( isset( $_GET['updated'] ) ) {
             echo '<div class="notice notice-success inline"><p>' . esc_html__( 'Cookie consent settings saved.', 'cinderwell-cookie-consent' ) . '</p></div>';
         }
-        echo '<div class="card" style="max-width:820px"><h2>' . esc_html__( 'Cookie Consent', 'cinderwell-cookie-consent' ) . '</h2>';
+        echo '<div class="card cw-settings-card"><h2>' . esc_html__( 'Cookie Consent', 'cinderwell-cookie-consent' ) . '</h2>';
         echo '<p>' . esc_html__( 'Optional technologies are denied until a visitor makes an affirmative choice. Activation does not replace a site-specific cookie and vendor audit.', 'cinderwell-cookie-consent' ) . '</p>';
         if ( ! $settings['privacy_page_id'] || 'publish' !== get_post_status( $settings['privacy_page_id'] ) ) {
             echo '<div class="notice notice-warning inline"><p>' . esc_html__( 'Publish and select a complete privacy/cookie policy before launch. The consent banner will not output a broken or private policy link.', 'cinderwell-cookie-consent' ) . '</p></div>';
@@ -127,7 +127,7 @@ class Settings {
         \Cinderwell\Admin_Fields::render_table( $this->fields(), $settings, 'cookie_consent', 'cw-cookie-consent' );
         submit_button( __( 'Save Cookie Consent Settings', 'cinderwell-cookie-consent' ) );
         echo '</form></div>';
-        echo '<div class="card" style="max-width:820px"><h2>' . esc_html__( 'Implementation checklist', 'cinderwell-cookie-consent' ) . '</h2><ol>';
+        echo '<div class="card cw-settings-card cw-settings-card--checklist"><h2>' . esc_html__( 'Implementation checklist', 'cinderwell-cookie-consent' ) . '</h2><ol>';
         echo '<li>' . esc_html__( 'Inventory every cookie, pixel, SDK, iframe, external font, and local-storage use on the production site.', 'cinderwell-cookie-consent' ) . '</li>';
         echo '<li>' . esc_html__( 'Register every optional script and stylesheet with a consent category.', 'cinderwell-cookie-consent' ) . '</li>';
         echo '<li>' . esc_html__( 'List the technologies, purposes, providers, durations, and legal bases in the privacy/cookie policy.', 'cinderwell-cookie-consent' ) . '</li>';
