@@ -4,7 +4,10 @@ Site-specific child theme for the Cinderwell product and demonstration site.
 
 The updateable `cinderwell-starter` parent owns the FSE template hierarchy and
 minimal site frame. This child theme owns the Cinderwell site's navigation,
-footer content, product-specific tokens, and presentation CSS.
+footer content, and presentation CSS. It currently registers no site-specific
+tokens: the Cinderwell plugin's default `cinderwell_token_manifest` supplies
+its token values. Use a client theme with a manifest filter as the reference
+when building a branded site.
 
 Public product marketing lives at the site root. Demonstration content lives
 under `/demo/` and uses the `header-demo` template part. WooCommerce routes,

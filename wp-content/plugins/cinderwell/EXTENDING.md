@@ -40,6 +40,13 @@ theme files. Use **Cinderwell → Template Updates** to identify these
 records. Export intentional changes into the child theme before resetting the
 database customization.
 
+Use `cinderwell_block_variations` for client presentation recipes and child
+theme `templates/` and `parts/` files for FSE page structure. The Field Frost
+and Aster Peak demo child themes in Studio show small and fuller examples of
+token manifests, variations, and FSE templates. Those demo themes live outside
+this repository; `cinderwell-marketing` is a product-site child theme that uses
+the default plugin token manifest, not a client brand reference.
+
 ## Admin bar integrations
 
 Cinderwell provides a shared admin-bar root for add-ons. Add nodes during
@@ -887,16 +894,16 @@ templates/taxonomy-cw_portfolio_category.html
 Theme files win over the registered plugin defaults and remain editable in the
 Site Editor. No PHP template loader or copied plugin file is required.
 
-## Theme Override Directory
+## Theme templates and block presentation
 
-Place custom templates in your theme at:
-
-```
-theme/cinderwell/{block-name}/index.html
-```
-
-The plugin checks the active theme (so client child themes work) first, then the
-parent theme, falling back to plugin defaults. `index.html` may use
-`{{content}}` (the block's inner content) and `{{attribute_name}}` (an escaped
-scalar attribute value) so each instance renders its own data. Use the
-`cinderwell_render_{block}` filter for programmatic changes.
+Place site templates in the child theme's `templates/` directory and shared
+template parts in `parts/`. WordPress's FSE template hierarchy handles these
+files; the Portfolio examples above use that path. For a different presentation
+of an existing Cinderwell block, register a named recipe with
+`cinderwell_block_variations` and add scoped CSS. For a complete markup override,
+place `cinderwell/{block-name}/index.html` in the child theme root. The plugin
+checks the child theme before the parent theme; the file may use `{{content}}`
+and escaped scalar `{{attribute_name}}` placeholders. Such an override supplies
+a render callback, so use it deliberately for blocks that store markup with JS
+`save()`. The render extension API also applies `cinderwell_render_{block}` to
+Cinderwell block output for programmatic changes.
