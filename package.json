@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "smoke:demo": "node scripts/blast-radius-smoke.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}

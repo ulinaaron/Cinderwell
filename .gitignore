@@ -2,6 +2,9 @@
 /*
 !/.gitignore
 !/README.md
+!/STUDIO.md
+!/package.json
+!/package-lock.json
 !/.github/
 !/.agents/
 !/scripts/
@@ -16,9 +19,16 @@
 
 /.github/*
 !/.github/workflows/
+!/.github/pull_request_template.md
 
 /scripts/*
 !/scripts/build-update-release.mjs
+!/scripts/link-demo-addons.mjs
+!/scripts/blast-radius-smoke.mjs
+!/scripts/demo-sites.example.json
+
+/.artifacts/
+/demo-sites.json
 
 /updates/*
 !/updates/info.example.json
