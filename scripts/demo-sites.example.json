@@ -1,0 +1,10 @@
+[
+  { "name": "aster-peak-demo", "url": "http://aster-peak-demo.test/" },
+  { "name": "cedar-ledger-demo", "url": "http://cedar-ledger-demo.test/" },
+  { "name": "field-frost-demo", "url": "http://field-frost-demo.test/" },
+  { "name": "goodgood-parcel-demo", "url": "http://goodgood-parcel-demo.test/" },
+  { "name": "northline-concrete-demo", "url": "http://northline-concrete-demo.test/" },
+  { "name": "sundrift-fruit-co", "url": "http://sundrift-fruit-co.test/" },
+  { "name": "velaform-building-systems", "url": "http://velaform-building-systems.test/" },
+  { "name": "my-shiny-website", "url": "http://my-shiny-website.test/" }
+]
